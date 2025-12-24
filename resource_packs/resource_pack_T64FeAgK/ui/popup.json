@@ -15,6 +15,13 @@
                         175
                     ],
                     "$show_black_background|default": false,
+                    "button_mappings": [
+                        {
+                            "from_button_id": "button.menu_cancel",
+                            "mapping_type": "global",
+                            "to_button_id": "button.menu_exit"
+                        }
+                    ],
                     "controls": [
                         {
                             "modal_bg_buttons@popup_dialog.modal_dialog_with_buttons": {
@@ -29,13 +36,6 @@
                                 "ignored": "(not $show_black_background)",
                                 "texture": "textures/ui/realms_text_background"
                             }
-                        }
-                    ],
-                    "button_mappings": [
-                        {
-                            "from_button_id": "button.menu_cancel",
-                            "mapping_type": "global",
-                            "to_button_id": "button.menu_exit"
                         }
                     ]
                 }

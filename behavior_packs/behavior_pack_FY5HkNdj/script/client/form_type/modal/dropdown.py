@@ -11,10 +11,12 @@ from ..base import (
     TRIGGER_TYPE_CLICK,
     TRIGGER_TYPE_RELEASE,
     KEY_PRESS_TYPE_DOWN,
+    KEY_PRESS_TYPE_UP,
     BaseComponent,
 )
 from ...utils import (
     point_is_in_rect,
+    input_mode_is_touch,
     check_esc_key,
     get_scorll_view_background,
     get_scroll_view_content,
@@ -610,10 +612,16 @@ class DropDown(BaseComponent):
         """
         if not self._is_showing_dropdown_content():
             return False
-        if press_type != KEY_PRESS_TYPE_DOWN:
-            return False
         if not check_esc_key(press_key):
             return False
+
+        if input_mode_is_touch():
+            if press_type != KEY_PRESS_TYPE_UP:
+                return False
+        else:
+            if press_type != KEY_PRESS_TYPE_DOWN:
+                return False
+
         self._should_close_dropdown = True
         return False
 
