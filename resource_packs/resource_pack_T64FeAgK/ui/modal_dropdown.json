@@ -1,0 +1,77 @@
+{
+    "custom_dropdown": {
+        "type": "panel",
+        "size": [
+            "100%",
+            "100%c"
+        ],
+        "controls": [
+            {
+                "dropdown@settings_common.option_dropdown": {
+                    "$option_label": "#custom_text",
+                    "$dropdown_content": "modal_dropdown.custom_dropdown_content",
+                    "$dropdown_area": "generated_form",
+                    "$dropdown_name": "custom_dropdown",
+                    "$toggle_binding_type": "collection",
+                    "$toggle_grid_collection_name": "custom_form",
+                    "$options_dropdown_toggle_label_binding": "#dropdown_option_text",
+                    "$options_dropdown_toggle_label_binding_type": "collection",
+                    "$options_dropdown_toggle_label_binding_collection_name": "custom_form",
+                    "$dropdown_scroll_content_size": [
+                        "100%",
+                        "200%"
+                    ],
+                    "$label_bindings": [
+                        {
+                            "binding_name": "#custom_text",
+                            "binding_type": "collection",
+                            "binding_collection_name": "custom_form"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "custom_dropdown_content@settings_common.option_radio_dropdown_group": {
+        "$radio_buttons": [],
+        "$radio_factory": {
+            "name": "buttons",
+            "control_name": "modal_dropdown.custom_dropdown_radio"
+        },
+        "$radio_collection_name": "custom_dropdown",
+        "$radio_bindings": [
+            {
+                "binding_name": "#custom_dropdown_length",
+                "binding_type": "collection",
+                "binding_name_override": "#collection_length",
+                "binding_collection_name": "custom_form"
+            }
+        ]
+    },
+    "custom_dropdown_radio@settings_common.radio_with_label": {
+        "$toggle_name": "custom_dropdown_radio_toggle",
+        "$toggle_state_binding_name": "#custom_radio_toggled",
+        "$option_enabled_binding_name": "#option_enabled_binding_name",
+        "$toggle_binding_type": "collection",
+        "$toggle_grid_collection_name": "custom_dropdown",
+        "$toggle_collection_details_type": "collection_details",
+        "$radio_label_text": "#custom_radio_text",
+        "$radio_label_bindings": [
+            {
+                "binding_name": "#custom_radio_text",
+                "binding_type": "collection",
+                "binding_collection_name": "custom_dropdown"
+            },
+            {
+                "binding_type": "collection_details"
+            }
+        ]
+    },
+    "radio_toggled@settings_common.radio_with_label": {
+        "$toggle_name": "radio_toggled_toggle",
+        "$toggle_state_binding_name": "#toggle_state_binding_name",
+        "$option_enabled_binding_name": "#option_enabled_binding_name",
+        "$radio_label_text": "#radio_label_text"
+    },
+    "namespace": "modal_dropdown"
+}

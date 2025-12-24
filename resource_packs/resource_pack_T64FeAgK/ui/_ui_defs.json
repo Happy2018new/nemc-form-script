@@ -1,0 +1,11 @@
+{
+    "ui_defs": [
+        "ui/form.json",
+        "ui/long.json",
+        "ui/modal.json",
+        "ui/modal_component.json",
+        "ui/modal_dropdown.json",
+        "ui/popup.json",
+        "ui/utils.json"
+    ]
+}

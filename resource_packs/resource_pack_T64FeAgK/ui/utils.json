@@ -1,0 +1,21 @@
+{
+    "slider_step": {
+        "type": "image",
+        "texture": "textures/ui/slider_step_background",
+        "size": [
+            2,
+            6
+        ],
+        "layer": 4
+    },
+    "slider_step_hover@utils.slider_step": {
+        "texture": "textures/ui/slider_step_background_hover"
+    },
+    "slider_step_progress@utils.slider_step": {
+        "texture": "textures/ui/slider_step_progress"
+    },
+    "slider_step_progress_hover@utils.slider_step": {
+        "texture": "textures/ui/slider_step_progress_hover"
+    },
+    "namespace": "utils"
+}

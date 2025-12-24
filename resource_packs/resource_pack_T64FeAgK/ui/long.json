@@ -1,0 +1,235 @@
+{
+    "dynamic_button": {
+        "type": "stack_panel",
+        "size": [
+            "100%",
+            32
+        ],
+        "orientation": "horizontal",
+        "controls": [
+            {
+                "panel_name": {
+                    "type": "panel",
+                    "size": [
+                        34,
+                        "100%c"
+                    ],
+                    "bindings": [
+                        {
+                            "source_property_name": "(not (#texture = ''))",
+                            "binding_type": "view",
+                            "resolve_sibling_scope": true,
+                            "target_property_name": "#visible",
+                            "source_control_name": "image"
+                        }
+                    ],
+                    "controls": [
+                        {
+                            "image": {
+                                "type": "image",
+                                "offset": [
+                                    -2,
+                                    0
+                                ],
+                                "size": [
+                                    32,
+                                    32
+                                ],
+                                "layer": 2
+                            }
+                        },
+                        {
+                            "progress@progress.progress_loading_bars": {
+                                "bindings": [
+                                    {
+                                        "binding_type": "view",
+                                        "resolve_sibling_scope": true,
+                                        "source_control_name": "image",
+                                        "source_property_name": "(#texture = 'loading')",
+                                        "target_property_name": "#visible"
+                                    }
+                                ],
+                                "offset": [
+                                    -2,
+                                    0
+                                ],
+                                "size": [
+                                    30,
+                                    4
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "form_button@common_buttons.light_text_button": {
+                    "$button_text": "#form_button_text",
+                    "$button_text_binding_type": "collection",
+                    "$button_text_grid_collection_name": "form_buttons",
+                    "$button_text_max_size": [
+                        "100%",
+                        20
+                    ],
+                    "$pressed_button_name": "button.form_button_click",
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "bindings": [
+                        {
+                            "binding_collection_name": "form_buttons",
+                            "binding_type": "collection_details"
+                        }
+                    ],
+                    "size": [
+                        "fill",
+                        32
+                    ]
+                }
+            }
+        ]
+    },
+    "long_form@common_dialogs.main_panel_no_buttons": {
+        "$child_control": "long.long_form_panel",
+        "$text_name": "#title_text",
+        "$title_panel": "common_dialogs.standard_title_label",
+        "$title_size": [
+            "100% - 14px",
+            10
+        ],
+        "$title_text_binding_type": "none",
+        "layer": 2,
+        "size": [
+            225,
+            200
+        ]
+    },
+    "long_form_panel": {
+        "type": "stack_panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "size": [
+            "100%",
+            "100%"
+        ],
+        "layer": 1,
+        "orientation": "vertical",
+        "controls": [
+            {
+                "scrolling_panel@common.scrolling_panel": {
+                    "$scroll_bar_right_padding_size": [
+                        0,
+                        0
+                    ],
+                    "$scroll_size": [
+                        5,
+                        "100% - 4px"
+                    ],
+                    "$scrolling_content": "long.long_form_scrolling_content",
+                    "$scrolling_pane_offset": [
+                        2,
+                        0
+                    ],
+                    "$scrolling_pane_size": [
+                        "100% - 4px",
+                        "100% - 2px"
+                    ],
+                    "$show_background": false,
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "size": [
+                        "100%",
+                        "100%"
+                    ]
+                }
+            }
+        ]
+    },
+    "long_form_scrolling_content": {
+        "type": "stack_panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "size": [
+            "100% - 4px",
+            "100%c"
+        ],
+        "orientation": "vertical",
+        "controls": [
+            {
+                "label_offset_panel": {
+                    "type": "panel",
+                    "size": [
+                        "100%",
+                        "100%c"
+                    ],
+                    "controls": [
+                        {
+                            "main_label": {
+                                "type": "label",
+                                "anchor_from": "top_left",
+                                "anchor_to": "top_left",
+                                "offset": [
+                                    2,
+                                    2
+                                ],
+                                "size": [
+                                    "100%",
+                                    "default"
+                                ],
+                                "color": "$main_header_text_color",
+                                "text": "#form_text"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "padding": {
+                    "type": "panel",
+                    "size": [
+                        "100%",
+                        4
+                    ]
+                }
+            },
+            {
+                "wrapping_panel": {
+                    "type": "panel",
+                    "size": [
+                        "100%",
+                        "100%c"
+                    ],
+                    "controls": [
+                        {
+                            "long_form_dynamic_buttons_panel": {
+                                "type": "stack_panel",
+                                "anchor_from": "top_middle",
+                                "anchor_to": "top_middle",
+                                "offset": [
+                                    2,
+                                    0
+                                ],
+                                "size": [
+                                    "100% - 4px",
+                                    "100%c"
+                                ],
+                                "collection_name": "form_buttons",
+                                "factory": {
+                                    "control_name": "long.dynamic_button",
+                                    "name": "buttons"
+                                },
+                                "orientation": "vertical",
+                                "bindings": [
+                                    {
+                                        "binding_name_override": "#collection_length",
+                                        "binding_name": "#form_button_length"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "namespace": "long"
+}

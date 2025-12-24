@@ -1,0 +1,41 @@
+/form add <formName: str> long|popup|modal [autoSave: bool]
+/form remove <formName: str> [autoSave: bool]
+/form save <formName: str>
+/form open <formName: str>
+
+/modalform list <formName: str>
+/modalform append <formName: str> label|toggle|input|dropdown|slider|step_slider <formName: str>
+/modalform insert <formName: str> <index: str> label|toggle|input|dropdown|slider|step_slider
+/modalform sub <formName: str> <startIndex: str> <endIndex: str>
+/modalform remove <formName: str> head|tail
+
+/editmodalform label <formName: str> <index: str> <text: str>
+/editmodalform toggle <formName: str> <index: str> <text: str> <default: str> <onSubmit: str>
+/editmodalform input <formName: str> <index: str> <text: str> <placeHolder: str> <default: str> <onSubmit: str>
+/editmodalform slider <formName: str> <index: str> <text: str> <min: str> <max: str> <step: str> <default: str> <onSubmit: str>
+
+/editdropdown text <formName: str> <index: str> <text: str>
+/editdropdown submit <formName: str> <index: str> <onSubmit: str>
+/editdropdown default <formName: str> <index: str> <default: str>
+/editdropdown append <formName: str> <index: str> <text: str>
+/editdropdown sub <formName: str> <index: str> <startIndex: str> <endIndex: str>
+/editdropdown remove head|tail <formName: str> <index: str>
+
+/editstepslider text <formName: str> <index: str> <text: str>
+/editstepslider submit <formName: str> <index: str> <onSubmit: str>
+/editstepslider default <formName: str> <index: str> <default: str>
+/editstepslider append <formName: str> <index: str> <text: str>
+/editstepslider sub <formName: str> <index: str> <startIndex: str> <endIndex: str>
+/editstepslider remove head|tail <formName: str> <index: str>
+
+/editstepslider append "my_form"
+
+"
+a={score, @s, "计分板a"}
+b={selector, @p[r=3]}
+c=""
+if b
+    g=0
+end if
+return a+b+c+k+g
+"

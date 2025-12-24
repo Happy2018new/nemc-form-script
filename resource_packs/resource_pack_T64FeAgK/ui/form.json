@@ -1,0 +1,31 @@
+{
+    "main_screen_content": {
+        "type": "panel",
+        "size": [
+            0,
+            0
+        ],
+        "controls": [
+            {
+                "form_factory": {
+                    "type": "factory",
+                    "control_ids": {
+                        "long_form": "@long.long_form",
+                        "custom_form": "@modal.custom_form"
+                    }
+                }
+            }
+        ]
+    },
+    "namespace": "form",
+    "form_main_screen@common.base_screen": {
+        "$screen_content": "form.main_screen_content",
+        "button_mappings": [
+            {
+                "from_button_id": "button.menu_cancel",
+                "mapping_type": "global",
+                "to_button_id": "button.menu_exit"
+            }
+        ]
+    }
+}
