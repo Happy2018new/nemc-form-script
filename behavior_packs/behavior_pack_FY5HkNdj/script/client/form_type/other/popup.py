@@ -26,14 +26,18 @@ class PopupForm(BaseForm):
     def __init__(
         self, ui_node, control, callback=None
     ):  # type: (ScreenNode, BaseUIControl, Callable[[dict[str, Any], bool], None] | None) -> None
-        """初始化并返回一个新的信息表单
+        """
+        初始化并返回一个新的信息表单。
+
+        另，对于 callback 参数：
+            - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
+            - 该函数的第二个参数，也即 bool 参数，用于指示用户点击的按钮是否代表“确定”
 
         Args:
             ui_node (ScreenNode): 该表单所在的屏幕结点
             control (BaseUIControl): 要将该表单挂接在哪个父节点下
             callback (Callable[[dict[str, Any], bool], None] | None, optional):
                 当用户点击代表“确定”或代表“取消”按钮时，应当执行的回调函数。
-                回调函数的第二个参数，也即 bool 参数用户点击的按钮是否代表“确定”。
                 默认值为 None，指示不需要执行回调函数
 
         Raises:

@@ -36,15 +36,21 @@ def parse_json_to_long_form(
 ):  # type: (...) -> LongForm
     """
     parse_json_to_long_form 根据给定的 JSON 数据，
-    在对应的节点下创建一个新的长表单
+    在对应的节点下创建一个新的长表单。
+
+    另，对于 callback 参数：
+        - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
+        - 该函数的第二个参数，也即 int 参数，用于指示按钮的索引
 
     Args:
-        form_data (dict[str, Any]): 给定的 JSON 数据
-        ui_node (ScreenNode): 长表单所在的屏幕结点
-        control (BaseUIControl): 要将长表单挂接在哪个父节点下
+        form_data (dict[str, Any]):
+            给定的 JSON 数据
+        ui_node (ScreenNode):
+            长表单所在的屏幕结点
+        control (BaseUIControl):
+            要将长表单挂接在哪个父节点下
         callback (Callable[[dict[str, Any], int], None]):
-            在用户点击长表单中的任何一个按钮时，执行的回调函数。
-            回调函数的第二个参数，也即 int 参数指示按钮的索引。
+            在用户点击长表单中的任何一个按钮时，执行的回调函数
 
     Returns:
         Long: 无论给定的 JSON 数据如何，
@@ -76,19 +82,25 @@ def parse_json_to_popup_form(
 ):  # type: (...) -> PopupForm
     """
     parse_json_to_popup_form 根据给定的 JSON 数据，
-    在对应的节点下创建一个新的信息（消息）表单
+    在对应的节点下创建一个新的信息（消息）表单。
+
+    另，对于 callback 参数：
+        - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
+        - 该函数的第二个参数，也即 bool 参数，用于指示用户点击的按钮是否代表“确定”
 
     Args:
-        form_data (dict[str, Any]): 给定的 JSON 数据
-        ui_node (ScreenNode): 信息表单所在的屏幕结点
-        control (BaseUIControl): 要将信息表单挂接在哪个父节点下
+        form_data (dict[str, Any]):
+            给定的 JSON 数据
+        ui_node (ScreenNode):
+            信息表单所在的屏幕结点
+        control (BaseUIControl):
+            要将信息表单挂接在哪个父节点下
         callback (Callable[[dict[str, Any], bool], None]):
-            当用户点击代表“确定”或代表“取消”按钮时，应当执行的回调函数。
-            回调函数的第二个参数，也即 bool 参数用户点击的按钮是否代表“确定”
+            当用户点击代表“确定”或代表“取消”按钮时，应当执行的回调函数
 
     Returns:
         Popup: 无论给定的 JSON 数据如何，
-              总是创建并返回一个新的信息表单
+               总是创建并返回一个新的信息表单
     """
     formal = PopupFormalForm().unmarshal(form_data)
     return (
@@ -115,7 +127,8 @@ def parse_json_to_modal_form(
         ui_node (ScreenNode): 模态表单所在的屏幕结点
         control (BaseUIControl): 要将模态表单挂接在哪个父节点下
         callback (Callable[[dict[str, Any]], None]):
-            当用户点击模态表单的提交按钮时，应当执行的回调函数
+            当用户点击模态表单的提交按钮时，应当执行的回调函数。
+            该回调函数的输入是事件 SetButtonTouchUpCallback 的参数
 
     Returns:
         Modal: 无论给定的 JSON 数据如何，

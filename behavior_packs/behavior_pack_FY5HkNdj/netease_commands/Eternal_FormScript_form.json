@@ -1,20 +1,27 @@
 {
     "format_version": "0.0.1",
-    "name": "customtest3",
-    "description": "测试自定义指令3.3更新",
+    "name": "systemcall",
+    "description": "commands.custom.success",
     "permission_level": "any",
     "requires_cheats": true,
     "args": [
         {
+            "name": "test",
+            "type": "target"
+        },
+        {
             "name": "枚举",
-            "type": "enum_short",
+            "type": "enum",
             "options": [
-                "add",
                 "remove"
             ]
         },
         {
             "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "formName2",
             "type": "str"
         },
         {
@@ -25,14 +32,22 @@
     ],
     "args2": [
         {
-            "name": "-",
+            "name": "test",
+            "type": "target"
+        },
+        {
+            "name": "枚举",
             "type": "enum",
             "options": [
-                "ko"
+                "add"
             ]
         },
         {
             "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "formName2",
             "type": "str"
         },
         {

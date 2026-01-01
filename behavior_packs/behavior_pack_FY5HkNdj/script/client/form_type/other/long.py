@@ -240,14 +240,18 @@ class LongForm(BaseForm):
     def __init__(
         self, ui_node, control, callback=None
     ):  # type: (ScreenNode, BaseUIControl, Callable[[dict[str, Any], int], None] | None) -> None
-        """初始化并返回一个新的长表单
+        """
+        初始化并返回一个新的长表单。
+
+        另，对于 callback 参数：
+            - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
+            - 该函数的第二个参数，也即 int 参数，用于指示按钮的索引
 
         Args:
             ui_node (ScreenNode): 该表单所在的屏幕结点
             control (BaseUIControl): 要将该表单挂接在哪个父节点下
             callback (Callable[[dict[str, Any], int], None] | None, optional):
                 在用户点击长表单中的任何一个按钮时，执行的回调函数。
-                回调函数的第二个参数，也即 int 参数指示按钮的索引。
                 默认值为 None，指示不需要执行回调函数
 
         Raises:

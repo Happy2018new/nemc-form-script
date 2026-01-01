@@ -1,5 +1,6 @@
 {
     "ui_defs": [
+        "ui/command_block_screen.json",
         "ui/form.json",
         "ui/long.json",
         "ui/modal.json",

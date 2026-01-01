@@ -13,10 +13,22 @@ ClientSystem = GetClientSystemCls()
 
 
 class FormSystem(BaseFormSystem):
+    """
+    FormSystem 是表单系统在客户端侧实现的接口
+    """
+
     client_form_system = None  # type: ClientFormSystem | None
     engine_form_system = None  # type: EngineFormSystem | None
 
     def __init__(self, namespace, system_name):  # type: (str, str) -> None
+        """初始化并返回一个新的 FormSystem
+
+        Args:
+            namespace (str):
+                该表单模组的命名空间
+            system_name (str):
+                该表单模组在客户端侧的系统名称
+        """
         BaseFormSystem.__init__(self, namespace, system_name)
         self.client_form_system = ClientFormSystem(self)
         self.engine_form_system = EngineFormSystem(self.client_form_system)

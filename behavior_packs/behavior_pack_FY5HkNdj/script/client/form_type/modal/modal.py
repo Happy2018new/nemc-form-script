@@ -34,6 +34,7 @@ class ModalForm(BaseForm):
             control (BaseUIControl): 要将该表单挂接在哪个父节点下
             callback (Callable[[dict[str, Any]], None] | None, optional):
                 当用户点击提交按钮时，应当执行的回调函数。
+                该回调函数的输入是事件 SetButtonTouchUpCallback 的参数。
                 默认值为 None，指示不需要执行回调函数
         Raises:
             Exception: 如果 control 下已经挂接了一个模态表单，

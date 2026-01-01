@@ -26,6 +26,10 @@ STATES_SYSTEM_SHUTDOWN = 6
 
 
 class BaseFormSystem(ClientSystem):
+    """
+    BaseFormSystem 是表单系统在客户端侧的基本实现
+    """
+
     states = 0  # type: int
     locker = None  # type: threading.Lock | None
     ui_node = None  # type: ScreenNode | None
@@ -34,6 +38,14 @@ class BaseFormSystem(ClientSystem):
     pending_pk = None  # type: ModalFormRequest | None
 
     def __init__(self, namespace, system_name):  # type: (str, str) -> None
+        """初始化并返回一个新的 BaseFormSystem
+
+        Args:
+            namespace (str):
+                该表单模组的命名空间
+            system_name (str):
+                该表单模组在客户端侧的系统名称
+        """
         ClientSystem.__init__(self, namespace, system_name)
         self.states = STATES_SYSTEM_INITIALIZING
         self.locker = threading.Lock()

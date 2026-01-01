@@ -43,9 +43,19 @@ ClientSystem = GetClientSystemCls()
 
 
 class EngineFormSystem:
+    """
+    EngineFormSystem 是客户端表单系统在引擎侧的相关实现。
+    它是基于 ClientFormSystem 实现的，用于处理来自引擎侧的事件
+    """
+
     parent = None  # type: ClientFormSystem | None
 
     def __init__(self, parent):  # type: (ClientFormSystem) -> None
+        """初始化并返回一个新的 EngineFormSystem
+
+        Args:
+            parent (ClientFormSystem): 表单系统在客户端侧的实例
+        """
         self.parent = parent
 
     def _render_screen(self, force_update):  # type: (bool) -> None
@@ -81,11 +91,35 @@ class EngineFormSystem:
         base.server_pk = None
 
     def base(self):  # type: () -> BaseFormSystem | None
+        """base 返回表单系统在客户端侧的基本实现
+
+        Returns:
+            BaseFormSystem | None:
+                如果成功，则返回表单系统在客户端侧的基本实现；
+                否则失败，那么返回 None
+        """
         if self.parent is None:
             return None
         return self.parent.base
 
     def check_incoming_screen(self, args):  # type: (dict[str, Any]) -> bool
+        """
+        check_incoming_screen 检查即将抵达屏幕的 UI 是否是由表单系统产生。
+
+        参数 args 提供了该 UI 的相关信息，应确保下面两个键至少其中之一位于该字典中。
+        应注意的是，如果不保证这一限制，则 check_incoming_screen 将会永远返回真。
+
+        - screenDef
+        - screenName
+
+        Args:
+            args (dict[str, Any]):
+                即将抵达的屏幕所对应的参数
+
+        Returns:
+            bool:
+                args 所对应的屏幕是否是由表单系统产生
+        """
         if "screenDef" in args and args["screenDef"] != "form.form_main_screen":
             return False
         if "screenName" in args and args["screenName"] != "form_main_screen":
@@ -93,6 +127,14 @@ class EngineFormSystem:
         return True
 
     def on_ui_init_finished(self, _):  # type: (dict[str, Any]) -> None
+        """
+        on_ui_init_finished 在客户端 UI 完成初始化时被调用。
+        初始化完成的时间可能是完成游戏进入或完成维度切换之时
+
+        Args:
+            _ (dict[str, Any]):
+                UiInitFinished 传入的字典参数
+        """
         base = self.base()
         if base is None:
             return
@@ -125,12 +167,30 @@ class EngineFormSystem:
             base.states = STATES_SYSTEM_AVAILABLE
 
     def on_click_screen(self, _):  # type: (dict[str, Any]) -> None
+        """on_click_screen 在玩家点击屏幕时调用
+
+        Args:
+            _ (dict[str, Any]):
+                GetEntityByCoordEvent 传入的字典参数
+        """
         self.on_trigger_screen(TRIGGER_TYPE_CLICK)
 
     def on_release_screen(self, _):  # type: (dict[str, Any]) -> None
+        """on_release_screen 在玩家释放屏幕点击时调用
+
+        Args:
+            _ (dict[str, Any]):
+                GetEntityByCoordReleaseClientEvent 传入的字典参数
+        """
         self.on_trigger_screen(TRIGGER_TYPE_RELEASE)
 
     def on_key_press_in_game(self, args):  # type: (dict[str, Any]) -> None
+        """on_key_press_in_game 在玩家点击键盘按钮时调用
+
+        Args:
+            args (dict[str, Any]):
+                OnKeyPressInGame 传入的字典参数
+        """
         base = self.base()
         if base is None:
             return
@@ -157,6 +217,12 @@ class EngineFormSystem:
                 base.ui_node.UpdateScreen()
 
     def on_push_screen(self, args):  # type: (dict[str, Any]) -> None
+        """on_push_screen 在新的 UI 推入到屏幕中时被调用
+
+        Args:
+            args (dict[str, Any]):
+                PushScreenEvent 传入的字典参数
+        """
         base = self.base()
         if base is None:
             return
@@ -204,6 +270,12 @@ class EngineFormSystem:
             base.states = STATES_SCREEN_IS_SHOWING
 
     def on_pop_screen(self, args):  # type: (dict[str, Any]) -> None
+        """on_pop_screen 在 UI 从屏幕中弹出时被调用
+
+        Args:
+            args (dict[str, Any]):
+                PopScreenEvent 传入的字典参数
+        """
         base = self.base()
         if base is None:
             return
