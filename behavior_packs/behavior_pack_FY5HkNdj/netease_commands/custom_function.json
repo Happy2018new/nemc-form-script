@@ -1,0 +1,89 @@
+{
+    "format_version": "0.0.1",
+    "name": "customfunction",
+    "description": "commands.customfunction.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "add",
+            "type": "enum",
+            "options": [
+                "add"
+            ]
+        },
+        {
+            "name": "name",
+            "type": "str"
+        },
+        {
+            "name": "code",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "call",
+            "type": "enum",
+            "options": [
+                "call"
+            ]
+        },
+        {
+            "name": "entity",
+            "type": "target"
+        },
+        {
+            "name": "name",
+            "type": "str"
+        }
+    ],
+    "args3": [
+        {
+            "name": "callwithargs",
+            "type": "enum",
+            "options": [
+                "callwithargs"
+            ]
+        },
+        {
+            "name": "entity",
+            "type": "target"
+        },
+        {
+            "name": "funcToCall",
+            "type": "str"
+        },
+        {
+            "name": "argFuncName",
+            "type": "str"
+        }
+    ],
+    "args4": [
+        {
+            "name": "list",
+            "type": "enum",
+            "options": [
+                "list"
+            ]
+        },
+        {
+            "name": "name",
+            "type": "str",
+            "default": ""
+        }
+    ],
+    "args5": [
+        {
+            "name": "remove",
+            "type": "enum",
+            "options": [
+                "remove"
+            ]
+        },
+        {
+            "name": "name",
+            "type": "str"
+        }
+    ]
+}

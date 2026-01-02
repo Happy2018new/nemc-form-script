@@ -1,1 +1,14 @@
-commands.custom.success=你好
+commands.customform.description=操作自定义表单。
+commands.editlongform.description=编辑长表单的内容。
+commands.editbutton.description=编辑长表单中的按钮。
+commands.editpopupform.description=编辑信息表单的内容。
+commands.editmodalform.description=编辑模态表单的内容。
+commands.editlabel.description=编辑模态表单中的标签文本。
+commands.editinput.description=编辑模态表单中的输入框。
+commands.edittoggle.description=编辑模态表单中的开关。
+commands.editdropdown.description=编辑模态表单中的下拉框。
+commands.editslider.description=编辑模态表单中的隐式步进滑块。
+commands.editstepslider.description=编辑模态表单中的显式步进滑块。
+commands.customfunction.description=操作或执行自定义函数。
+commands.systemevent.description=监听游戏事件。
+commands.compilecache.description=管理编译缓冲区。

@@ -1,41 +1,155 @@
-/form add <formName: str> long|popup|modal [autoSave: bool]
-/form remove <formName: str> [autoSave: bool]
-/form save <formName: str>
-/form open <formName: str>
+/customform add <name: string> long|popup|modal [auoCompile: Boolean]
+/customform compile <name: string> [auoCompile: Boolean]
+/customform list [name: string]
+/customform oncancel all|normal|busy <name: string> <code: string>
+/customform onsubmit <name: string> <code: string>
+/customform remove <name: string>
+/customform save <name: string>
+/customform show <player: target> <name: string>
 
-/modalform list <formName: str>
-/modalform append <formName: str> label|toggle|input|dropdown|slider|step_slider <formName: str>
-/modalform insert <formName: str> <index: str> label|toggle|input|dropdown|slider|step_slider
-/modalform sub <formName: str> <startIndex: str> <endIndex: str>
-/modalform remove <formName: str> head|tail
 
-/editmodalform label <formName: str> <index: str> <text: str>
-/editmodalform toggle <formName: str> <index: str> <text: str> <default: str> <onSubmit: str>
-/editmodalform input <formName: str> <index: str> <text: str> <placeHolder: str> <default: str> <onSubmit: str>
-/editmodalform slider <formName: str> <index: str> <text: str> <min: str> <max: str> <step: str> <default: str> <onSubmit: str>
 
-/editdropdown text <formName: str> <index: str> <text: str>
-/editdropdown submit <formName: str> <index: str> <onSubmit: str>
-/editdropdown default <formName: str> <index: str> <default: str>
-/editdropdown append <formName: str> <index: str> <text: str>
-/editdropdown sub <formName: str> <index: str> <startIndex: str> <endIndex: str>
-/editdropdown remove head|tail <formName: str> <index: str>
+/editlongform <formName: string> append
+/editlongform <formName: string> content <content: string>
+/editlongform <formName: string> insert <index: int>
+/editlongform <formName: string> list
+/editlongform <formName: string> pop left|right
+/editlongform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
+/editlongform <formName: string> title <title: string>
 
-/editstepslider text <formName: str> <index: str> <text: str>
-/editstepslider submit <formName: str> <index: str> <onSubmit: str>
-/editstepslider default <formName: str> <index: str> <default: str>
-/editstepslider append <formName: str> <index: str> <text: str>
-/editstepslider sub <formName: str> <index: str> <startIndex: str> <endIndex: str>
-/editstepslider remove head|tail <formName: str> <index: str>
+/editbutton <formName: string> <buttonIndex: int> icon [texture: string]
+/editbutton <formName: string> <buttonIndex: int> text <text: string>
 
-/editstepslider append "my_form"
 
-"
-a={score, @s, "计分板a"}
-b={selector, @p[r=3]}
-c=""
-if b
-    g=0
-end if
-return a+b+c+k+g
-"
+
+/editpopupform <formName: string> button1 <button1: string>
+/editpopupform <formName: string> button2 <button2: string>
+/editpopupform <formName: string> content <content: string>
+/editpopupform <formName: string> title <title: string>
+
+
+
+/editmodalform <formName: string> append label|input|toggle|dropdown|slider|stepslider
+/editmodalform <formName: string> insert <index: int> label|input|toggle|dropdown|slider|stepslider
+/editmodalform <formName: string> list
+/editmodalform <formName: string> pop left|right
+/editmodalform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
+/editmodalform <formName: string> title <title: string>
+
+/editlabel <formName: string> <index: int> label <label: string>
+
+/editinput <formName: string> <index: int> default <default: string>
+/editinput <formName: string> <index: int> placeholder <placeholder: string>
+/editinput <formName: string> <index: int> text <text: string>
+
+/edittoggle <formName: string> <index: int> default <state: string>
+/edittoggle <formName: string> <index: int> text <text: string>
+
+/editdropdown <formName: string> <index: int> append <option: string>
+/editdropdown <formName: string> <index: int> default <index: string>
+/editdropdown <formName: string> <index: int> insert <index: int> <option: string>
+/editdropdown <formName: string> <index: int> pop left|right
+/editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
+/editdropdown <formName: string> <index: int> text <text: string>
+
+/editslider <formName: string> <index: int> default <default: string>
+/editslider <formName: string> <index: int> min <min: string>
+/editslider <formName: string> <index: int> max <max: string>
+/editslider <formName: string> <index: int> step <step: string>
+/editslider <formName: string> <index: int> text <text: string>
+
+/editstepslider <formName: string> <index: int> append <step: string>
+/editstepslider <formName: string> <index: int> default <index: string>
+/editstepslider <formName: string> <index: int> insert <index: int> <step: string>
+/editstepslider <formName: string> <index: int> pop left|right
+/editstepslider <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
+/editstepslider <formName: string> <index: int> text <text: string>
+
+
+
+/customfunction add <name: string> <code: string>
+/customfunction call <entity: target> <name: string>
+/customfunction callwithargs <entity: target> <funcToCall: string> <argFuncName: string>
+/customfunction list [name: string]
+/customfunction remove <name: string>
+
+
+
+/systemevent destroy <funcName: string>
+/systemevent list [eventName: string]
+/systemevent listen <funcName: string> <eventName: string> <code: string>
+/systemevent query <funcName: string>
+
+
+
+/compilecache compile <code: string>
+/compilecache query
+/compilecache set [size: int]
+
+
+
+form.list_all_form
+form.list_long_form_icon_type
+form.list_modal_form_element_type
+
+form.custom_form_type
+form.long_form_element_icon_type
+form.modal_form_element_type
+
+form.modal_form_length
+form.long_form_length
+form.dropdown_length
+form.step_slider_length
+
+function.list
+function.register
+function.unregister
+function.call
+
+
+
+event.list
+event.listen
+event.destroy
+
+
+
+compile.set_cache_size
+compile.get_cache_size
+compile.register_cache
+
+
+
+debug.test_compile_time
+debug.collect_compile_garbage
+debug.clean_compile_cache
+debug.compile_all_preparation
+
+
+
+uuid
+time
+math
+json
+type()..
+
+
+
+entity..
+world..
+(host id..)
+...
+
+
+
+object.load
+object.pin
+object.finalise
+object.type
+object.exist
+object.is_int
+object.is_none
+
+
+
+slices

@@ -1,0 +1,28 @@
+{
+    "format_version": "0.0.1",
+    "name": "editlabel",
+    "description": "commands.editlabel.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "label",
+            "type": "enum",
+            "options": [
+                "label"
+            ]
+        },
+        {
+            "name": "label",
+            "type": "str"
+        }
+    ]
+}

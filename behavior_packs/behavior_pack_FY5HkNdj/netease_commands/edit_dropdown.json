@@ -1,0 +1,153 @@
+{
+    "format_version": "0.0.1",
+    "name": "editdropdown",
+    "description": "commands.editdropdown.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "append",
+            "type": "enum",
+            "options": [
+                "append"
+            ]
+        },
+        {
+            "name": "option",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "options": [
+                "default"
+            ]
+        },
+        {
+            "name": "index",
+            "type": "str"
+        }
+    ],
+    "args3": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "insert",
+            "type": "enum",
+            "options": [
+                "insert"
+            ]
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "option",
+            "type": "str"
+        }
+    ],
+    "args4": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "pop",
+            "type": "enum",
+            "options": [
+                "pop"
+            ]
+        },
+        {
+            "name": "popAction",
+            "type": "enum_short",
+            "options": [
+                "left",
+                "right"
+            ]
+        }
+    ],
+    "args5": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "sub",
+            "type": "enum",
+            "options": [
+                "sub"
+            ]
+        },
+        {
+            "name": "subAction",
+            "type": "enum_short",
+            "options": [
+                "keep",
+                "discard"
+            ]
+        },
+        {
+            "name": "startIndex",
+            "type": "int"
+        },
+        {
+            "name": "endIndex",
+            "type": "int"
+        }
+    ],
+    "args6": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "text",
+            "type": "enum",
+            "options": [
+                "text"
+            ]
+        },
+        {
+            "name": "text",
+            "type": "str"
+        }
+    ]
+}

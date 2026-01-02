@@ -1,0 +1,68 @@
+{
+    "format_version": "0.0.1",
+    "name": "systemevent",
+    "description": "commands.systemevent.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "destroy",
+            "type": "enum",
+            "options": [
+                "destroy"
+            ]
+        },
+        {
+            "name": "funcName",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "list",
+            "type": "enum",
+            "options": [
+                "list"
+            ]
+        },
+        {
+            "name": "eventName",
+            "type": "str",
+            "default": ""
+        }
+    ],
+    "args3": [
+        {
+            "name": "listen",
+            "type": "enum",
+            "options": [
+                "listen"
+            ]
+        },
+        {
+            "name": "funcName",
+            "type": "str"
+        },
+        {
+            "name": "eventName",
+            "type": "str"
+        },
+        {
+            "name": "code",
+            "type": "str"
+        }
+    ],
+    "args4": [
+        {
+            "name": "query",
+            "type": "enum",
+            "options": [
+                "query"
+            ]
+        },
+        {
+            "name": "funcName",
+            "type": "str"
+        }
+    ]
+}

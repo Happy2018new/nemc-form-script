@@ -1,0 +1,112 @@
+{
+    "format_version": "0.0.1",
+    "name": "editslider",
+    "description": "commands.editslider.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "options": [
+                "default"
+            ]
+        },
+        {
+            "name": "default",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "min",
+            "type": "enum",
+            "options": [
+                "min"
+            ]
+        },
+        {
+            "name": "min",
+            "type": "str"
+        }
+    ],
+    "args3": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "max",
+            "type": "enum",
+            "options": [
+                "max"
+            ]
+        },
+        {
+            "name": "max",
+            "type": "str"
+        }
+    ],
+    "args4": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "step",
+            "type": "enum",
+            "options": [
+                "step"
+            ]
+        },
+        {
+            "name": "step",
+            "type": "str"
+        }
+    ],
+    "args5": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "text",
+            "type": "enum",
+            "options": [
+                "text"
+            ]
+        },
+        {
+            "name": "text",
+            "type": "str"
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "format_version": "0.0.1",
+    "name": "editbutton",
+    "description": "commands.editbutton.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "buttonIndex",
+            "type": "int"
+        },
+        {
+            "name": "icon",
+            "type": "enum",
+            "options": [
+                "icon"
+            ]
+        },
+        {
+            "name": "texture",
+            "type": "str",
+            "default": ""
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "buttonIndex",
+            "type": "int"
+        },
+        {
+            "name": "text",
+            "type": "enum",
+            "options": [
+                "text"
+            ]
+        },
+        {
+            "name": "text",
+            "type": "str"
+        }
+    ]
+}

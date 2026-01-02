@@ -1,0 +1,75 @@
+{
+    "format_version": "0.0.1",
+    "name": "editpopupform",
+    "description": "commands.editpopupform.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "button1",
+            "type": "enum",
+            "options": [
+                "button1"
+            ]
+        },
+        {
+            "name": "button1",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "button2",
+            "type": "enum",
+            "options": [
+                "button2"
+            ]
+        },
+        {
+            "name": "button2",
+            "type": "str"
+        }
+    ],
+    "args3": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "content",
+            "type": "enum",
+            "options": [
+                "content"
+            ]
+        },
+        {
+            "name": "content",
+            "type": "str"
+        }
+    ],
+    "args4": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "title",
+            "type": "enum",
+            "options": [
+                "title"
+            ]
+        },
+        {
+            "name": "title",
+            "type": "str"
+        }
+    ]
+}

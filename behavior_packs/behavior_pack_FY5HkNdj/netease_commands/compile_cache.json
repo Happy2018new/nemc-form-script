@@ -1,0 +1,43 @@
+{
+    "format_version": "0.0.1",
+    "name": "compilecache",
+    "description": "commands.compilecache.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "compile",
+            "type": "enum",
+            "options": [
+                "compile"
+            ]
+        },
+        {
+            "name": "code",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "query",
+            "type": "enum",
+            "options": [
+                "query"
+            ]
+        }
+    ],
+    "args3": [
+        {
+            "name": "set",
+            "type": "enum",
+            "options": [
+                "set"
+            ]
+        },
+        {
+            "name": "size",
+            "type": "int",
+            "default": 2048
+        }
+    ]
+}

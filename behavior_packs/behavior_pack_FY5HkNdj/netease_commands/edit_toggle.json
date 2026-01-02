@@ -1,0 +1,49 @@
+{
+    "format_version": "0.0.1",
+    "name": "edittoggle",
+    "description": "commands.edittoggle.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "options": [
+                "default"
+            ]
+        },
+        {
+            "name": "state",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "text",
+            "type": "enum",
+            "options": [
+                "text"
+            ]
+        },
+        {
+            "name": "text",
+            "type": "str"
+        }
+    ]
+}

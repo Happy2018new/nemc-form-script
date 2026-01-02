@@ -1,0 +1,70 @@
+{
+    "format_version": "0.0.1",
+    "name": "editinput",
+    "description": "commands.editinput.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "default",
+            "type": "enum",
+            "options": [
+                "default"
+            ]
+        },
+        {
+            "name": "default",
+            "type": "str"
+        }
+    ],
+    "args2": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "placeholder",
+            "type": "enum",
+            "options": [
+                "placeholder"
+            ]
+        },
+        {
+            "name": "placeholder",
+            "type": "str"
+        }
+    ],
+    "args3": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "text",
+            "type": "enum",
+            "options": [
+                "text"
+            ]
+        },
+        {
+            "name": "text",
+            "type": "str"
+        }
+    ]
+}
