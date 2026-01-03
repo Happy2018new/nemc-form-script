@@ -4,7 +4,11 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
 
-from .base import Marshaler, BaseForm
+from ..base import BaseForm
+from ..base import StringWithHash
+from ....formal.base import Marshaler
+
+EMPTY_STRING_WITH_HASH = StringWithHash()
 
 
 class LongFormIcon(Marshaler):
@@ -50,16 +54,18 @@ class LongFormIconNone(LongFormIcon):
 class LongFormIconPathImage(LongFormIcon):
     """LongFormIconPathImage 指示使用本地材质贴图作为按钮的图标"""
 
-    image_path = ""
+    image_path = EMPTY_STRING_WITH_HASH
 
-    def __init__(self, image_path=""):  # type: (str) -> None
+    def __init__(
+        self, image_path=EMPTY_STRING_WITH_HASH
+    ):  # type: (StringWithHash) -> None
         """
         初始化并返回一个新的 LongFormIconPathImage
 
         Args:
-            image_path (str, optional):
+            image_path (StringWithHash, optional):
                 本地贴图路径，如 "textures/ui/anvil_icon.png"。
-                默认值为空字符串
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.image_path = image_path
 
@@ -69,7 +75,7 @@ class LongFormIconPathImage(LongFormIcon):
         Returns:
             dict[str, Any]: 本实例对应的 JSON 表示
         """
-        return {"data": self.image_path}
+        return {"data": self.image_path.marshal()}
 
     def unmarshal(self, data):  # type: (Any) -> LongFormIconPathImage
         """
@@ -83,77 +89,25 @@ class LongFormIconPathImage(LongFormIcon):
         Returns:
             LongFormIconPathImage: 返回 LongFormIconPathImage 本身
         """
-        self.text = ""
-        if not isinstance(data, dict):
-            return self
-
-        data = data.get("data", "")
-        if isinstance(data, str):
-            self.image_path = data
-        return self
-
-
-class LongFormIconURLImage(LongFormIcon):
-    """LongFormIconURLImage 指示使用 URL 所指示的图片作为按钮的图标"""
-
-    image_url = ""
-
-    def __init__(self, image_url=""):  # type: (str) -> None
-        """
-        初始化并返回一个新的 LongFormIconURLImage
-
-        Args:
-            image_url (str, optional):
-                图片的 URL 地址。
-                默认值为空字符串
-        """
-        self.image_url = image_url
-
-    def marshal(self):  # type: () -> dict[str, Any]
-        """marshal 将本实例编码为其对应 JSON 表示
-
-        Returns:
-            dict[str, Any]: 本实例对应的 JSON 表示
-        """
-        return {"data": self.image_url}
-
-    def unmarshal(self, data):  # type: (Any) -> LongFormIconURLImage
-        """
-        unmarshal 从 data 所指示的 JSON 数据中解码，
-        然后将解码所得的数据传输到本实例中
-
-        Args:
-            data (Any): 给定的 JSON 数据。
-                        应确保它是一个字典
-
-        Returns:
-            LongFormIconURLImage: 返回 LongFormIconURLImage 本身
-        """
-        self.image_url = ""
-        if not isinstance(data, dict):
-            return self
-
-        data = data.get("data", "")
-        if isinstance(data, str):
-            self.image_url = data
+        self.text = StringWithHash().unmarshal(data["data"])
         return self
 
 
 class LongFormElement(Marshaler):
     """LongFormElement 指示长表单中的单个按钮"""
 
-    text = ""
+    text = EMPTY_STRING_WITH_HASH
     icon = LongFormIcon()
 
     def __init__(
-        self, text="", icon=LongFormIconNone()
-    ):  # type: (str, LongFormIcon) -> None
+        self, text=EMPTY_STRING_WITH_HASH, icon=LongFormIconNone()
+    ):  # type: (StringWithHash, LongFormIcon) -> None
         """初始化并返回一个新的 LongFormElement
 
         Args:
-            text (str, optional):
+            text (StringWithHash, optional):
                 该按钮上所显示的文本。
-                默认值为空字符串
+                默认值为 EMPTY_STRING_WITH_HASH
             icon (LongFormIcon, optional):
                 该按钮所使用的图标。
                 默认值为 LongFormIconNone()
@@ -169,22 +123,15 @@ class LongFormElement(Marshaler):
         Returns:
             dict[str, Any]: 本实例对应的 JSON 表示
         """
-        image = self.icon.marshal()
-
         if isinstance(self.icon, LongFormIconPathImage):
-            image["type"] = "path"
             return {
-                "text": self.text,
-                "image": image,
+                "text": self.text.marshal(),
+                "image": self.icon.marshal(),
             }
-        elif isinstance(self.icon, LongFormIconURLImage):
-            image["type"] = "url"
+        else:
             return {
-                "text": self.text,
-                "image": image,
+                "text": self.text.marshal(),
             }
-
-        return {"text": self.text}
 
     def unmarshal(self, data):  # type: (Any) -> LongFormElement
         """
@@ -198,50 +145,34 @@ class LongFormElement(Marshaler):
         Returns:
             LongFormElement: 返回 LongFormElement 本身
         """
-        self.text = ""
-        self.icon = LongFormIconNone()
-
-        if not isinstance(data, dict):
-            return self
-
-        text = data.get("text", "")
-        if isinstance(text, str):
-            self.text = text
-
-        image = data.get("image", {})
-        if len(image) == 0:
-            return self
-
-        image_type = image.get("type", "")
-        if not isinstance(image_type, str):
-            return self
-        if image_type == "path":
-            self.icon = LongFormIconPathImage().unmarshal(image)
-        elif image_type == "url":
-            self.icon = LongFormIconURLImage().unmarshal(image)
-
+        self.text = StringWithHash().unmarshal(data["text"])
+        self.icon = (
+            LongFormIconPathImage().unmarshal(data["image"])
+            if "image" in data
+            else LongFormIconNone()
+        )
         return self
 
 
 class LongForm(BaseForm):
-    """LongForm 是长表单的形式化表示"""
+    """LongForm 是数据保存实现中的长表单"""
 
-    title = ""  # type: str
-    content = ""  # type: str
+    title = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    content = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     buttons = []  # type: list[LongFormElement]
 
     def __init__(
-        self, title="", content="", buttons=[]
-    ):  # type: (str, str, list[LongFormElement]) -> None
-        """初始化并返回一个新的形式化的长表单
+        self, title=EMPTY_STRING_WITH_HASH, content=EMPTY_STRING_WITH_HASH, buttons=[]
+    ):  # type: (StringWithHash, StringWithHash, list[LongFormElement]) -> None
+        """初始化并返回一个新的 LongForm
 
         Args:
-            title (str, optional):
+            title (StringWithHash, optional):
                 长表单的标题文本。
-                默认值为空字符串
-            content (str, optional):
+                默认值为 EMPTY_STRING_WITH_HASH
+            content (StringWithHash, optional):
                 长表单的内容文本。
-                默认值为空字符串
+                默认值为 EMPTY_STRING_WITH_HASH
             buttons (list, optional):
                 长表单中的按钮。
                 默认值为空列表
@@ -251,14 +182,14 @@ class LongForm(BaseForm):
         self.buttons = buttons if len(buttons) > 0 else []
 
     def marshal(self):  # type: () -> dict[str, Any]
-        """marshal 将形式化的长表单编码为对应的 JSON 表示
+        """marshal 将该 LongForm 编码为对应的 JSON 表示
 
         Returns:
             dict[str, Any]: 该长表单对应的 JSON 表示
         """
         return {
-            "title": self.title,
-            "content": self.content,
+            "title": self.title.marshal(),
+            "content": self.content.marshal(),
             "buttons": [i.marshal() for i in self.buttons],
         }
 
@@ -274,20 +205,7 @@ class LongForm(BaseForm):
         Returns:
             LongForm: 返回 LongForm 本身
         """
-        self.title = ""
-        self.content = ""
-        self.buttons = []
-        if not isinstance(data, dict):
-            return self
-
-        title = data.get("title", "")
-        content = data.get("content", "")
-        buttons = data.get("buttons", [])
-
-        if isinstance(title, str):
-            self.title = title
-        if isinstance(content, str):
-            self.content = content
-        if isinstance(buttons, list):
-            self.buttons = [LongFormElement().unmarshal(i) for i in buttons]
+        self.title = StringWithHash().unmarshal(data["title"])
+        self.content = StringWithHash().unmarshal(data["content"])
+        self.buttons = [LongFormElement().unmarshal(i) for i in data["buttons"]]
         return self
