@@ -27,6 +27,18 @@ class EventStorage:
         self._storage = storage
         self._locker = threading.Lock()
 
+    def get_locker(self):  # type: () -> threading.Lock
+        """
+        get_locker 返回事件存储管理器的锁。
+        任何对事件的存储操作都须在锁的上下文内完成
+
+        Returns:
+            threading.Lock:
+                事件存储管理器的锁
+        """
+        assert self._locker is not None
+        return self._locker
+
     def event_name(self, func_name):  # type: (str) -> str | None
         """
         event_name 返回给定函数绑定在哪个事件下
@@ -42,53 +54,33 @@ class EventStorage:
         """
         if self._storage is None:
             return None
-        if self._locker is None:
-            return None
+        index = self.func_index()
+        if func_name in index:
+            return index[func_name]
+        return None
 
-        with self._locker:
-            for event_name, event_data in self._event.items():
-                if func_name in event_data:
-                    return event_name
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return None
-
-                func_index = root.get("event_func_index", {})  # type: dict[str, str]
-                if func_name in func_index:
-                    return func_index[func_name]
-                return None
-
-    def all_index(self):  # type: () -> dict[str, dict[str, bool]]
+    def all_index(self):  # type: () -> dict[str, set[str]]
         """
         all_index 返回所有事件的索引。
-        键是事件名，值是以函数名为键的字典。
-
-        您不需要关心子字典中的布尔值，
-        因为它永远保持为 True
+        键是事件名，值是该事件下注册的所有函数
 
         Returns:
-            dict[str, dict[str, bool]]:
+            dict[str, set[str]]:
                 所有事件的索引
         """
         if self._storage is None:
             return {}
-        if self._locker is None:
-            return {}
 
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-                root = manager.GetExtraData("form_system_storage")
-                if root is None:
-                    return {}
+            root = manager.GetExtraData("form_system_storage")
+            if root is None:
+                return {}
 
-                assert isinstance(root, dict)
-                return root.get("event_all_index", {})
+            assert isinstance(root, dict)
+            result = root.get("event_all_index", {})  # type: dict[str, dict[str, bool]]
+            return {key: set(value) for key, value in result.items()}
 
     def func_index(self):  # type: () -> dict[str, str]
         """
@@ -101,50 +93,45 @@ class EventStorage:
         """
         if self._storage is None:
             return {}
-        if self._locker is None:
-            return {}
 
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-                root = manager.GetExtraData("form_system_storage")
-                if root is None:
-                    return {}
+            root = manager.GetExtraData("form_system_storage")
+            if root is None:
+                return {}
 
-                assert isinstance(root, dict)
-                return root.get("event_func_index", {})
+            assert isinstance(root, dict)
+            return root.get("event_func_index", {})
 
     def load_all(self):  # type: () -> EventStorage
         """
-        load_all 从底层存储中加载所有已注册的事件到缓存中。
-        如果某个事件已命中缓存，则该事件将会被跳过
+        load_all 从底层存储中加载所有已注册的事件到缓存中
 
         Returns:
-            EventStorage: 返回 EventStorage 本身
+            EventStorage:
+                返回 EventStorage 本身
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return self
+            data = root.get(
+                "event_data", {}
+            )  # type: dict[str, dict[str, dict[str, Any]]]
+
+            for key, value in data.items():
+                event = {}  # type: dict[str, CustomFunction]
+                for k, v in value.items():
+                    event[k] = CustomFunction().unmarshal(v)
+                self._event[key] = event
+
             return self
-
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return self
-                data = root.get(
-                    "event_data", {}
-                )  # type: dict[str, dict[str, dict[str, Any]]]
-
-                for key, value in data.items():
-                    event = {}  # type: dict[str, CustomFunction]
-                    for k, v in value.items():
-                        event[k] = CustomFunction().unmarshal(v)
-                    self._event[key] = event
-        return self
 
     def get_event(self, event_name):  # type: (str) -> dict[str, CustomFunction] | None
         """
@@ -165,30 +152,26 @@ class EventStorage:
         """
         if self._storage is None:
             return None
-        if self._locker is None:
-            return None
+        if event_name in self._event:
+            return self._event[event_name]
 
-        with self._locker:
-            if event_name in self._event:
-                return self._event[event_name]
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return None
 
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return None
+            data = root.get(
+                "event_data", {}
+            )  # type: dict[str, dict[str, dict[str, Any]]]
+            if event_name not in data:
+                return None
 
-                data = root.get(
-                    "event_data", {}
-                )  # type: dict[str, dict[str, dict[str, Any]]]
-                if event_name not in data:
-                    return None
-
-                event = {}  # type: dict[str, CustomFunction]
-                for key, value in data[event_name].items():
-                    event[key] = CustomFunction().unmarshal(value)
-                self._event[event_name] = event
+            event = {}  # type: dict[str, CustomFunction]
+            for key, value in data[event_name].items():
+                event[key] = CustomFunction().unmarshal(value)
+            self._event[event_name] = event
 
             return self._event[event_name]
 
@@ -213,103 +196,98 @@ class EventStorage:
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+
+        funcs = self._event.get(event_name, {})  # type: dict[str, CustomFunction]
+        funcs[func_name] = real_func
+        self._event[event_name] = funcs
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+
+            func_index = root.get("event_func_index", {})  # type: dict[str, str]
+            func_index[func_name] = event_name
+            root["event_func_index"] = func_index
+
+            data = root.get(
+                "event_data", {}
+            )  # type: dict[str, dict[str, dict[str, Any]]]
+            event = data.get(event_name, {})  # type: dict[str, dict[str, Any]]
+            event[func_name] = real_func.marshal()
+            data[event_name] = event
+            root["event_data"] = data
+
+            all_index = root.get(
+                "event_all_index", {}
+            )  # type: dict[str, dict[str, bool]]
+            index = all_index.get(event_name, {})  # type: dict[str, bool]
+            index[func_name] = True
+            all_index[event_name] = index
+            root["event_all_index"] = all_index
+
+            manager.SetExtraData("form_system_storage", root)
             return self
 
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
-
-                data = root.get(
-                    "event_data", {}
-                )  # type: dict[str, dict[str, dict[str, Any]]]
-                all_index = root.get(
-                    "event_all_index", {}
-                )  # type: dict[str, dict[str, bool]]
-                func_index = root.get("event_func_index", {})  # type: dict[str, str]
-
-                event = data.get(event_name, {})  # type: dict[str, dict[str, Any]]
-                event[func_name] = real_func.marshal()
-                root["event_data"] = data
-
-                func_index[func_name] = event_name
-                root["event_func_index"] = func_index
-
-                index = all_index.get(event_name, {})  # type: dict[str, bool]
-                index[func_name] = True
-                all_index[event_name] = index
-                root["event_all_index"] = all_index
-
-                manager.SetExtraData("form_system_storage", root)
-        return self
-
-    def remove_func(self, func_name):  # type: (str) -> str
+    def remove_func(self, func_name):  # type: (str) -> str | None
         """
-        remove_func 同时从缓存和底层存储中删除指定名称的自定义函数
+        remove_func 同时从缓存和底层存储中删除指定名称的自定义函数。
+        即便 func_name 指示的自定义函数不存在，remove_func 也不会出错
 
         Args:
             func_name (str): 欲删除的自定义函数的名称
 
         Returns:
-            str:
+            str | None:
                 如果该函数所在的事件在 remove_func 调用后没有剩余的函数，
-                则返回一个非空的字符串，并且该字符串是 func_name 对应事件的名称
+                则返回该 func_name 对应事件的名称；否则，那么返回 None
         """
         if self._storage is None:
-            return ""
-        if self._locker is None:
-            return ""
+            return None
 
-        with self._locker:
-            result = ""
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-            for key, value in list(self._event.items()):
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+
+            func_index = root.get("event_func_index", {})  # type: dict[str, str]
+            if func_name not in func_index:
+                return None
+
+            data = root.get(
+                "event_data", {}
+            )  # type: dict[str, dict[str, dict[str, Any]]]
+            all_index = root.get(
+                "event_all_index", {}
+            )  # type: dict[str, dict[str, bool]]
+
+            for key, value in list(data.items()):
                 if func_name in value:
                     del value[func_name]
-                    break
                 if len(value) == 0:
-                    del self._event[key]
-                    result = key
+                    del data[key]
+            for key, value in list(all_index.items()):
+                if func_name in value:
+                    del value[func_name]
+                if len(value) == 0:
+                    del all_index[key]
+            del func_index[func_name]
 
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+            root["event_data"] = data
+            root["event_all_index"] = all_index
+            root["event_func_index"] = func_index
 
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
+            manager.SetExtraData("form_system_storage", root)
 
-                func_index = root.get("event_func_index", {})  # type: dict[str, str]
-                if func_name not in func_index:
-                    return result
-
-                data = root.get(
-                    "event_data", {}
-                )  # type: dict[str, dict[str, dict[str, Any]]]
-                all_index = root.get(
-                    "event_all_index", {}
-                )  # type: dict[str, dict[str, bool]]
-
-                for key, value in list(data.items()):
-                    if func_name in value:
-                        del value[func_name]
-                    if len(value) == 0:
-                        del data[key]
-                        result = key
-                for key, value in list(all_index.items()):
-                    if func_name in value:
-                        del value[func_name]
-                    if len(value) == 0:
-                        del all_index[key]
-                        result = key
-                del func_index[func_name]
-
-                root["event_data"] = data
-                root["event_all_index"] = all_index
-                root["event_func_index"] = func_index
-
-                manager.SetExtraData("form_system_storage", root)
+        result = None
+        for key, value in list(self._event.items()):
+            if func_name in value:
+                del value[func_name]
+            if len(value) == 0:
+                del self._event[key]
+                result = key
         return result

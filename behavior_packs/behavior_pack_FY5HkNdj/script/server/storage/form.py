@@ -34,6 +34,18 @@ class FormStorage:
         self._storage = storage
         self._locker = threading.Lock()
 
+    def get_locker(self):  # type: () -> threading.Lock
+        """
+        get_locker 返回表单存储管理器的锁。
+        任何对表单的存储操作都须在锁的上下文内完成
+
+        Returns:
+            threading.Lock:
+                表单存储管理器的锁
+        """
+        assert self._locker is not None
+        return self._locker
+
     def form_type(self, form_name):  # type: (str) -> int | None
         """
         form_type 返回给定表单的类型
@@ -49,24 +61,20 @@ class FormStorage:
         """
         if self._storage is None:
             return None
-        if self._locker is None:
-            return None
 
-        with self._locker:
-            if form_name in self._form:
-                return True
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return None
-
-                data = root.get("form_index", {})  # type: dict[str, int]
-                if form_name in data:
-                    return data[form_name]
+        if form_name in self._form:
+            form = self._form[form_name]
+        else:
+            form = self.get_form(form_name)
+            if form is None:
                 return None
+
+        if isinstance(form, LongForm):
+            return FORM_TYPE_LONG
+        elif isinstance(form, PopupForm):
+            return FORM_TYPE_POPUP
+        elif isinstance(form, ModalForm):
+            return FORM_TYPE_MODAL
 
     def form_index(self):  # type: () -> dict[str, int]
         """
@@ -77,31 +85,31 @@ class FormStorage:
             dict[str, int]:
                 所有已存储表单的索引
         """
+        result = {}  # type: dict[str, int]
         if self._storage is None:
-            return {}
-        if self._locker is None:
-            return {}
+            return result
 
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+        for key, value in self._form.items():
+            if isinstance(value, LongForm):
+                result[key] = FORM_TYPE_LONG
+            elif isinstance(value, PopupForm):
+                result[key] = FORM_TYPE_POPUP
+            elif isinstance(value, ModalForm):
+                result[key] = FORM_TYPE_MODAL
 
-                root = manager.GetExtraData("form_system_storage")
-                if root is None:
-                    return {}
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-                assert isinstance(root, dict)
-                result = root.get("form_index", {})  # type: dict[str, int]
-                result = result.copy()
-
-                for key, value in self._form.items():
-                    if isinstance(value, LongForm):
-                        result[key] = FORM_TYPE_LONG
-                    elif isinstance(value, PopupForm):
-                        result[key] = FORM_TYPE_POPUP
-                    elif isinstance(value, ModalForm):
-                        result[key] = FORM_TYPE_MODAL
+            root = manager.GetExtraData("form_system_storage")
+            if root is None:
                 return result
+
+            assert isinstance(root, dict)
+            index = root.get("form_index", {})  # type: dict[str, int]
+            for key, value in index.items():
+                result[key] = value
+
+            return result
 
     def load_all(self):  # type: () -> FormStorage
         """
@@ -113,31 +121,28 @@ class FormStorage:
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return self
+
+            data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
+            index = root.get("form_index", {})  # type: dict[str, int]
+
+            for key, value in data.items():
+                if key in self._form:
+                    continue
+                form_type = index[key]
+                if form_type == FORM_TYPE_LONG:
+                    self._form[key] = LongForm().unmarshal(value)
+                elif form_type == FORM_TYPE_POPUP:
+                    self._form[key] = PopupForm().unmarshal(value)
+                elif form_type == FORM_TYPE_MODAL:
+                    self._form[key] = ModalForm().unmarshal(value)
             return self
-
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return self
-
-                data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
-                index = root.get("form_index", {})  # type: dict[str, int]
-
-                for key, value in data.items():
-                    if key in self._form:
-                        continue
-                    form_type = index[key]
-                    if form_type == FORM_TYPE_LONG:
-                        self._form[key] = LongForm().unmarshal(value)
-                    elif form_type == FORM_TYPE_POPUP:
-                        self._form[key] = PopupForm().unmarshal(value)
-                    elif form_type == FORM_TYPE_MODAL:
-                        self._form[key] = ModalForm().unmarshal(value)
-        return self
 
     def get_form(self, form_name):  # type: (str) -> BaseForm | None
         """
@@ -158,33 +163,30 @@ class FormStorage:
         """
         if self._storage is None:
             return None
-        if self._locker is None:
-            return None
+        if form_name in self._form:
+            return self._form[form_name]
 
-        with self._locker:
-            if form_name in self._form:
-                return self._form[form_name]
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return None
 
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return None
+            index = root.get("form_index", {})  # type: dict[str, int]
+            if form_name not in index:
+                return None
 
-                data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
-                index = root.get("form_index", {})  # type: dict[str, int]
-                if form_name not in data or form_name not in index:
-                    return None
+            data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
+            form_data = data[form_name]  # type: dict[str, Any]
+            form_type = index[form_name]  # type: int
 
-                form_data = data[form_name]  # type: dict[str, Any]
-                form_type = index[form_name]  # type: int
-                if form_type == FORM_TYPE_LONG:
-                    self._form[form_name] = LongForm().unmarshal(form_data)
-                elif form_type == FORM_TYPE_POPUP:
-                    self._form[form_name] = PopupForm().unmarshal(form_data)
-                elif form_type == FORM_TYPE_MODAL:
-                    self._form[form_name] = ModalForm().unmarshal(form_data)
+            if form_type == FORM_TYPE_LONG:
+                self._form[form_name] = LongForm().unmarshal(form_data)
+            elif form_type == FORM_TYPE_POPUP:
+                self._form[form_name] = PopupForm().unmarshal(form_data)
+            elif form_type == FORM_TYPE_MODAL:
+                self._form[form_name] = ModalForm().unmarshal(form_data)
 
             return self._form[form_name]
 
@@ -211,43 +213,41 @@ class FormStorage:
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+
+        if real_form is None and form_name not in self._form:
             return self
+        if real_form is not None:
+            self._form[form_name] = real_form
 
-        with self._locker:
-            if real_form is None and form_name not in self._form:
-                return self
-            if real_form is not None:
-                self._form[form_name] = real_form
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+            data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
+            index = root.get("form_index", {})  # type: dict[str, int]
 
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
-                data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
-                index = root.get("form_index", {})  # type: dict[str, int]
+            form_cls = self._form[form_name]
+            form_data = form_cls.marshal()
+            data[form_name] = form_data
+            root["form_data"] = data
 
-                form_cls = self._form[form_name]
-                form_data = form_cls.marshal()
-                data[form_name] = form_data
-                root["form_data"] = data
+            if isinstance(form_cls, LongForm):
+                index[form_name] = FORM_TYPE_LONG
+            elif isinstance(form_cls, PopupForm):
+                index[form_name] = FORM_TYPE_POPUP
+            elif isinstance(form_cls, ModalForm):
+                index[form_name] = FORM_TYPE_MODAL
+            root["form_index"] = index
 
-                if isinstance(form_cls, LongForm):
-                    index[form_name] = FORM_TYPE_LONG
-                elif isinstance(form_cls, PopupForm):
-                    index[form_name] = FORM_TYPE_POPUP
-                elif isinstance(form_cls, ModalForm):
-                    index[form_name] = FORM_TYPE_MODAL
-                root["form_index"] = index
-
-                manager.SetExtraData("form_system_storage", root)
-        return self
+            manager.SetExtraData("form_system_storage", root)
+            return self
 
     def remove_form(self, form_name):  # type: (str) -> FormStorage
         """
-        remove_form 同时从缓存和底层存储中删除指定名称的表单
+        remove_form 同时从缓存和底层存储中删除指定名称的表单。
+        即便 form_name 指示的表单不存在，remove_form 也不会出错
 
         Args:
             form_name (str):
@@ -258,29 +258,25 @@ class FormStorage:
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+        if form_name in self._form:
+            del self._form[form_name]
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+            data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
+
+            index = root.get("form_index", {})  # type: dict[str, int]
+            if form_name not in index:
+                return self
+
+            del data[form_name]
+            del index[form_name]
+            root["form_data"] = data
+            root["form_index"] = index
+
+            manager.SetExtraData("form_system_storage", root)
             return self
-
-        with self._locker:
-            if form_name in self._form:
-                del self._form[form_name]
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
-                data = root.get("form_data", {})  # type: dict[str, dict[str, Any]]
-
-                index = root.get("form_index", {})  # type: dict[str, int]
-                if form_name not in index:
-                    return self
-
-                del data[form_name]
-                del index[form_name]
-                root["form_data"] = data
-                root["form_index"] = index
-
-                manager.SetExtraData("form_system_storage", root)
-        return self

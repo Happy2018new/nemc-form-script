@@ -97,13 +97,13 @@ class StorageManager:
     保证了线程安全的存储管理器
     """
 
-    locker = None  # type: threading.Lock | None
-    storage = None  # type: ExDataCompServer | None
+    _locker = None  # type: threading.Lock | None
+    _storage = None  # type: ExDataCompServer | None
 
     def __init__(self):  # type: () -> None
         """初始化并返回一个新的 StorageManager"""
-        self.locker = threading.Lock()
-        self.storage = GetEngineCompFactory().CreateExtraData(GetLevelId())
+        self._locker = threading.Lock()
+        self._storage = GetEngineCompFactory().CreateExtraData(GetLevelId())
 
     def get_locker(self):  # type: () -> threading.Lock
         """get_locker 返回存储资源的锁
@@ -111,8 +111,8 @@ class StorageManager:
         Returns:
             threading.Lock: 存储资源的锁
         """
-        assert self.locker is not None
-        return self.locker
+        assert self._locker is not None
+        return self._locker
 
     def get_storage(self):  # type: () -> ExDataCompServer
         """
@@ -125,5 +125,5 @@ class StorageManager:
             ExDataCompServer:
                 底层的存储资源管理器
         """
-        assert self.storage is not None
-        return self.storage
+        assert self._storage is not None
+        return self._storage

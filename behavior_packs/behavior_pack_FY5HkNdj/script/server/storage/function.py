@@ -56,6 +56,18 @@ class FunctionStorage:
         self._storage = storage
         self._locker = threading.Lock()
 
+    def get_locker(self):  # type: () -> threading.Lock
+        """
+        get_locker 返回自定义函数的存储管理器的锁。
+        任何对自定义函数的存储操作都须在锁的上下文内完成
+
+        Returns:
+            threading.Lock:
+                自定义函数的存储管理器的锁
+        """
+        assert self._locker is not None
+        return self._locker
+
     def check_exist(self, func_name):  # type: (str) -> bool
         """
         check_exist 检查给定名称的自定义函数是否存在
@@ -71,78 +83,54 @@ class FunctionStorage:
         """
         if self._storage is None:
             return False
-        if self._locker is None:
-            return False
+        if func_name in self._func:
+            return True
+        return self.get_func(func_name) is not None
 
-        with self._locker:
-            if func_name in self._func:
-                return True
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return False
-
-                data = root.get("func_index", {})  # type: dict[str, bool]
-                return func_name in data
-
-    def func_index(self):  # type: () -> dict[str, bool]
+    def func_index(self):  # type: () -> set[str]
         """
-        func_index 返回所有自定义函数的索引。
-        键是自定义函数的名字，值永远为 True
+        func_index 返回所有自定义函数的索引
 
         Returns:
-            dict[str, bool]:
-                所有已存储自定义函数的索引
+            set[str]:
+                所有自定义函数的索引
         """
         if self._storage is None:
-            return {}
-        if self._locker is None:
-            return {}
+            return set()
 
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
 
-                root = manager.GetExtraData("form_system_storage")
-                if root is None:
-                    return {}
+            root = manager.GetExtraData("form_system_storage")
+            if root is None:
+                return set()
 
-                assert isinstance(root, dict)
-                result = root.get("func_index", {})  # type: dict[str, bool]
-                result = result.copy()
-
-                for i in self._func:
-                    result[i] = True
-                return result
+            assert isinstance(root, dict)
+            result = root.get("func_index", {})  # type: dict[str, bool]
+            return set(result)
 
     def load_all(self):  # type: () -> FunctionStorage
         """
-        load_all 从底层存储中加载所有自定义函数到缓存中。
-        如果某个自定义函数已命中缓存，则该自定义函数会被跳过
+        load_all 从底层存储中加载所有自定义函数到缓存中
 
         Returns:
-            FunctionStorage: 返回 FunctionStorage 本身
+            FunctionStorage:
+                返回 FunctionStorage 本身
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return self
+            data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
+
+            for key, value in data.items():
+                self._func[key] = CustomFunction().unmarshal(value)
             return self
-
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return self
-                data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
-
-                for key, value in data.items():
-                    self._func[key] = CustomFunction().unmarshal(value)
-        return self
 
     def get_func(self, func_name):  # type: (str) -> CustomFunction | None
         """
@@ -164,26 +152,23 @@ class FunctionStorage:
         """
         if self._storage is None:
             return None
-        if self._locker is None:
-            return None
-
-        with self._locker:
-            if func_name in self._func:
-                return self._func[func_name]
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    return None
-
-                data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
-                if func_name not in data:
-                    return None
-                self._func[func_name] = CustomFunction().unmarshal(data[func_name])
-
+        if func_name in self._func:
             return self._func[func_name]
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                return None
+
+            data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
+            if func_name not in data:
+                return None
+            func = CustomFunction().unmarshal(data[func_name])
+
+            self._func[func_name] = func
+            return func
 
     def save_func(
         self, func_name, real_func
@@ -203,64 +188,57 @@ class FunctionStorage:
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+        self._func[func_name] = real_func
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+            data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
+            index = root.get("func_index", {})  # type: dict[str, bool]
+
+            data[func_name] = real_func.marshal()
+            index[func_name] = True
+            root["func_data"] = data
+            root["func_index"] = index
+
+            manager.SetExtraData("form_system_storage", root)
             return self
-
-        with self._locker:
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
-                data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
-                index = root.get("func_index", {})  # type: dict[str, bool]
-
-                data[func_name] = real_func.marshal()
-                index[func_name] = True
-                root["func_data"] = data
-                root["func_index"] = index
-
-                manager.SetExtraData("form_system_storage", root)
-        return self
 
     def remove_func(self, func_name):  # type: (str) -> FunctionStorage
         """
-        remove_func 同时从缓存和底层
-        存储中删除指定名称的自定义函数
+        remove_func 同时从缓存和底层存储中删除指定名称的自定义函数。
+        即便 func_name 指示的自定义函数不存在，remove_func 也不会出错
 
         Args:
-            func_name (str):
-                欲删除的自定义函数的名称
+            func_name (str): 欲删除的自定义函数的名称
 
         Returns:
             FunctionStorage: 返回 FunctionStorage 本身
         """
         if self._storage is None:
             return self
-        if self._locker is None:
+        if func_name in self._func:
+            del self._func[func_name]
+
+        with self._storage.get_locker():
+            manager = self._storage.get_storage()
+
+            root = manager.GetExtraData("form_system_storage")
+            if not isinstance(root, dict):
+                root = {}  # type: dict[str, Any]
+            data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
+
+            index = root.get("func_index", {})  # type: dict[str, bool]
+            if func_name not in index:
+                return self
+
+            del data[func_name]
+            del index[func_name]
+            root["func_data"] = data
+            root["func_index"] = index
+
+            manager.SetExtraData("form_system_storage", root)
             return self
-
-        with self._locker:
-            if func_name in self._func:
-                del self._func[func_name]
-
-            with self._storage.get_locker():
-                manager = self._storage.get_storage()
-
-                root = manager.GetExtraData("form_system_storage")
-                if not isinstance(root, dict):
-                    root = {}  # type: dict[str, Any]
-                data = root.get("func_data", {})  # type: dict[str, dict[str, Any]]
-
-                index = root.get("func_index", {})  # type: dict[str, bool]
-                if func_name not in index:
-                    return self
-
-                del data[func_name]
-                del index[func_name]
-                root["func_data"] = data
-                root["func_index"] = index
-
-                manager.SetExtraData("form_system_storage", root)
-        return self
