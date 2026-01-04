@@ -212,14 +212,6 @@ class EventStorage:
             func_index[func_name] = event_name
             root["event_func_index"] = func_index
 
-            data = root.get(
-                "event_data", {}
-            )  # type: dict[str, dict[str, dict[str, Any]]]
-            event = data.get(event_name, {})  # type: dict[str, dict[str, Any]]
-            event[func_name] = real_func.marshal()
-            data[event_name] = event
-            root["event_data"] = data
-
             all_index = root.get(
                 "event_all_index", {}
             )  # type: dict[str, dict[str, bool]]
@@ -227,6 +219,14 @@ class EventStorage:
             index[func_name] = True
             all_index[event_name] = index
             root["event_all_index"] = all_index
+
+            data = root.get(
+                "event_data", {}
+            )  # type: dict[str, dict[str, dict[str, Any]]]
+            event = data.get(event_name, {})  # type: dict[str, dict[str, Any]]
+            event[func_name] = real_func.marshal()
+            data[event_name] = event
+            root["event_data"] = data
 
             manager.SetExtraData("form_system_storage", root)
             return self
