@@ -143,16 +143,18 @@ command.get_dimension
 
 
 
-object.ptr
+object.ref
 object.can_deref
 object.deref
-object.release (release all..)
+object.release
+object.release_all
 object.pin
 object.finalise
+object.make_none
 object.is_ptr
 object.is_none
 object.raw_type
-object.ptr_type
+object.ref_type
 
 
 
@@ -177,6 +179,9 @@ reflect.add
 reflect.remove
 reflect.times
 reflect.divide
+reflect.floordiv
+reflect.negative
+reflect.abs
 reflect.mod
 reflect.pow
 reflect.powmod
@@ -188,11 +193,13 @@ reflect.equal
 reflect.not_equal
 reflect.bit_and
 reflect.bit_or
-reflect.bit_inverse
-reflect.xor
+reflect.bit_xor
+reflect.bit_not
 reflect.left_shift
 reflect.right_shift
-reflect.unsafe
+reflect.max
+reflect.min
+reflect.sum
 
 
 
@@ -207,19 +214,17 @@ slices.set
 slices.max
 slices.min
 slices.sum
-slices.clone
-slices.clear
 slices.sub
 slices.insert
 slices.pop
 slices.reverse
-slices.sort (sort order..)
+slices.sort (Support order)
 slices.concat
 slices.binsearch (= BinarySearch)
 
 
 
-maps.new (ordered..)
+maps.make (Support ordered map)
 maps.cast
 maps.length
 maps.copy
@@ -233,7 +238,6 @@ maps.clear
 maps.keys
 maps.values
 maps.items
-maps.clone
 maps.equal
 
 
@@ -244,6 +248,9 @@ tuple.length
 tuple.format
 tuple.get
 tuple.sub
+tuple.max
+tuple.min
+tuple.sum
 
 
 
@@ -258,6 +265,9 @@ set.remove
 set.discard
 set.pop
 set.clear
+set.max
+set.min
+set.sum
 set.difference
 set.symmetric_difference
 set.intersection
@@ -283,11 +293,8 @@ strings.index
 strings.rindex
 strings.isalnum
 strings.isalpha
-strings.isascii
-strings.isdecimal
 strings.isdigit
 strings.islower
-strings.isnumeric
 strings.isspace
 strings.istitle
 strings.isupper
@@ -310,15 +317,15 @@ strings.equalfold (= EqualFlod)
 
 
 uuid.new
-uuid.cast
 uuid.format
 uuid.string
 uuid.bytes
 uuid.bytes_le
 uuid.hex
+uuid.from_string
 uuid.from_bytes
 uuid.from_bytes_le
-uuid.from_str
+uuid.from_hex
 
 
 
@@ -333,21 +340,27 @@ time.strptime
 time.timezone
 time.tzname
 
-time_struct.cast
-time_struct.length
-time_struct.format
-time_struct.tm_year
-time_struct.tm_mon
-time_struct.tm_mday
-time_struct.tm_hour
-time_struct.tm_min
-time_struct.tm_sec
-time_struct.tm_wday
-time_struct.tm_yday
-time_struct.tm_isdst
+struct_time.cast
+struct_time.length
+struct_time.format
+struct_time.tm_year
+struct_time.tm_mon
+struct_time.tm_mday
+struct_time.tm_hour
+struct_time.tm_min
+struct_time.tm_sec
+struct_time.tm_wday
+struct_time.tm_yday
+struct_time.tm_isdst
 
 
 
+math.bit_and
+math.bit_or
+math.bit_xor
+math.bit_not
+math.left_shift
+math.right_shift
 math.acos
 math.acosh
 math.asin
@@ -383,7 +396,7 @@ math.modf
 math.pi
 math.mod
 math.pow
-math.powmod (= pow..)
+math.powmod (= pow(x, y, mod))
 math.radians
 math.sin
 math.sinh
@@ -399,7 +412,6 @@ random.choice
 random.expovariate
 random.gammavariate
 random.gauss
-random.getrandbits
 random.lognormvariate
 random.normalvariate
 random.paretovariate
@@ -412,11 +424,14 @@ random.triangular
 random.uniform
 random.vonmisesvariate
 random.weibullvariate
+random.seed
+random.getstate
+random.setstate
 
 
 
-json.dumps (rewrite ..)
-json.loads (rewrite ..)
+json.dumps
+json.loads
 
 
 
@@ -431,12 +446,10 @@ binascii.hexlify
 datetime_datetime.new
 datetime_datetime.now
 datetime_datetime.format
-datetime_datetime.astimezone
 datetime_datetime.combine
 datetime_datetime.ctime
 datetime_datetime.date
 datetime_datetime.day
-datetime_datetime.dst
 datetime_datetime.fromordinal
 datetime_datetime.fromtimestamp
 datetime_datetime.hour
@@ -449,26 +462,19 @@ datetime_datetime.min
 datetime_datetime.minute
 datetime_datetime.month
 datetime_datetime.replace
-datetime_datetime.resolution
 datetime_datetime.second
 datetime_datetime.strftime
 datetime_datetime.strptime
 datetime_datetime.time
 datetime_datetime.timetuple
-datetime_datetime.timetz
 datetime_datetime.today
 datetime_datetime.toordinal
-datetime_datetime.tzinfo
-datetime_datetime.tzname
-datetime_datetime.utcoffset
-datetime_datetime.utctimetuple
 datetime_datetime.weekday
 datetime_datetime.greater
 datetime_datetime.less
 datetime_datetime.greater_equal
 datetime_datetime.less_equal
 datetime_datetime.equal
-datetime_datetime.not_equal
 datetime_datetime.add_delta
 datetime_datetime.remove_delta
 datetime_datetime.remove_datetime
@@ -486,7 +492,6 @@ datetime_date.max
 datetime_date.min
 datetime_date.month
 datetime_date.replace
-datetime_date.resolution
 datetime_date.strftime
 datetime_date.timetuple
 datetime_date.today
@@ -498,14 +503,12 @@ datetime_date.less
 datetime_date.greater_equal
 datetime_date.less_equal
 datetime_date.equal
-datetime_date.not_equal
 datetime_date.add_delta
 datetime_date.remove_delta
 datetime_date.remove_date
 
 datetime_time.new
 datetime_time.format
-datetime_time.dst
 datetime_time.hour
 datetime_time.isoformat
 datetime_time.max
@@ -513,18 +516,13 @@ datetime_time.microsecond
 datetime_time.min
 datetime_time.minute
 datetime_time.replace
-datetime_time.resolution
 datetime_time.second
 datetime_time.strftime
-datetime_time.tzinfo
-datetime_time.tzname
-datetime_time.utcoffset
 datetime_time.greater
 datetime_time.less
 datetime_time.greater_equal
 datetime_time.less_equal
 datetime_time.equal
-datetime_time.not_equal
 
 datetime_timedelta.new
 datetime_timedelta.format
@@ -532,28 +530,19 @@ datetime_timedelta.days
 datetime_timedelta.max
 datetime_timedelta.microseconds
 datetime_timedelta.min
-datetime_timedelta.resolution
 datetime_timedelta.seconds
 datetime_timedelta.total_seconds
 datetime_timedelta.greater
 datetime_timedelta.less
 datetime_timedelta.greater_equal
 datetime_timedelta.less_equal
-datetime_timedelta.equal
-datetime_timedelta.not_equal
+datetime_timedelta.equal 
 datetime_timedelta.add
 datetime_timedelta.remove
 datetime_timedelta.times
 datetime_timedelta.divide
 datetime_timedelta.negative
 datetime_timedelta.abs
-
-datetime_tzinfo.new
-datetime_tzinfo.format
-datetime_tzinfo.dst
-datetime_tzinfo.fromutc
-datetime_tzinfo.tzname
-datetime_tzinfo.utcoffset
 
 
 
