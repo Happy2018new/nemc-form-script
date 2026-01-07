@@ -218,9 +218,7 @@ class LongForm(BaseForm):
             list[StringWithHash]:
                 该 LongForm 中存在的所有代码
         """
-        codes = []  # type: list[StringWithHash]
-        codes.append(self.title)
-        codes.append(self.content)
+        codes = [self.title, self.content]  # type: list[StringWithHash]
 
         for i in self.buttons:
             codes.append(i.text)
