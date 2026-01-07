@@ -204,7 +204,7 @@ class FunctionStorage:
             root["func_data"] = data
             root["func_index"] = index
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
             return self
 
     def remove_func(self, func_name):  # type: (str) -> FunctionStorage
@@ -240,5 +240,5 @@ class FunctionStorage:
             root["func_data"] = data
             root["func_index"] = index
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
             return self

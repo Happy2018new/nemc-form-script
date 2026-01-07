@@ -241,7 +241,7 @@ class FormStorage:
                 index[form_name] = FORM_TYPE_MODAL
             root["form_index"] = index
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
             return self
 
     def remove_form(self, form_name):  # type: (str) -> FormStorage
@@ -278,5 +278,5 @@ class FormStorage:
             root["form_data"] = data
             root["form_index"] = index
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
             return self

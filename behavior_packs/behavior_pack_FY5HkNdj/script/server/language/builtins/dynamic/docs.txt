@@ -1,0 +1,238 @@
+命令执行上下文
+    command.set_executor
+    command.get_executor
+    command.set_position
+    command.get_position
+    command.set_dimension
+    command.get_dimension
+    command.dimension_name
+
+
+
+通用
+    事件
+        BroadcastEvent
+        BroadcastToAllClient
+        GetEngineNamespace
+        GetEngineSystemName
+        NotifyToClient
+        NotifyToMultiClients
+    本地设备
+        GetMinecraftVersion
+        GetPlatform
+    工具
+        GetHostPlayerId
+        GetServerTickTime
+
+
+
+世界
+    地图
+        CanSee
+        CheckBlockToPos
+        CheckChunkState
+        GetAllAreaKeys
+        GetBiomeInfo
+        GetBiomeName
+        GetBlockLightLevel
+        GetChunkEntites
+        GetChunkMobNum
+        GetEntitiesAround
+        GetEntitiesAroundByType
+        GetEntitiesInSquareArea
+        GetLevelId
+        GetSpawnPosition
+        GetStructureSize
+        IsChunkGenerated
+        IsSlimeChunk
+        LocateStructureFeature
+        MayPlace
+        MayPlaceOn
+        PlaceFeature
+        SetMergeSpawnItemRadius
+    实体管理
+        CreateExperienceOrb
+        CreateProjectileEntity
+        DestroyEntity
+        GetDroppedItem
+        GetPlayerList
+        IsEntityAlive
+        KillEntity
+    方块管理
+        GetBlockClip
+        GetBlockCollision
+        GetBlockNew
+        GetLiquidBlock
+        GetTopBlockHeight
+    生物生成
+        GetEntityLimit
+        SetEntityLimit
+    天气
+        IsRaining
+        IsThunder
+    游戏规则
+        GetLevelGravity
+        GetPistonMaxInteractionCount
+        SetHurtCD
+        SetLevelGravity
+        SetPistonMaxInteractionCount
+    指令
+        SetCommand
+
+
+
+实体
+    实体类型
+        GetEngineType
+        GetEngineTypeStr
+    附加值
+        GetAuxValue
+    属性
+        ChangeEntityDimension
+        GetAttrMaxValue
+        GetAttrValue
+        GetEntitiesBySelector
+        GetEntityDimensionId
+        GetEntityOwner
+        GetGravity
+        GetName
+        GetPos
+        GetRot
+        GetTypeFamily
+        SetAttrValue
+        SetEntityOwner
+        SetGravity
+        SetName
+        SetPos
+        SetRot
+    行为
+        GetAttackTarget
+        GetMotion
+        GetOwnerId
+        ResetAttackTarget
+        ResetMotion
+        SetAttackTarget
+        SetMotion
+    状态效果
+        AddEffectToEntity
+        GetAllEffects
+        HasEffect
+        RemoveEffectFromEntity
+    背包
+        GetEntityItem
+        GetEquItemEnchant
+        GetEquItemModEnchant
+    自定义数据
+        CleanExtraData
+        GetExtraData
+        GetWholeExtraData
+        SaveExtraData
+        SetExtraData
+    标签
+        AddEntityTag
+        EntityHasTag
+        GetEntityTags
+        RemoveEntityTag
+    抛射物
+        GetSourceEntityId
+    经验球
+        GetOrbExperience
+        SetOrbExperience
+
+
+
+玩家
+    属性
+        GetPlayerExp
+        GetPlayerHunger
+        GetPlayerTotalExp
+        SetPlayerHunger
+        SetPlayerPrefixAndSuffixName
+        SetPlayerTotalExp
+    行为
+        ChangePlayerDimension
+        ChangePlayerFlyState
+        GetPlayerRespawnPos
+        IsPlayerCanFly
+        IsPlayerFlying
+        SetBanPlayerFishing
+        SetPickUpArea
+        SetPlayerAttackSpeedAmplifier
+        SetPlayerMotion
+        SetPlayerRespawnPos
+        isSneaking
+        isSwimming
+    背包
+        AddEnchantToInvItem
+        AddModEnchantToInvItem
+        ChangePlayerItemTipsAndExtraId
+        ChangeSelectSlot
+        GetInvItemEnchantData
+        GetInvItemModEnchantData
+        GetPlayerItem
+        GetSelectSlotId
+        RemoveEnchantToInvItem
+        RemoveModEnchantToInvItem
+        SetInvItemExchange
+    游戏模式
+        GetPlayerGameType
+        SetPlayerGameType
+    权限
+        GetPlayerAbilities
+        GetPlayerOperation
+        SetAttackMobsAbility
+        SetAttackPlayersAbility
+        SetBuildAbility
+        SetMineAbility
+        SetOpenContainersAbility
+        SetOperateDoorsAndSwitchesAbility
+        SetOperatorCommandAbility
+        SetPermissionLevel
+        SetPlayerMute
+        SetTeleportAbility
+
+
+
+方块
+    方块状态与附加值
+        GetBlockStates
+    方块实体
+        ExecuteCommandBlock
+        GetBlockEntityData
+        GetBlockTileEntityCustomData
+        GetBlockTileEntityWholeCustomData
+        GetCommandBlock
+        GetFrameItem
+        GetFrameRotation
+        SetCommandBlock
+        SetFrameRotation
+    容器
+        GetBrewingStandSlotItem
+        GetChestBoxSize
+        GetChestPairedPosition
+        GetContainerItem
+        GetContainerSize
+        GetEnderChestItem
+        GetInputSlotItem
+        GetOutputSlotItem
+        SetChestBoxItemExchange
+    红石
+        GetBlockPoweredState
+        GetStrength
+    告示牌
+        GetSignBlockText
+        GetSignTextStyle
+        SetSignBlockText
+        SetSignTextStyle
+    床
+        GetBedColor
+        SetBedColor
+
+
+
+物品
+    GetAllEnchantsInfo
+    GetItemDurability
+    GetItemInfoByBlockName
+    GetItemMaxDurability
+    SetItemDurability

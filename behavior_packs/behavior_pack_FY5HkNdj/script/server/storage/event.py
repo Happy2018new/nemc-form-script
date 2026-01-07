@@ -228,7 +228,7 @@ class EventStorage:
             data[event_name] = event
             root["event_data"] = data
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
             return self
 
     def remove_func(self, func_name):  # type: (str) -> str | None
@@ -281,7 +281,7 @@ class EventStorage:
             root["event_all_index"] = all_index
             root["event_func_index"] = func_index
 
-            manager.SetExtraData("form_system_storage", root)
+            _ = manager.SetExtraData("form_system_storage", root)
 
         result = None
         for key, value in list(self._event.items()):
