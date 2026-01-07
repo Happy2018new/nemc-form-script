@@ -456,3 +456,42 @@ class ModalForm(BaseForm):
                 self.content.append(ModalFormElementStepSlider().unmarshal(i))
 
         return self
+
+    def all_codes(self):  # type: () -> list[StringWithHash]
+        """
+        all_codes 返回该 ModalForm 中存在的所有代码
+
+        Returns:
+            list[StringWithHash]:
+                该 ModalForm 中存在的所有代码
+        """
+        codes = [self.title]  # type: list[StringWithHash]
+
+        for i in self.content:
+            if isinstance(i, ModalFormElementLabel):
+                codes.append(i.text)
+            elif isinstance(i, ModalFormElementInput):
+                codes.append(i.text)
+                codes.append(i.default)
+                codes.append(i.place_holder)
+            elif isinstance(i, ModalFormElementToggle):
+                codes.append(i.text)
+                codes.append(i.default)
+            elif isinstance(i, ModalFormElementDropdown):
+                codes.append(i.text)
+                codes.append(i.default)
+                for option in i.options:
+                    codes.append(option)
+            elif isinstance(i, ModalFormElementSlider):
+                codes.append(i.text)
+                codes.append(i.min_val)
+                codes.append(i.max_val)
+                codes.append(i.step)
+                codes.append(i.default)
+            elif isinstance(i, ModalFormElementStepSlider):
+                codes.append(i.text)
+                codes.append(i.default)
+                for step in i.steps:
+                    codes.append(step)
+
+        return codes

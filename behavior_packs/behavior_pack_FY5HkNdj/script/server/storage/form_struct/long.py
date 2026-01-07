@@ -209,3 +209,22 @@ class LongForm(BaseForm):
         self.content = StringWithHash().unmarshal(data["content"])
         self.buttons = [LongFormElement().unmarshal(i) for i in data["buttons"]]
         return self
+
+    def all_codes(self):  # type: () -> list[StringWithHash]
+        """
+        all_codes 返回该 LongForm 中存在的所有代码
+
+        Returns:
+            list[StringWithHash]:
+                该 LongForm 中存在的所有代码
+        """
+        codes = []  # type: list[StringWithHash]
+        codes.append(self.title)
+        codes.append(self.content)
+
+        for i in self.buttons:
+            codes.append(i.text)
+            if isinstance(i.icon, LongFormIconPathImage):
+                codes.append(i.icon.image_path)
+
+        return codes

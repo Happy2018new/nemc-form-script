@@ -7,9 +7,9 @@ if TYPE_CHECKING:
 import threading
 from .base import BaseForm
 from .base import StorageManager
-from .form.long import LongForm
-from .form.popup import PopupForm
-from .form.modal import ModalForm
+from .form_struct.long import LongForm
+from .form_struct.popup import PopupForm
+from .form_struct.modal import ModalForm
 
 FORM_TYPE_LONG = 0
 FORM_TYPE_POPUP = 1

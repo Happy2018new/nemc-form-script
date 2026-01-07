@@ -116,8 +116,9 @@ event.destroy
 
 
 
-compile.set_cache_size
-compile.get_cache_size
+compile.get_max_cache_size
+compile.get_current_cache_size
+compile.set_max_cache_size
 compile.register_cache
 
 

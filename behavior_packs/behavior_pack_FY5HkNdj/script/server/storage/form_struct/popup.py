@@ -79,3 +79,13 @@ class PopupForm(BaseForm):
         self.button1 = StringWithHash().unmarshal(data["button1"])
         self.button2 = StringWithHash().unmarshal(data["button2"])
         return self
+
+    def all_codes(self):  # type: () -> list[StringWithHash]
+        """
+        all_codes 返回该 PopupForm 中存在的所有代码
+
+        Returns:
+            list[StringWithHash]:
+                该 PopupForm 中存在的所有代码
+        """
+        return [self.title, self.content, self.button1, self.button2]
