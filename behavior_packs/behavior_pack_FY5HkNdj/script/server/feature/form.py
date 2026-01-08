@@ -42,8 +42,6 @@ from ...formal.modal import (
 )
 from ...packet.packet import (
     PACKET_NAME_MODAL_FORM_REQUEST,
-    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
-    MODAL_FORM_CANCEL_REASON_USER_BUSY,
     ModalFormRequest,
     ModalFormResponse,
 )
@@ -195,7 +193,7 @@ class FormFeature:
         title = self.executor.run_code(form.title, executor, dimension, position, True)
         if not isinstance(title, str):
             raise Exception(
-                "_generate_long_form: The title of long form must be a str (title={})".format(
+                "_generate_long_form: The title of long form must be str (title={})".format(
                     title
                 )
             )
@@ -206,7 +204,7 @@ class FormFeature:
         )
         if not isinstance(content, str):
             raise Exception(
-                "_generate_long_form: The content of long form must be a str (content={})".format(
+                "_generate_long_form: The content of long form must be str (content={})".format(
                     content
                 )
             )
@@ -221,7 +219,7 @@ class FormFeature:
             )
             if not isinstance(text, str):
                 raise Exception(
-                    "_generate_long_form: The text of button which indexed in {} must be a str (text={})".format(
+                    "_generate_long_form: The text of button which indexed in {} must be str (text={})".format(
                         index, text
                     )
                 )
@@ -233,7 +231,7 @@ class FormFeature:
                 )
                 if not isinstance(image_path, str):
                     raise Exception(
-                        "_generate_long_form: The image path of button which indexed in {} must be a str (image_path={})".format(
+                        "_generate_long_form: The image path of button which indexed in {} must be str (image_path={})".format(
                             index, image_path
                         )
                     )
@@ -258,7 +256,7 @@ class FormFeature:
         title = self.executor.run_code(form.title, executor, dimension, position, True)
         if not isinstance(title, str):
             raise Exception(
-                "_generate_popup_form: The title of popup form must be a str (title={})".format(
+                "_generate_popup_form: The title of popup form must be str (title={})".format(
                     title
                 )
             )
@@ -269,7 +267,7 @@ class FormFeature:
         )
         if not isinstance(content, str):
             raise Exception(
-                "_generate_popup_form: The content of popup form must be a str (content={})".format(
+                "_generate_popup_form: The content of popup form must be str (content={})".format(
                     content
                 )
             )
@@ -280,7 +278,7 @@ class FormFeature:
         )
         if not isinstance(button1, str):
             raise Exception(
-                "_generate_popup_form: The button1 of popup form must be a str (button1={})".format(
+                "_generate_popup_form: The button1 of popup form must be str (button1={})".format(
                     button1
                 )
             )
@@ -291,7 +289,7 @@ class FormFeature:
         )
         if not isinstance(button2, str):
             raise Exception(
-                "_generate_popup_form: The button2 of popup form must be a str (button2={})".format(
+                "_generate_popup_form: The button2 of popup form must be str (button2={})".format(
                     button2
                 )
             )
@@ -314,7 +312,7 @@ class FormFeature:
         title = self.executor.run_code(form.title, executor, dimension, position, True)
         if not isinstance(title, str):
             raise Exception(
-                "_generate_modal_form: The title of modal form must be a str (title={})".format(
+                "_generate_modal_form: The title of modal form must be str (title={})".format(
                     title
                 )
             )
@@ -327,7 +325,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of label must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of label must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -339,7 +337,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of input must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of input must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -349,7 +347,7 @@ class FormFeature:
                 )
                 if not isinstance(place_holder, str):
                     raise Exception(
-                        "_generate_modal_form: The place holder of input must be a str (index={}, place_holder={})".format(
+                        "_generate_modal_form: The place holder of input must be str (index={}, place_holder={})".format(
                             index, place_holder
                         )
                     )
@@ -359,7 +357,7 @@ class FormFeature:
                 )
                 if not isinstance(default, str):
                     raise Exception(
-                        "_generate_modal_form: The default of input must be a str (index={}, default={})".format(
+                        "_generate_modal_form: The default of input must be str (index={}, default={})".format(
                             index, default
                         )
                     )
@@ -374,7 +372,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of toggle must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of toggle must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -384,7 +382,7 @@ class FormFeature:
                 )
                 if not isinstance(default, bool):
                     raise Exception(
-                        "_generate_modal_form: The default of toggle must be a bool (index={}, default={})".format(
+                        "_generate_modal_form: The default of toggle must be bool (index={}, default={})".format(
                             index, default
                         )
                     )
@@ -399,7 +397,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of dropdown must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of dropdown must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -410,7 +408,7 @@ class FormFeature:
                 )
                 if isinstance(default, bool) or not isinstance(default, int):
                     raise Exception(
-                        "_generate_modal_form: The default of dropdown must be an integer (index={}, default={})".format(
+                        "_generate_modal_form: The default of dropdown must be integer (index={}, default={})".format(
                             index, default
                         )
                     )
@@ -434,7 +432,7 @@ class FormFeature:
                     )
                     if not isinstance(option, str):
                         raise Exception(
-                            "_generate_modal_form: The option of dropdown must be a str (index={}, ind={}, option={})".format(
+                            "_generate_modal_form: The option of dropdown must be str (index={}, ind={}, option={})".format(
                                 index, ind, option
                             )
                         )
@@ -448,7 +446,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of slider must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of slider must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -458,7 +456,7 @@ class FormFeature:
                 )
                 if isinstance(min_val, bool) or not isinstance(min_val, (int, float)):
                     raise Exception(
-                        "_generate_modal_form: The min value of slider must be a number (index={}, min_val={})".format(
+                        "_generate_modal_form: The min value of slider must be number (index={}, min_val={})".format(
                             index, min_val
                         )
                     )
@@ -468,7 +466,7 @@ class FormFeature:
                 )
                 if isinstance(max_val, bool) or not isinstance(max_val, (int, float)):
                     raise Exception(
-                        "_generate_modal_form: The max value of slider must be a number (index={}, max_val={})".format(
+                        "_generate_modal_form: The max value of slider must be number (index={}, max_val={})".format(
                             index, max_val
                         )
                     )
@@ -484,7 +482,7 @@ class FormFeature:
                 )
                 if isinstance(step, bool) or not isinstance(step, (int, float)):
                     raise Exception(
-                        "_generate_modal_form: The step of slider must be a number (index={}, step={})".format(
+                        "_generate_modal_form: The step of slider must be number (index={}, step={})".format(
                             index, step
                         )
                     )
@@ -500,7 +498,7 @@ class FormFeature:
                 )
                 if isinstance(default, bool) or not isinstance(default, (int, float)):
                     raise Exception(
-                        "_generate_modal_form: The default of slider must be a number (index={}, default={})".format(
+                        "_generate_modal_form: The default of slider must be number (index={}, default={})".format(
                             index, default
                         )
                     )
@@ -529,7 +527,7 @@ class FormFeature:
                 )
                 if not isinstance(text, str):
                     raise Exception(
-                        "_generate_modal_form: The text of step slider must be a str (index={}, text={})".format(
+                        "_generate_modal_form: The text of step slider must be str (index={}, text={})".format(
                             index, text
                         )
                     )
@@ -540,7 +538,7 @@ class FormFeature:
                 )
                 if isinstance(default, bool) or not isinstance(default, int):
                     raise Exception(
-                        "_generate_modal_form: The default of step slider must be an integer (index={}, default={})".format(
+                        "_generate_modal_form: The default of step slider must be integer (index={}, default={})".format(
                             index, default
                         )
                     )
@@ -564,7 +562,7 @@ class FormFeature:
                     )
                     if not isinstance(step, str):
                         raise Exception(
-                            "_generate_modal_form: The step of step slider must be a str (index={}, ind={}, step={})".format(
+                            "_generate_modal_form: The step of step slider must be str (index={}, ind={}, step={})".format(
                                 index, ind, step
                             )
                         )
@@ -604,8 +602,8 @@ class FormFeature:
         assert self.executor is not None
 
         with self.executor.get_locker():
-            form = self.storage.get_form(form_name)
-            if form is None:
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None:
                 raise Exception(
                     "send_modal_form_request: Form {} not found".format(
                         json.dumps(form_name, ensure_ascii=False)
@@ -613,12 +611,12 @@ class FormFeature:
                 )
 
             formal_with_cb = self._generate_any_form(
-                form, executor, dimension, position
+                storage_form, executor, dimension, position
             )
+            self._sequence += 1
             player_forms = self._pending.get(player_id, {})
             player_forms[self._sequence] = formal_with_cb
             self._pending[player_id] = player_forms
-            self._sequence += 1
 
             raw = formal_with_cb.formal.marshal()
             if isinstance(formal_with_cb.formal, LongFormalForm):
@@ -631,7 +629,7 @@ class FormFeature:
             self.server.NotifyToClient(
                 player_id,
                 PACKET_NAME_MODAL_FORM_REQUEST,
-                ModalFormRequest(self._sequence - 1, raw).marshal(),
+                ModalFormRequest(self._sequence, raw).marshal(),
             )
             return self
 
