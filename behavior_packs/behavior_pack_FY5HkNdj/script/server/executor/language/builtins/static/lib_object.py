@@ -287,10 +287,10 @@ class BaseManager:
                     - RAW_TYPE_FLOAT: 浮点数
                     - RAW_TYPE_STR: 字符串
         """
-        if isinstance(obj, int):
-            return RAW_TYPE_INT
         if isinstance(obj, bool):
             return RAW_TYPE_BOOL
+        if isinstance(obj, int):
+            return RAW_TYPE_INT
         if isinstance(obj, float):
             return RAW_TYPE_FLOAT
         if isinstance(obj, str):
@@ -342,10 +342,10 @@ class BaseManager:
         if isinstance(obj, datetime.datetime):
             return REF_TYPE_DATETIME_DATETIME
 
-        if isinstance(obj, int):
-            return REF_TYPE_INT
         if isinstance(obj, bool):
             return REF_TYPE_BOOL
+        if isinstance(obj, int):
+            return REF_TYPE_INT
         if isinstance(obj, float):
             return REF_TYPE_FLOAT
         if isinstance(obj, str):

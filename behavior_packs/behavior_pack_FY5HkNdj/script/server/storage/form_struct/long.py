@@ -161,9 +161,21 @@ class LongForm(BaseForm):
     content = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     buttons = []  # type: list[LongFormElement]
 
+    onsubmit = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    oncancel = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    onsuberr = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    oncanerr = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+
     def __init__(
-        self, title=EMPTY_STRING_WITH_HASH, content=EMPTY_STRING_WITH_HASH, buttons=[]
-    ):  # type: (StringWithHash, StringWithHash, list[LongFormElement]) -> None
+        self,
+        title=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        content=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        buttons=[],  # type: list[LongFormElement]
+        onsubmit=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        oncancel=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        onsuberr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        oncanerr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+    ):  # type: (...) -> None
         """初始化并返回一个新的 LongForm
 
         Args:
@@ -176,10 +188,28 @@ class LongForm(BaseForm):
             buttons (list, optional):
                 长表单中的按钮。
                 默认值为空列表
+            onsubmit (StringWithHash, optional):
+                当表单被用户提交时调用的代码。
+                默认值为 EMPTY_STRING_WITH_HASH
+            oncancel (StringWithHash, optional):
+                当用户正忙或取消表单时调用的代码。
+                默认值为 EMPTY_STRING_WITH_HASH
+            onsuberr (StringWithHash, optional):
+                当执行 onsubmit 所指示的代码出错时，
+                应执行的错误处理。
+                默认值为 EMPTY_STRING_WITH_HASH
+            oncanerr (StringWithHash, optional):
+                当执行 oncancel 所指示的代码出错时，
+                应执行的错误处理。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.title = title
         self.content = content
         self.buttons = buttons if len(buttons) > 0 else []
+        self.onsubmit = onsubmit
+        self.oncancel = oncancel
+        self.onsuberr = onsuberr
+        self.oncanerr = oncanerr
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将该 LongForm 编码为对应的 JSON 表示
@@ -191,6 +221,10 @@ class LongForm(BaseForm):
             "title": self.title.marshal(),
             "content": self.content.marshal(),
             "buttons": [i.marshal() for i in self.buttons],
+            "onsubmit": self.onsubmit.marshal(),
+            "oncancel": self.oncancel.marshal(),
+            "onsuberr": self.onsuberr.marshal(),
+            "oncanerr": self.oncanerr.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> LongForm
@@ -208,6 +242,10 @@ class LongForm(BaseForm):
         self.title = StringWithHash().unmarshal(data["title"])
         self.content = StringWithHash().unmarshal(data["content"])
         self.buttons = [LongFormElement().unmarshal(i) for i in data["buttons"]]
+        self.onsubmit = StringWithHash().unmarshal(data["onsubmit"])
+        self.oncancel = StringWithHash().unmarshal(data["oncancel"])
+        self.onsuberr = StringWithHash().unmarshal(data["onsuberr"])
+        self.oncanerr = StringWithHash().unmarshal(data["oncanerr"])
         return self
 
     def all_codes(self):  # type: () -> list[StringWithHash]
@@ -218,7 +256,14 @@ class LongForm(BaseForm):
             list[StringWithHash]:
                 该 LongForm 中存在的所有代码
         """
-        codes = [self.title, self.content]  # type: list[StringWithHash]
+        codes = [
+            self.title,
+            self.content,
+            self.onsubmit,
+            self.oncancel,
+            self.onsuberr,
+            self.oncanerr,
+        ]  # type: list[StringWithHash]
 
         for i in self.buttons:
             codes.append(i.text)

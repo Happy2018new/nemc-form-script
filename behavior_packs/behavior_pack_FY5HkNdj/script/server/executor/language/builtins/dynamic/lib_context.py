@@ -48,7 +48,7 @@ class Context:
             bool: 总是返回 True
         """
         if not isinstance(executor, str):
-            raise Exception("set_executor: The given argument must be a str")
+            raise Exception("set_executor: The given argument must be str")
         self._executor = executor
         return True
 
@@ -77,12 +77,12 @@ class Context:
         Returns:
             bool: 总是返回 True
         """
-        if not isinstance(posx, (int, float)):
-            raise Exception("set_position: Given posx must be a tuple")
-        if not isinstance(posy, (int, float)):
-            raise Exception("set_position: Given posy must be a tuple")
-        if not isinstance(posz, (int, float)):
-            raise Exception("set_position: Given posz must be a tuple")
+        if isinstance(posx, bool) or not isinstance(posx, (int, float)):
+            raise Exception("set_position: Given posx must be tuple")
+        if isinstance(posy, bool) or not isinstance(posy, (int, float)):
+            raise Exception("set_position: Given posy must be tuple")
+        if isinstance(posz, bool) or not isinstance(posz, (int, float)):
+            raise Exception("set_position: Given posz must be tuple")
 
         self._position = (float(posx), float(posy), float(posz))
         return True
@@ -111,8 +111,8 @@ class Context:
         Returns:
             bool: 总是返回 True
         """
-        if not isinstance(dim_id, int):
-            raise Exception("set_dimension: Given dimension ID must be an int")
+        if isinstance(dim_id, bool) or not isinstance(dim_id, int):
+            raise Exception("set_dimension: Given dimension ID must be int")
 
         if dim_id == 0:
             self._dim_name = "overworld"

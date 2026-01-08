@@ -10,15 +10,15 @@ if TYPE_CHECKING:
 import threading
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 from .cache import CompileCache
-from ..storage.base import StringWithHash
-from ..language.package.opcode.runner import EMPTY_VARIABLES
-from ..language.package.opcode.external import GameInteract, BuiltInFunction
-from ..language.builtins.dynamic.lib_context import Context
-from ..language.builtins import (
+from .language.package.opcode.runner import EMPTY_VARIABLES
+from .language.package.opcode.external import GameInteract, BuiltInFunction
+from .language.builtins.dynamic.lib_context import Context
+from .language.builtins import (
     new_base_manager,
     StaticBuiltInFunction,
     DynamicBuiltInFunction,
 )
+from ..storage.base import StringWithHash
 
 
 class GameCodeExecutor:
@@ -215,6 +215,19 @@ class GameCodeExecutor:
             return 0
         return 1
 
+    def get_locker(self):  # type: () -> threading.RLock
+        """
+        get_locker 返回代码执行器的可重入锁。
+        确保返回的锁只对不同线程之间互斥。
+        有责任确保调用其他函数前都占用了该锁
+
+        Returns:
+            threading.RLock:
+                代码执行器的可重入锁
+        """
+        assert self._locker is not None
+        return self._locker
+
     def run_code(
         self,
         code,  # type: StringWithHash
@@ -246,42 +259,39 @@ class GameCodeExecutor:
             str | int | float | bool | None:
                 代码执行的结果
         """
-        assert self._locker is not None
+        assert self.static_builtin is not None
+        assert self.static_builtin.manager is not None
+        assert self._compile_cache is not None
+        assert self._game_interact is not None
+        assert self._built_in_func is not None
 
-        with self._locker:
-            assert self.static_builtin is not None
-            assert self.static_builtin.manager is not None
-            assert self._compile_cache is not None
-            assert self._game_interact is not None
-            assert self._built_in_func is not None
+        # Backup current context
+        frame = self.static_builtin.manager.current()
+        context = self._context()
+        backup = context.current_context()
 
-            # Backup current context
-            frame = self.static_builtin.manager.current()
-            context = self._context()
-            backup = context.current_context()
+        # Update context
+        context.set_executor(executor)
+        context.set_dimension(dimension)
+        context.set_position(*position)
 
-            # Update context
-            context.set_executor(executor)
-            context.set_dimension(dimension)
-            context.set_position(*position)
+        try:
+            # Running the code
+            runner = self._compile_cache.get_runner(code)
+            result = runner.running(
+                require_return=require_return,
+                interact=self._game_interact,
+                builtins=self._built_in_func,
+            )
+        finally:
+            # Recover context
+            self.static_builtin.manager.release_internal(frame)
+            context.recover_context(backup)
 
-            try:
-                # Running the code
-                runner = self._compile_cache.get_runner(code)
-                result = runner.running(
-                    require_return=require_return,
-                    interact=self._game_interact,
-                    builtins=self._built_in_func,
-                )
-            finally:
-                # Recover context
-                self.static_builtin.manager.release_internal(frame)
-                context.recover_context(backup)
+        # Return result
+        return result
 
-            # Return result
-            return result
-
-    def event_run(
+    def variable_run(
         self,
         code,  # type: StringWithHash
         executor="",  # type: str
@@ -291,9 +301,11 @@ class GameCodeExecutor:
         require_return=False,  # type: bool
     ):  # type: (...) -> str | int | float | bool | None
         """
-        event_run 在给定的命令执行上下文中执行代码。
-        它与 run_code 的区别在于它允许预先设置变量，
-        这意味着它主要被用于运行来自事件的回调函数
+        variable_run 在给定的命令执行上下文中执行代码。
+        它与 run_code 的区别在于它允许预先设置变量。
+
+        从实现上，它不会在运行代码后清除 variables 中的数据，
+        这意味着您可以在代码运行完成后获取所有变量的最终状态
 
         Args:
             code (str):
@@ -318,42 +330,39 @@ class GameCodeExecutor:
             str | int | float | bool | None:
                 代码执行的结果
         """
-        assert self._locker is not None
+        # Prepare
+        assert self.static_builtin is not None
+        assert self.static_builtin.manager is not None
+        assert self._compile_cache is not None
+        assert self._game_interact is not None
+        assert self._built_in_func is not None
 
-        with self._locker:
-            # Prepare
-            assert self.static_builtin is not None
-            assert self.static_builtin.manager is not None
-            assert self._compile_cache is not None
-            assert self._game_interact is not None
-            assert self._built_in_func is not None
+        # Backup current context
+        frame = self.static_builtin.manager.current()
+        context = self._context()
+        backup = context.current_context()
 
-            # Backup current context
-            frame = self.static_builtin.manager.current()
-            context = self._context()
-            backup = context.current_context()
+        # Update context
+        context.set_executor(executor)
+        context.set_dimension(dimension)
+        context.set_position(*position)
 
-            # Update context
-            context.set_executor(executor)
-            context.set_dimension(dimension)
-            context.set_position(*position)
+        try:
+            # Running the code
+            runner = self._compile_cache.get_runner(code)
+            result = runner.debug(
+                require_return=require_return,
+                variables=variables,
+                interact=self._game_interact,
+                builtins=self._built_in_func,
+            )
+        finally:
+            # Recover context
+            self.static_builtin.manager.release_internal(frame)
+            context.recover_context(backup)
 
-            try:
-                # Running the code
-                runner = self._compile_cache.get_runner(code)
-                result = runner.debug(
-                    require_return=require_return,
-                    variables=variables,
-                    interact=self._game_interact,
-                    builtins=self._built_in_func,
-                )
-            finally:
-                # Recover context
-                self.static_builtin.manager.release_internal(frame)
-                context.recover_context(backup)
-
-            # Return result
-            return result
+        # Return result
+        return result
 
     def set_ref_func(
         self, func
@@ -370,12 +379,9 @@ class GameCodeExecutor:
             GameCodeExecutor:
                 返回 GameCodeExecutor 本身
         """
-        assert self._locker is not None
-
-        with self._locker:
-            assert self._game_interact is not None
-            self._game_interact.ref = func
-            return self
+        assert self._game_interact is not None
+        self._game_interact.ref = func
+        return self
 
     def inject_func(
         self, funcs
@@ -392,10 +398,7 @@ class GameCodeExecutor:
             GameCodeExecutor:
                 返回 GameCodeExecutor 本身
         """
-        assert self._locker is not None
-
-        with self._locker:
-            assert self._built_in_func is not None
-            for key, value in funcs.items():
-                self._built_in_func.dynamic[key] = value
-            return self
+        assert self._built_in_func is not None
+        for key, value in funcs.items():
+            self._built_in_func.dynamic[key] = value
+        return self

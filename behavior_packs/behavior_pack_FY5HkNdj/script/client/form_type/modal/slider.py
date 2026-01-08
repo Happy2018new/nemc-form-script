@@ -208,7 +208,7 @@ class Slider(BaseComponent):
         raw_bag = child.GetPropertyBag()  # type: Any
         property = raw_bag  # type: dict[str, Any]
         index = int(property["#slider_value"])
-        if index >= len(self.slider_contents):
+        if index < 0 or index >= len(self.slider_contents):
             return None
 
         return index

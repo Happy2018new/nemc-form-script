@@ -72,15 +72,6 @@
             ]
         },
         {
-            "name": "cancelType",
-            "type": "enum_short",
-            "options": [
-                "all",
-                "normal",
-                "busy"
-            ]
-        },
-        {
             "name": "name",
             "type": "str"
         },
@@ -149,6 +140,10 @@
             "options": [
                 "show"
             ]
+        },
+        {
+            "name": "executor",
+            "type": "target"
         },
         {
             "name": "player",

@@ -196,7 +196,7 @@ class Tuple:
             raise Exception("tuple.sum: Target object is not a tuple")
 
         result = sum(obj)
-        if not isinstance(result, (int, float)):
+        if isinstance(result, bool) or not isinstance(result, (int, float)):
             raise Exception("tuple.sum: Only support tuple that contains int or float")
 
         return result

@@ -123,7 +123,7 @@ class ModalFormRequest(BasePacket):
         form_id = data.get("FormID", 0)
         form_data = data.get("FormData", {})
 
-        if isinstance(form_id, int):
+        if not isinstance(form_id, bool) and isinstance(form_id, int):
             self.form_id = form_id
         if isinstance(form_data, dict):
             self.form_data = form_data
@@ -216,7 +216,7 @@ class ModalFormResponse(BasePacket):
             return self
 
         form_id = data.get("FormID", 0)
-        if isinstance(form_id, int):
+        if not isinstance(form_id, bool) and isinstance(form_id, int):
             self.form_id = form_id
 
         self.response_data.unmarshal(data.get("ResponseData", {}))

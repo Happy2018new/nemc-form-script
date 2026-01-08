@@ -380,9 +380,20 @@ class ModalForm(BaseForm):
     title = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     content = []  # type: list[ModalFormElement]
 
+    onsubmit = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    oncancel = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    onsuberr = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    oncanerr = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+
     def __init__(
-        self, title=EMPTY_STRING_WITH_HASH, content=[]
-    ):  # type: (StringWithHash, list[ModalFormElement]) -> None
+        self,
+        title=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        content=[],  # type: list[ModalFormElement]
+        onsubmit=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        oncancel=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        onsuberr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        oncanerr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+    ):  # type: (...) -> None
         """初始化并返回一个新的 ModalForm
 
         Args:
@@ -392,9 +403,27 @@ class ModalForm(BaseForm):
             content (list[ModalFormElement], optional):
                 模态表单的内容。
                 默认值为空列表
+            onsubmit (StringWithHash, optional):
+                当表单被用户提交时调用的代码。
+                默认值为 EMPTY_STRING_WITH_HASH
+            oncancel (StringWithHash, optional):
+                当用户正忙或取消表单时调用的代码。
+                默认值为 EMPTY_STRING_WITH_HASH
+            onsuberr (StringWithHash, optional):
+                当执行 onsubmit 所指示的代码出错时，
+                应执行的错误处理。
+                默认值为 EMPTY_STRING_WITH_HASH
+            oncanerr (StringWithHash, optional):
+                当执行 oncancel 所指示的代码出错时，
+                应执行的错误处理。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.title = title
         self.content = content if len(content) > 0 else []
+        self.onsubmit = onsubmit
+        self.oncancel = oncancel
+        self.onsuberr = onsuberr
+        self.oncanerr = oncanerr
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将该 ModalForm 编码为对应的 JSON 表示
@@ -423,6 +452,10 @@ class ModalForm(BaseForm):
         return {
             "title": self.title.marshal(),
             "content": content,
+            "onsubmit": self.onsubmit.marshal(),
+            "oncancel": self.oncancel.marshal(),
+            "onsuberr": self.onsuberr.marshal(),
+            "oncanerr": self.oncanerr.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalForm
@@ -438,8 +471,12 @@ class ModalForm(BaseForm):
             ModalForm: 返回 ModalForm 本身
         """
         self.title = StringWithHash().unmarshal(data["title"])
-        self.content = []
+        self.onsubmit = StringWithHash().unmarshal(data["onsubmit"])
+        self.oncancel = StringWithHash().unmarshal(data["oncancel"])
+        self.onsuberr = StringWithHash().unmarshal(data["onsuberr"])
+        self.oncanerr = StringWithHash().unmarshal(data["oncanerr"])
 
+        self.content = []
         for i in data["content"]:
             element_type = i["type"]
             if element_type == "label":
@@ -465,7 +502,13 @@ class ModalForm(BaseForm):
             list[StringWithHash]:
                 该 ModalForm 中存在的所有代码
         """
-        codes = [self.title]  # type: list[StringWithHash]
+        codes = [
+            self.title,
+            self.onsubmit,
+            self.oncancel,
+            self.onsuberr,
+            self.oncanerr,
+        ]  # type: list[StringWithHash]
 
         for i in self.content:
             if isinstance(i, ModalFormElementLabel):

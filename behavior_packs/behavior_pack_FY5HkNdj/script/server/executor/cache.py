@@ -5,11 +5,11 @@ if TYPE_CHECKING:
     from typing import Any, Callable
 
 import threading
+from .language.package import CodeParser, CodeRunner
 from ..storage.base import StringWithHash, StorageManager
 from ..storage.form import FormStorage
 from ..storage.function import FunctionStorage
 from ..storage.event import EventStorage
-from ..language.package import CodeParser, CodeRunner
 
 
 COMPILE_CACHE_DEFAULT_MAX_SIZE = 2048

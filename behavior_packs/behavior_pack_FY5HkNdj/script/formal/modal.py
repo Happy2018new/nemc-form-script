@@ -262,7 +262,7 @@ class ModalFormElementDropdown(ModalFormElement):
             self.text = text
         if isinstance(options, list):
             self.options = [i for i in options if isinstance(i, str)]
-        if isinstance(default, int) or isinstance(default, float):
+        if not isinstance(default, bool) and isinstance(default, (int, bool)):
             self.default = int(default)
         return self
 
@@ -349,13 +349,13 @@ class ModalFormElementSlider(ModalFormElement):
 
         if isinstance(text, str):
             self.text = text
-        if isinstance(min_val, float) or isinstance(min_val, int):
+        if not isinstance(min_val, bool) and isinstance(min_val, (float, int)):
             self.min_val = float(min_val)
-        if isinstance(max_val, float) or isinstance(max_val, int):
+        if not isinstance(max_val, bool) and isinstance(max_val, (float, int)):
             self.max_val = float(max_val)
-        if isinstance(step, float) or isinstance(step, int):
+        if not isinstance(step, bool) and isinstance(step, (float, int)):
             self.step = float(step)
-        if isinstance(default, float) or isinstance(default, int):
+        if not isinstance(default, bool) and isinstance(default, (float, int)):
             self.default = float(default)
         return self
 
@@ -429,7 +429,7 @@ class ModalFormElementStepSlider(ModalFormElement):
             self.text = text
         if isinstance(steps, list):
             self.steps = [i for i in steps if isinstance(i, str)]
-        if isinstance(default, int) or isinstance(default, float):
+        if not isinstance(default, bool) and isinstance(default, (int, float)):
             self.default = int(default)
         return self
 

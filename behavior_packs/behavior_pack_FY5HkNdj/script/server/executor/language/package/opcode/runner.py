@@ -548,7 +548,7 @@ class CodeRunner:
             except Exception as e:
                 self._fast_for_loop_panic(for_loop, -1, str(e))
                 raise Exception("unreachable")
-            if not isinstance(repeat_times, int) or isinstance(repeat_times, bool):
+            if isinstance(repeat_times, bool) or not isinstance(repeat_times, int):
                 self._fast_for_loop_panic(
                     for_loop, -1, "The repeat times of for loop must be int"
                 )

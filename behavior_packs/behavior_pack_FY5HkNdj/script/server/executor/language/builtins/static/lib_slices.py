@@ -247,7 +247,7 @@ class Slices:
             raise Exception("slices.sum: Target object is not a slice")
 
         result = sum(obj)
-        if not isinstance(result, (int, float)):
+        if isinstance(result, bool) or not isinstance(result, (int, float)):
             raise Exception("slices.sum: Only support slice that contains int or float")
 
         return result

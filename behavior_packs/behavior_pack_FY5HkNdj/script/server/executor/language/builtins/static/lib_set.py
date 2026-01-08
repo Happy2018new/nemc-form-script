@@ -297,7 +297,7 @@ class Set:
             raise Exception("set.sum: Target object is not a set")
 
         result = sum(obj)
-        if not isinstance(result, (int, float)):
+        if isinstance(result, bool) or not isinstance(result, (int, float)):
             raise Exception("set.sum: Only support set that contains int or float")
 
         return result
