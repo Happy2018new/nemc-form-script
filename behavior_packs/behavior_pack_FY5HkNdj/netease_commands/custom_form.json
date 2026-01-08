@@ -87,6 +87,11 @@
         {
             "name": "code",
             "type": "str"
+        },
+        {
+            "name": "onCodeError",
+            "type": "str",
+            "default": ""
         }
     ],
     "args5": [
@@ -104,6 +109,11 @@
         {
             "name": "code",
             "type": "str"
+        },
+        {
+            "name": "onCodeError",
+            "type": "str",
+            "default": ""
         }
     ],
     "args6": [

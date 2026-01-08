@@ -1,8 +1,8 @@
 /customform add <name: string> long|popup|modal [auoCompile: Boolean]
 /customform compile <name: string> [auoCompile: Boolean]
 /customform list [name: string]
-/customform oncancel all|normal|busy <name: string> <code: string>
-/customform onsubmit <name: string> <code: string>
+/customform oncancel all|normal|busy <name: string> <code: string> [onCodeError: string]
+/customform onsubmit <name: string> <code: string> [onCodeError: string]
 /customform remove <name: string>
 /customform save <name: string>
 /customform show <player: target> <name: string>

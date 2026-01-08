@@ -17,7 +17,7 @@ class Context:
     _executor = ""  # type: str
     _dim_id = 0  # type: int
     _dim_name = ""  # type: str
-    _pos = (0.0, 0.0, 0.0)  # type: tuple[float, float, float]
+    _position = (0.0, 0.0, 0.0)  # type: tuple[float, float, float]
 
     def __init__(self, manager):  # type: (BaseManager) -> None
         """初始化并返回一个新的命令执行上下文管理器
@@ -30,7 +30,7 @@ class Context:
         self._executor = ""
         self._dim_id = 0
         self._dim_name = "overworld"
-        self._pos = (0.0, 0.0, 0.0)
+        self._position = (0.0, 0.0, 0.0)
 
     def set_executor(self, executor):  # type: (str) -> bool
         """set_executor 设置命令的执行者
@@ -84,7 +84,7 @@ class Context:
         if not isinstance(posz, (int, float)):
             raise Exception("set_position: Given posz must be a tuple")
 
-        self._pos = (float(posx), float(posy), float(posz))
+        self._position = (float(posx), float(posy), float(posz))
         return True
 
     def get_position(self):  # type: () -> tuple[float, float, float]
@@ -95,7 +95,7 @@ class Context:
             tuple[float, float, float]:
                 当前命令执行点的坐标
         """
-        return self._pos
+        return self._position
 
     def set_dimension(self, dim_id):  # type: (int) -> bool
         """set_dimension 设置命令执行维度
@@ -144,6 +144,36 @@ class Context:
             str: 当前命令执行维度的名称
         """
         return self._dim_name
+
+    def current_context(
+        self,
+    ):  # type: () -> tuple[str, int, tuple[float, float, float]]
+        """
+        current_context 返回当前的命令执行上下文。
+        它用于在递归调用时保存当前的上下文信息，以便之后恢复。
+        有责任确保 current_context 的调用者总是来自于内部实现（如代码执行器）
+
+        Returns:
+            tuple[str, int, tuple[float, float, float]]:
+                当前的命令执行上下文
+        """
+        return (self._executor, self._dim_id, self._position)
+
+    def recover_context(
+        self, last
+    ):  # type: (tuple[str, int, tuple[float, float, float]]) -> None
+        """
+        recover_context 恢复 last 所指示的命令执行上下文。
+        它用于在递归的上下文调用之间恢复此前通过 current_context 获得的上下文。
+        有责任确保 recover_context 的调用者总是来自于内部实现（如代码执行器）
+
+        Args:
+            last (tuple[str, int, tuple[float, float, float]]):
+                欲恢复的命令执行上下文
+        """
+        self._executor = last[0]
+        self.set_dimension(last[1])
+        self._position = last[2]
 
     def build_func(
         self,

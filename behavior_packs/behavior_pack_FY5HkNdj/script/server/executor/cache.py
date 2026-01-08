@@ -2,7 +2,7 @@
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Callable
 
 import threading
 from ..storage.base import StringWithHash, StorageManager
@@ -205,10 +205,10 @@ class CompileCache:
 
             return self
 
-    def code_runner(self, code):  # type: (StringWithHash) -> CodeRunner
+    def get_runner(self, code):  # type: (StringWithHash) -> CodeRunner
         """
-        code_runner 根据 code 返回对应的 CodeRunner。
-        如果缓存未命中，则将重新编译相应的代码
+        get_runner 根据 code 返回对应的 CodeRunner。
+        如果缓存未命中，则给定的代码将会被重新编译
 
         Args:
             code (StringWithHash):
@@ -225,3 +225,40 @@ class CompileCache:
 
         with self._locker:
             return self._compile(code)
+
+    def register_cache(self, code):  # type: (str) -> bool
+        """
+        register_cache 编译给定的代码，并将其注册到缓存系统中。
+        如果给定的代码命中了缓存，则该函数的行为将视作无操作
+
+        Args:
+            code (str):
+                给定的代码
+
+        Returns:
+            bool: 总是返回 True
+        """
+        _ = self.get_runner(StringWithHash(code))
+        return True
+
+    def build_func(
+        self,
+        origin,  # type: dict[str, Callable[..., int | bool | float | str]]
+    ):  # type: (...) -> None
+        """
+        build_func 构建 json 模块的内置函数，
+        并将构建结果写入到传递的 origin 字典中
+
+        Args:
+            origin (dict[str, Callable[..., int | bool | float | str]]):
+                用于存放所有内置函数的字典
+        """
+        funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
+
+        funcs["compile.get_max_cache_size"] = self.get_max_cache_size
+        funcs["compile.get_current_cache_size"] = self.get_current_cache_size
+        funcs["compile.set_max_cache_size"] = self.set_max_cache_size
+        funcs["compile.register_cache"] = self.register_cache
+
+        for key, value in funcs.items():
+            origin[key] = value

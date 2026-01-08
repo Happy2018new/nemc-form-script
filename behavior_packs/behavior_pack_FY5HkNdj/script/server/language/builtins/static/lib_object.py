@@ -31,7 +31,7 @@ REF_TYPE_DATETIME_TIMEDELTA = 10
 REF_TYPE_DATETIME_TIME = 11
 REF_TYPE_DATETIME_DATE = 12
 REF_TYPE_DATETIME_DATETIME = 13
-REF_TYPE_OTHERS = 0xFFFF
+REF_TYPE_UNKNOWN = 0xFFFF
 
 
 class BaseManager:
@@ -139,6 +139,17 @@ class BaseManager:
             return obj
         raise Exception("deref: Target object cannot be dereferenced")
 
+    def current(self):  # type: () -> set[int]
+        """
+        current 返回当前所有对象的指针。它主要用于递归时保留调用者的上下文。
+        有责任确保 current 的调用者总是来自于内部实现（如代码执行器）
+
+        Returns:
+            dict[int, Any]:
+                当前所有对象的指针
+        """
+        return set(self._mapping)
+
     def release(self, ptr):  # type: (int) -> bool
         """
         release 释放 ptr 指向的对象的引用。
@@ -164,23 +175,24 @@ class BaseManager:
         del self._mapping[ptr]
         return True
 
-    def release_all(self):  # type: () -> bool
+    def release_internal(self, last):  # type: (set[int]) -> None
         """
-        release_all 释放所有未被固定的对象的引用
+        release_internal 释放除 last 以外的，对所有未被固定的对象的引用。
+        release_internal 主要用于在递归的上下文调用之间释放不再需要的对象。
+        有责任确保 release_internal 的调用者总是来自于内部实现（如代码执行器）
 
-        Returns:
-            bool: 总是返回 True
+        Args:
+            last (set[int]):
+                释放过程中要特别排除的指针
         """
-        if len(self._pinned) == 0:
+        if len(last) == 0 and len(self._pinned) == 0:
             self._mapping.clear()
-            return True
-
-        mapping = {}  # type: dict[int, Any]
-        for ptr in self._pinned:
-            mapping[ptr] = self._mapping[ptr]
-        self._mapping = mapping
-
-        return True
+        else:
+            self._mapping = {
+                ptr: self._mapping[ptr]
+                for ptr in last | self._pinned
+                if ptr in self._mapping
+            }
 
     def pin(self, ptr):  # type: (int) -> bool
         """
@@ -277,11 +289,11 @@ class BaseManager:
         """
         if isinstance(obj, int):
             return RAW_TYPE_INT
-        elif isinstance(obj, bool):
+        if isinstance(obj, bool):
             return RAW_TYPE_BOOL
-        elif isinstance(obj, float):
+        if isinstance(obj, float):
             return RAW_TYPE_FLOAT
-        elif isinstance(obj, str):
+        if isinstance(obj, str):
             return RAW_TYPE_STR
 
     def ref_type(self, ptr):  # type: (int) -> int
@@ -319,35 +331,35 @@ class BaseManager:
 
         if isinstance(obj, uuid.UUID):
             return REF_TYPE_UUID
-        elif isinstance(obj, time.struct_time):
+        if isinstance(obj, time.struct_time):
             return REF_TYPE_STRUCT_TIME
-        elif isinstance(obj, datetime.timedelta):
+        if isinstance(obj, datetime.timedelta):
             return REF_TYPE_DATETIME_TIMEDELTA
-        elif isinstance(obj, datetime.time):
+        if isinstance(obj, datetime.time):
             return REF_TYPE_DATETIME_TIME
-        elif isinstance(obj, datetime.date):
+        if isinstance(obj, datetime.date):
             return REF_TYPE_DATETIME_DATE
-        elif isinstance(obj, datetime.datetime):
+        if isinstance(obj, datetime.datetime):
             return REF_TYPE_DATETIME_DATETIME
 
         if isinstance(obj, int):
             return REF_TYPE_INT
-        elif isinstance(obj, bool):
+        if isinstance(obj, bool):
             return REF_TYPE_BOOL
-        elif isinstance(obj, float):
+        if isinstance(obj, float):
             return REF_TYPE_FLOAT
-        elif isinstance(obj, str):
+        if isinstance(obj, str):
             return REF_TYPE_STR
-        elif isinstance(obj, list):
+        if isinstance(obj, list):
             return REF_TYPE_SLICE
-        elif isinstance(obj, dict):
+        if isinstance(obj, dict):
             return REF_TYPE_MAP
-        elif isinstance(obj, tuple):
+        if isinstance(obj, tuple):
             return REF_TYPE_TUPLE
-        elif isinstance(obj, set):
+        if isinstance(obj, set):
             return REF_TYPE_SET
-        else:
-            return REF_TYPE_OTHERS
+
+        return REF_TYPE_UNKNOWN
 
     def build_func(
         self,
@@ -367,7 +379,6 @@ class BaseManager:
         funcs["object.can_deref"] = self.can_user_deref
         funcs["object.deref"] = lambda ptr: self.deref(ptr, False)
         funcs["object.release"] = self.release
-        funcs["object.release_all"] = self.release_all
         funcs["object.pin"] = self.pin
         funcs["object.finalise"] = self.finalise
         funcs["object.make_none"] = self.make_none

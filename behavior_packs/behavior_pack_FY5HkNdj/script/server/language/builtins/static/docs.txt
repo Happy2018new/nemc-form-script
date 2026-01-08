@@ -2,7 +2,6 @@ object.ref
 object.can_deref
 object.deref
 object.release
-object.release_all
 object.pin
 object.finalise
 object.make_none
