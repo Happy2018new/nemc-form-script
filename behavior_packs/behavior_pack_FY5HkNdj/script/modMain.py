@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+"""
+NEMC Form Script
+
+Open source in: https://github.com/Happy2018new/nemc-form-script
+"""
+
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any

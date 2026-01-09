@@ -268,11 +268,12 @@ class FormFeature:
             with self.executor.get_locker():
                 try:
                     _ = self.executor.run_code(
-                        func_to_run, player_id, dimension, position, False
+                        func_to_run, "", player_id, dimension, position, False
                     )
                 except Exception as e:
                     _ = self.executor.variable_run(
                         when_meet_err,
+                        "",
                         player_id,
                         dimension,
                         position,

@@ -69,7 +69,9 @@ def _generate_long_form(
     """
     result = LongFormalForm()
 
-    title = runner.run_code(form.title, executor, dimension, position, True)
+    title = runner.run_code(
+        form.title, "Error occurred in title", executor, dimension, position, True
+    )
     if not isinstance(title, str):
         raise Exception(
             "_generate_long_form: The title of long form must be str (title={})".format(
@@ -78,7 +80,9 @@ def _generate_long_form(
         )
     result.title = title
 
-    content = runner.run_code(form.content, executor, dimension, position, True)
+    content = runner.run_code(
+        form.content, "Error occurred in content", executor, dimension, position, True
+    )
     if not isinstance(content, str):
         raise Exception(
             "_generate_long_form: The content of long form must be str (content={})".format(
@@ -91,7 +95,8 @@ def _generate_long_form(
         # prepare
         element = LongFormalFormElement()
         # text
-        text = runner.run_code(value.text, executor, dimension, position, True)
+        ctx = "In text of button which indexed in {}".format(index)
+        text = runner.run_code(value.text, ctx, executor, dimension, position, True)
         if not isinstance(text, str):
             raise Exception(
                 "_generate_long_form: The text of button which indexed in {} must be str (text={})".format(
@@ -101,8 +106,9 @@ def _generate_long_form(
         element.text = text
         # icon
         if isinstance(value.icon, LongStorageFormIconPathImage):
+            ctx = "In image path of button which indexed in {}".format(index)
             image_path = runner.run_code(
-                value.icon.image_path, executor, dimension, position, True
+                value.icon.image_path, ctx, executor, dimension, position, True
             )
             if not isinstance(image_path, str):
                 raise Exception(
@@ -154,7 +160,9 @@ def _generate_popup_form(
     """
     result = PopupFormalForm()
 
-    title = runner.run_code(form.title, executor, dimension, position, True)
+    title = runner.run_code(
+        form.title, "Error occurred in title", executor, dimension, position, True
+    )
     if not isinstance(title, str):
         raise Exception(
             "_generate_popup_form: The title of popup form must be str (title={})".format(
@@ -163,7 +171,9 @@ def _generate_popup_form(
         )
     result.title = title
 
-    content = runner.run_code(form.content, executor, dimension, position, True)
+    content = runner.run_code(
+        form.content, "Error occurred in content", executor, dimension, position, True
+    )
     if not isinstance(content, str):
         raise Exception(
             "_generate_popup_form: The content of popup form must be str (content={})".format(
@@ -172,7 +182,9 @@ def _generate_popup_form(
         )
     result.content = content
 
-    button1 = runner.run_code(form.button1, executor, dimension, position, True)
+    button1 = runner.run_code(
+        form.button1, "Error occurred in button1", executor, dimension, position, True
+    )
     if not isinstance(button1, str):
         raise Exception(
             "_generate_popup_form: The button1 of popup form must be str (button1={})".format(
@@ -181,7 +193,9 @@ def _generate_popup_form(
         )
     result.button1 = button1
 
-    button2 = runner.run_code(form.button2, executor, dimension, position, True)
+    button2 = runner.run_code(
+        form.button2, "Error occurred in button2", executor, dimension, position, True
+    )
     if not isinstance(button2, str):
         raise Exception(
             "_generate_popup_form: The button2 of popup form must be str (button2={})".format(
@@ -230,7 +244,9 @@ def _generate_modal_form(
     """
     result = ModalFormalForm()
 
-    title = runner.run_code(form.title, executor, dimension, position, True)
+    title = runner.run_code(
+        form.title, "Error occurred in title", executor, dimension, position, True
+    )
     if not isinstance(title, str):
         raise Exception(
             "_generate_modal_form: The title of modal form must be str (title={})".format(
@@ -241,7 +257,8 @@ def _generate_modal_form(
 
     for index, value in enumerate(form.content):
         if isinstance(value, ModalStorageFormElementLabel):
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of label (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of label must be str (index={}, text={})".format(
@@ -251,7 +268,8 @@ def _generate_modal_form(
             result.content.append(ModalFormalFormElementLabel(text))
         elif isinstance(value, ModalStorageFormElementInput):
             # text
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of input (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of input must be str (index={}, text={})".format(
@@ -259,8 +277,9 @@ def _generate_modal_form(
                     )
                 )
             # place holder
+            ctx = "In place holder of input (index={})".format(index)
             place_holder = runner.run_code(
-                value.place_holder, executor, dimension, position, True
+                value.place_holder, ctx, executor, dimension, position, True
             )
             if not isinstance(place_holder, str):
                 raise Exception(
@@ -269,8 +288,9 @@ def _generate_modal_form(
                     )
                 )
             # default
+            ctx = "In default of input (index={})".format(index)
             default = runner.run_code(
-                value.default, executor, dimension, position, True
+                value.default, ctx, executor, dimension, position, True
             )
             if not isinstance(default, str):
                 raise Exception(
@@ -284,7 +304,8 @@ def _generate_modal_form(
             )
         elif isinstance(value, ModalStorageFormElementToggle):
             # text
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of toggle (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of toggle must be str (index={}, text={})".format(
@@ -292,8 +313,9 @@ def _generate_modal_form(
                     )
                 )
             # default
+            ctx = "In default of toggle (index={})".format(index)
             default = runner.run_code(
-                value.default, executor, dimension, position, True
+                value.default, ctx, executor, dimension, position, True
             )
             if not isinstance(default, bool):
                 raise Exception(
@@ -307,7 +329,8 @@ def _generate_modal_form(
             # prepare
             element = ModalFormalFormElementDropdown()
             # text
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of dropdown (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of dropdown must be str (index={}, text={})".format(
@@ -316,8 +339,9 @@ def _generate_modal_form(
                 )
             element.text = text
             # default
+            ctx = "In default of dropdown (index={})".format(index)
             default = runner.run_code(
-                value.default, executor, dimension, position, True
+                value.default, ctx, executor, dimension, position, True
             )
             if isinstance(default, bool) or not isinstance(default, int):
                 raise Exception(
@@ -340,7 +364,8 @@ def _generate_modal_form(
                     )
                 )
             for ind, val in enumerate(value.options):
-                option = runner.run_code(val, executor, dimension, position, True)
+                ctx = "In option of dropdown (index={}, ind={})".format(index, ind)
+                option = runner.run_code(val, ctx, executor, dimension, position, True)
                 if not isinstance(option, str):
                     raise Exception(
                         "_generate_modal_form: The option of dropdown must be str (index={}, ind={}, option={})".format(
@@ -352,7 +377,8 @@ def _generate_modal_form(
             result.content.append(element)
         elif isinstance(value, ModalStorageFormElementSlider):
             # text
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of slider (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of slider must be str (index={}, text={})".format(
@@ -360,8 +386,9 @@ def _generate_modal_form(
                     )
                 )
             # min value
+            ctx = "In min value of slider (index={})".format(index)
             min_val = runner.run_code(
-                value.min_val, executor, dimension, position, True
+                value.min_val, ctx, executor, dimension, position, True
             )
             if isinstance(min_val, bool) or not isinstance(min_val, (int, float)):
                 raise Exception(
@@ -370,8 +397,9 @@ def _generate_modal_form(
                     )
                 )
             # max value
+            ctx = "In max value of slider (index={})".format(index)
             max_val = runner.run_code(
-                value.max_val, executor, dimension, position, True
+                value.max_val, ctx, executor, dimension, position, True
             )
             if isinstance(max_val, bool) or not isinstance(max_val, (int, float)):
                 raise Exception(
@@ -386,7 +414,8 @@ def _generate_modal_form(
                     )
                 )
             # step
-            step = runner.run_code(value.step, executor, dimension, position, True)
+            ctx = "In step of slider (index={})".format(index)
+            step = runner.run_code(value.step, ctx, executor, dimension, position, True)
             if isinstance(step, bool) or not isinstance(step, (int, float)):
                 raise Exception(
                     "_generate_modal_form: The step of slider must be number (index={}, step={})".format(
@@ -400,8 +429,9 @@ def _generate_modal_form(
                     )
                 )
             # default
+            ctx = "In default of slider (index={})".format(index)
             default = runner.run_code(
-                value.default, executor, dimension, position, True
+                value.default, ctx, executor, dimension, position, True
             )
             if isinstance(default, bool) or not isinstance(default, (int, float)):
                 raise Exception(
@@ -429,7 +459,8 @@ def _generate_modal_form(
             # prepare
             element = ModalFormalFormElementStepSlider()
             # text
-            text = runner.run_code(value.text, executor, dimension, position, True)
+            ctx = "In text of step slider (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position, True)
             if not isinstance(text, str):
                 raise Exception(
                     "_generate_modal_form: The text of step slider must be str (index={}, text={})".format(
@@ -438,8 +469,9 @@ def _generate_modal_form(
                 )
             element.text = text
             # default
+            ctx = "In default of step slider (index={})".format(index)
             default = runner.run_code(
-                value.default, executor, dimension, position, True
+                value.default, ctx, executor, dimension, position, True
             )
             if isinstance(default, bool) or not isinstance(default, int):
                 raise Exception(
@@ -462,7 +494,8 @@ def _generate_modal_form(
                     )
                 )
             for ind, val in enumerate(value.steps):
-                step = runner.run_code(val, executor, dimension, position, True)
+                ctx = "In step of step slider (index={}, ind={})".format(index, ind)
+                step = runner.run_code(val, ctx, executor, dimension, position, True)
                 if not isinstance(step, str):
                     raise Exception(
                         "_generate_modal_form: The step of step slider must be str (index={}, ind={}, step={})".format(

@@ -232,6 +232,7 @@ class GameCodeExecutor:
     def run_code(
         self,
         code,  # type: StringWithHash
+        ctx="",  # type: str
         executor="",  # type: str
         dimension=0,  # type: int
         position=(0.0, 0.0, 0.0),  # type: tuple[float, float, float]
@@ -243,6 +244,9 @@ class GameCodeExecutor:
         Args:
             code (str):
                 已取得 MD5 摘要的代码
+            ctx (str):
+                在代码执行失败时，
+                所抛出的错误中要提供的上下文信息
             executor (str, optional):
                 命令执行者的 ID。
                 默认值为空字符串
@@ -284,6 +288,10 @@ class GameCodeExecutor:
                 interact=self._game_interact,
                 builtins=self._built_in_func,
             )
+        except Exception as e:
+            if len(ctx) == 0:
+                raise e
+            raise Exception(str(e) + "\n\n- Context -\n{}".format(ctx))
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)
@@ -295,6 +303,7 @@ class GameCodeExecutor:
     def variable_run(
         self,
         code,  # type: StringWithHash
+        ctx="",  # type: str
         executor="",  # type: str
         dimension=0,  # type: int
         position=(0.0, 0.0, 0.0),  # type: tuple[float, float, float]
@@ -311,6 +320,9 @@ class GameCodeExecutor:
         Args:
             code (str):
                 已取得 MD5 摘要的代码
+            ctx (str):
+                在代码执行失败时，
+                所抛出的错误中要提供的上下文信息
             executor (str, optional):
                 命令执行者的 ID。
                 默认值为空字符串
@@ -357,6 +369,10 @@ class GameCodeExecutor:
                 interact=self._game_interact,
                 builtins=self._built_in_func,
             )
+        except Exception as e:
+            if len(ctx) == 0:
+                raise e
+            raise Exception(str(e) + "\n\n- Context -\n{}".format(ctx))
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)
