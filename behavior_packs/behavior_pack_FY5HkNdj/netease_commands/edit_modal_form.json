@@ -134,7 +134,7 @@
             ]
         },
         {
-            "name": "title",
+            "name": "titleCode",
             "type": "str"
         }
     ]

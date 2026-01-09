@@ -21,7 +21,7 @@
             ]
         },
         {
-            "name": "default",
+            "name": "defaultCode",
             "type": "str"
         }
     ],
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "name": "placeholder",
+            "name": "placeHolderCode",
             "type": "str"
         }
     ],
@@ -63,7 +63,7 @@
             ]
         },
         {
-            "name": "text",
+            "name": "textCode",
             "type": "str"
         }
     ]

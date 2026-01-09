@@ -17,7 +17,7 @@
             ]
         },
         {
-            "name": "button1",
+            "name": "firstButtonCode",
             "type": "str"
         }
     ],
@@ -34,7 +34,7 @@
             ]
         },
         {
-            "name": "button2",
+            "name": "secondButtonCode",
             "type": "str"
         }
     ],
@@ -51,7 +51,7 @@
             ]
         },
         {
-            "name": "content",
+            "name": "contentCode",
             "type": "str"
         }
     ],
@@ -68,7 +68,7 @@
             ]
         },
         {
-            "name": "title",
+            "name": "titleCode",
             "type": "str"
         }
     ]

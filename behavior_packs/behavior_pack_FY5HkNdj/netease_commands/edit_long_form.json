@@ -30,7 +30,7 @@
             ]
         },
         {
-            "name": "content",
+            "name": "contentCode",
             "type": "str"
         }
     ],
@@ -127,7 +127,7 @@
             ]
         },
         {
-            "name": "title",
+            "name": "titleCode",
             "type": "str"
         }
     ]

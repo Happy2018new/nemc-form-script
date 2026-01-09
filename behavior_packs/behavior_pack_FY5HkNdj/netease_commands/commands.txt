@@ -10,22 +10,22 @@
 
 
 /editlongform <formName: string> append
-/editlongform <formName: string> content <content: string>
+/editlongform <formName: string> content <contentCode: string>
 /editlongform <formName: string> insert <index: int>
 /editlongform <formName: string> list
 /editlongform <formName: string> pop left|right
 /editlongform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
-/editlongform <formName: string> title <title: string>
+/editlongform <formName: string> title <titleCode: string>
 
-/editbutton <formName: string> <buttonIndex: int> icon [texture: string]
-/editbutton <formName: string> <buttonIndex: int> text <text: string>
+/editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
+/editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 
 
 
-/editpopupform <formName: string> button1 <button1: string>
-/editpopupform <formName: string> button2 <button2: string>
-/editpopupform <formName: string> content <content: string>
-/editpopupform <formName: string> title <title: string>
+/editpopupform <formName: string> button1 <firstButtonCode: string>
+/editpopupform <formName: string> button2 <secondButtonCode: string>
+/editpopupform <formName: string> content <contentCode: string>
+/editpopupform <formName: string> title <titleCode: string>
 
 
 
@@ -34,36 +34,36 @@
 /editmodalform <formName: string> list
 /editmodalform <formName: string> pop left|right
 /editmodalform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
-/editmodalform <formName: string> title <title: string>
+/editmodalform <formName: string> title <titleCode: string>
 
-/editlabel <formName: string> <index: int> label <label: string>
+/editlabel <formName: string> <index: int> label <labelCode: string>
 
-/editinput <formName: string> <index: int> default <default: string>
-/editinput <formName: string> <index: int> placeholder <placeholder: string>
-/editinput <formName: string> <index: int> text <text: string>
+/editinput <formName: string> <index: int> default <defaultCode: string>
+/editinput <formName: string> <index: int> placeholder <placeHolderCode: string>
+/editinput <formName: string> <index: int> text <textCode: string>
 
-/edittoggle <formName: string> <index: int> default <state: string>
-/edittoggle <formName: string> <index: int> text <text: string>
+/edittoggle <formName: string> <index: int> default <stateCode: string>
+/edittoggle <formName: string> <index: int> text <textCode: string>
 
-/editdropdown <formName: string> <index: int> append <option: string>
-/editdropdown <formName: string> <index: int> default <index: string>
-/editdropdown <formName: string> <index: int> insert <index: int> <option: string>
+/editdropdown <formName: string> <index: int> append <optionCode: string>
+/editdropdown <formName: string> <index: int> default <indexCode: string>
+/editdropdown <formName: string> <index: int> insert <index: int> <optionCode: string>
 /editdropdown <formName: string> <index: int> pop left|right
 /editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
-/editdropdown <formName: string> <index: int> text <text: string>
+/editdropdown <formName: string> <index: int> text <textCode: string>
 
-/editslider <formName: string> <index: int> default <default: string>
-/editslider <formName: string> <index: int> min <min: string>
-/editslider <formName: string> <index: int> max <max: string>
-/editslider <formName: string> <index: int> step <step: string>
-/editslider <formName: string> <index: int> text <text: string>
+/editslider <formName: string> <index: int> default <defaultCode: string>
+/editslider <formName: string> <index: int> min <minCode: string>
+/editslider <formName: string> <index: int> max <maxCode: string>
+/editslider <formName: string> <index: int> step <stepCode: string>
+/editslider <formName: string> <index: int> text <textCode: string>
 
-/editstepslider <formName: string> <index: int> append <step: string>
-/editstepslider <formName: string> <index: int> default <index: string>
-/editstepslider <formName: string> <index: int> insert <index: int> <step: string>
+/editstepslider <formName: string> <index: int> append <stepCode: string>
+/editstepslider <formName: string> <index: int> default <indexCode: string>
+/editstepslider <formName: string> <index: int> insert <index: int> <stepCode: string>
 /editstepslider <formName: string> <index: int> pop left|right
 /editstepslider <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
-/editstepslider <formName: string> <index: int> text <text: string>
+/editstepslider <formName: string> <index: int> text <textCode: string>
 
 
 
@@ -77,7 +77,7 @@
 
 /systemevent destroy <funcName: string>
 /systemevent list [eventName: string]
-/systemevent listen <funcName: string> <eventName: string> <code: string>
+/systemevent listen <eventName: string> <funcName: string> <code: string>
 /systemevent query <funcName: string>
 
 

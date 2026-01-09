@@ -21,7 +21,7 @@
             ]
         },
         {
-            "name": "default",
+            "name": "defaultCode",
             "type": "str"
         }
     ],
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "name": "min",
+            "name": "minCode",
             "type": "str"
         }
     ],
@@ -63,7 +63,7 @@
             ]
         },
         {
-            "name": "max",
+            "name": "maxCode",
             "type": "str"
         }
     ],
@@ -84,7 +84,7 @@
             ]
         },
         {
-            "name": "step",
+            "name": "stepCode",
             "type": "str"
         }
     ],
@@ -105,7 +105,7 @@
             ]
         },
         {
-            "name": "text",
+            "name": "textCode",
             "type": "str"
         }
     ]

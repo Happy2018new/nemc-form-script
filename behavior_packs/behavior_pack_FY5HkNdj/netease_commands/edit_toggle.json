@@ -21,7 +21,7 @@
             ]
         },
         {
-            "name": "state",
+            "name": "stateCode",
             "type": "str"
         }
     ],
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "name": "text",
+            "name": "textCode",
             "type": "str"
         }
     ]

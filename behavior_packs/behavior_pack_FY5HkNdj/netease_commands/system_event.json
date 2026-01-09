@@ -40,11 +40,11 @@
             ]
         },
         {
-            "name": "funcName",
+            "name": "eventName",
             "type": "str"
         },
         {
-            "name": "eventName",
+            "name": "funcName",
             "type": "str"
         },
         {
