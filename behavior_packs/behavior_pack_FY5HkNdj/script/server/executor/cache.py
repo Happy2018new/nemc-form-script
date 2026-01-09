@@ -182,26 +182,38 @@ class CompileCache:
         assert self._locker is not None
 
         with self._locker:
-            form_storage.load_all()
-            func_storage.load_all()
-            event_storage.load_all()
+            form_storage.get_locker().acquire()
+            func_storage.get_locker().acquire()
+            event_storage.get_locker().acquire()
 
-            for form_name in form_storage.form_index():
-                form = form_storage.get_form(form_name)
-                if form is None:
-                    continue
-                for i in form.all_codes():
-                    _ = self._compile(i)
-            for func_name in func_storage.func_index():
-                func = func_storage.get_func(func_name)
-                if func is not None:
-                    _ = self._compile(func)
-            for event_name in event_storage.all_index():
-                event = event_storage.get_event(event_name)
-                if event is None:
-                    continue
-                for _, func in event.items():
-                    _ = self._compile(func)
+            try:
+                # load all saved things
+                form_storage.load_all()
+                func_storage.load_all()
+                event_storage.load_all()
+                # process form objects
+                for form_name in form_storage.form_index():
+                    form = form_storage.get_form(form_name)
+                    if form is None:
+                        continue
+                    for i in form.all_codes():
+                        _ = self._compile(i)
+                # process custom functions
+                for func_name in func_storage.func_index():
+                    func = func_storage.get_func(func_name)
+                    if func is not None:
+                        _ = self._compile(func)
+                # process event functions
+                for event_name in event_storage.all_index():
+                    event = event_storage.get_event(event_name)
+                    if event is None:
+                        continue
+                    for _, func in event.items():
+                        _ = self._compile(func)
+            finally:
+                event_storage.get_locker().release()
+                func_storage.get_locker().release()
+                form_storage.get_locker().release()
 
             return self
 

@@ -23,9 +23,8 @@ from ..storage.base import StringWithHash
 
 class GameCodeExecutor:
     """
-    GameCodeExecutor 是游戏运行的时候，所有代码的执行器。
-    它保存了相应的命令执行上下文以及所有的引用对象。
-    确保它是线程安全的，这意味着多线程使用将是互斥的
+    GameCodeExecutor 是游戏运行时，所有代码的执行器。
+    它保存了相应的命令执行上下文以及所有可能的引用对象
     """
 
     static_builtin = None  # type: StaticBuiltInFunction | None
@@ -72,9 +71,11 @@ class GameCodeExecutor:
         """_init_builtins 初始化大多数内置函数"""
         assert self.static_builtin is not None
         assert self.dynamic_builtin is not None
+        assert self._compile_cache is not None
         self._built_in_func = BuiltInFunction()
         self.static_builtin.build_func(self._built_in_func.static)
         self.dynamic_builtin.build_func(self._built_in_func.dynamic)
+        self._compile_cache.build_func(self._built_in_func.dynamic)
 
     def _context(self):  # type: () -> Context
         """_context 返回当前的命令执行上下文

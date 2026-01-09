@@ -2,18 +2,19 @@
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Callable
     from mod.server.extraServerApi import ServerSystem
 
 import json
+import threading
 from mod.server.extraServerApi import GetEngineCompFactory
-from ..storage.base import StringWithHash
-from ..storage.form import FormStorage, BaseForm as BaseStorageForm
+from .form_depends.define import FormalWithCallback, FormRefProcesser
+from .form_depends.generator import generate_any_form
+from ..storage.form import FORM_TYPE_LONG, FORM_TYPE_MODAL, FormStorage
 from ..storage.form_struct.long import (
     LongForm as LongStorageForm,
     LongFormIconPathImage as LongStorageFormIconPathImage,
 )
-from ..storage.form_struct.popup import PopupForm as PopupStorageForm
 from ..storage.form_struct.modal import (
     ModalForm as ModalStorageForm,
     ModalFormElementLabel as ModalStorageFormElementLabel,
@@ -24,570 +25,111 @@ from ..storage.form_struct.modal import (
     ModalFormElementStepSlider as ModalStorageFormElementStepSlider,
 )
 from ..executor.executor import GameCodeExecutor
-from ...formal.base import BaseForm as BaseFormalForm
-from ...formal.long import (
-    LongForm as LongFormalForm,
-    LongFormElement as LongFormalFormElement,
-    LongFormIconPathImage as LongFormalFormIconPathImage,
-)
+from ...formal.long import LongForm as LongFormalForm
 from ...formal.popup import PopupForm as PopupFormalForm
-from ...formal.modal import (
-    ModalForm as ModalFormalForm,
-    ModalFormElementLabel as ModalFormalFormElementLabel,
-    ModalFormElementInput as ModalFormalFormElementInput,
-    ModalFormElementToggle as ModalFormalFormElementToggle,
-    ModalFormElementDropdown as ModalFormalFormElementDropdown,
-    ModalFormElementSlider as ModalFormalFormElementSlider,
-    ModalFormElementStepSlider as ModalFormalFormElementStepSlider,
-)
+from ...formal.modal import ModalForm as ModalFormalForm
 from ...packet.packet import (
     PACKET_NAME_MODAL_FORM_REQUEST,
+    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
+    MODAL_FORM_CANCEL_REASON_USER_BUSY,
     ModalFormRequest,
     ModalFormResponse,
 )
 
 
-EMPTY_BASE_FORM = BaseFormalForm()
-EMPTY_STRING_WITH_HASH = StringWithHash()
+LONG_FORM_ICON_TYPE_NONE = 0
+LONG_FORM_ICON_TYPE_PATH_IMAGE = 1
 
-
-class FormalWithCallback:
-    formal = EMPTY_BASE_FORM
-    onsubmit = EMPTY_STRING_WITH_HASH
-    oncancel = EMPTY_STRING_WITH_HASH
-    onsuberr = EMPTY_STRING_WITH_HASH
-    oncanerr = EMPTY_STRING_WITH_HASH
-
-    def __init__(
-        self,
-        formal,  # type: BaseFormalForm
-        onsubmit,  # type: StringWithHash
-        oncancel,  # type: StringWithHash
-        onsuberr,  # type: StringWithHash
-        oncanerr,  # type: StringWithHash
-    ):  # type: (...) -> None
-        self.formal = formal
-        self.onsubmit = onsubmit
-        self.oncancel = oncancel
-        self.onsuberr = onsuberr
-        self.oncancel = oncanerr
-
-    def validate(
-        self, pk
-    ):  # type: (ModalFormResponse) -> int | bool | list[int | bool | float | str | None] | None
-        raw = pk.response_data.value()
-        if raw is None:
-            return None
-        try:
-            resp = json.loads(raw)
-        except Exception:
-            return None
-
-        if isinstance(self.formal, LongFormalForm):
-            if isinstance(resp, bool) or not isinstance(resp, int):
-                return None
-            return resp
-        if isinstance(self.formal, PopupFormalForm):
-            if not isinstance(resp, bool):
-                return None
-            return resp
-        if isinstance(self.formal, ModalFormalForm):
-            if not isinstance(resp, list):
-                return None
-            if len(self.formal.content) != len(resp):
-                return None
-            for index, value in enumerate(self.formal.content):
-                if isinstance(value, ModalFormalFormElementLabel):
-                    if resp[index] is not None:
-                        return None
-                elif isinstance(value, ModalFormalFormElementInput):
-                    if not isinstance(resp[index], str):
-                        return None
-                elif isinstance(value, ModalFormalFormElementToggle):
-                    if not isinstance(resp[index], bool):
-                        return None
-                elif isinstance(value, ModalFormalFormElementDropdown):
-                    val = resp[index]
-                    if isinstance(val, bool) or not isinstance(val, int):
-                        return None
-                    if val < 0 or val >= len(value.options):
-                        return None
-                elif isinstance(value, ModalFormalFormElementSlider):
-                    val = resp[index]
-                    if isinstance(val, bool) or not isinstance(val, (int, float)):
-                        return None
-                    if val < value.min_val or val > value.max_val:
-                        return None
-                    resp[index] = float(val)
-                elif isinstance(value, ModalFormalFormElementStepSlider):
-                    val = resp[index]
-                    if isinstance(val, bool) or not isinstance(val, int):
-                        return None
-                    if val < 0 or val >= len(value.steps):
-                        return None
-            return resp
-
-        return None
-
-
-class FormRefProcesser:
-    response = None  # type: int | bool | list[int | bool | float | str | None] | None
-
-    def __init__(self):  # type: () -> None
-        self.response = None
-
-    def ref(self, index):  # type: (int) -> int | bool | float | str
-        if self.response is None:
-            raise Exception(
-                "ref: Ref statement can only used under form response environment"
-            )
-
-        if isinstance(self.response, (int, bool)):
-            if index == -1:
-                return self.response
-            return index == int(self.response)
-
-        if index >= len(self.response):
-            raise Exception(
-                "ref: Ref index out of range [{}] with length {}".format(
-                    index, len(self.response)
-                )
-            )
-        value = self.response[index]
-        if value is None:
-            raise Exception(
-                "ref: Can not reference a null value (index={})".format(index)
-            )
-
-        return value
+MODAL_FORM_ELEMENT_TYPE_LABEL = 0
+MODAL_FORM_ELEMENT_TYPE_INPUT = 1
+MODAL_FORM_ELEMENT_TYPE_TOGGLE = 2
+MODAL_FORM_ELEMENT_TYPE_DROPDOWN = 3
+MODAL_FORM_ELEMENT_TYPE_SLIDER = 4
+MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER = 5
 
 
 class FormFeature:
-    server = None  # type: ServerSystem | None
+    """
+    FormFeature 实现了表单系统在服务器上的主要特性。
+    确保 FormFeature 的实现是线程安全的，
+    并且仅会对不同线程之间的调用产生互斥作用
+    """
+
+    system = None  # type: ServerSystem | None
     storage = None  # type: FormStorage | None
     executor = None  # type: GameCodeExecutor | None
     _sequence = 0  # type: int
     _pending = {}  # type: dict[str, dict[int, FormalWithCallback]]
     _ref = None  # type: FormRefProcesser | None
+    _locker = None  # type: threading.RLock | None
 
     def __init__(
-        self, server, storage, executor
+        self, system, storage, executor
     ):  # type: (ServerSystem, FormStorage, GameCodeExecutor) -> None
-        self.server = server
+        """初始化并返回一个新的 FormFeature
+
+        Args:
+            system (ServerSystem):
+                当前模组的服务端实现
+            storage (FormStorage):
+                所有表单的存储管理器
+            executor (GameCodeExecutor):
+                用户代码的执行器
+        """
+        self.system = system
         self.executor = executor
         self.storage = storage
         self._sequence = 0
         self._pending = {}
         self._ref = FormRefProcesser()
+        self._locker = threading.RLock()
+        self._dynamic_init()
 
-    def _generate_long_form(
-        self,
-        form,  # type: LongStorageForm
-        executor,  # type: str
-        dimension,  # type: int
-        position,  # type: tuple[float, float, float]
-    ):  # type: (...) -> FormalWithCallback
+    def _dynamic_init(self):  # type: () -> None
+        """
+        _dynamic_init 设置 Ref 语句相关联的函数，
+        并同时初始化和设置与表单相关的内建动态函数
+        """
         assert self.executor is not None
-        result = LongFormalForm()
+        assert self.executor.static_builtin is not None
+        assert self.executor.static_builtin.manager is not None
+        assert self._ref is not None
 
-        title = self.executor.run_code(form.title, executor, dimension, position, True)
-        if not isinstance(title, str):
-            raise Exception(
-                "_generate_long_form: The title of long form must be str (title={})".format(
-                    title
-                )
-            )
-        result.title = title
+        manager = self.executor.static_builtin.manager
+        funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        content = self.executor.run_code(
-            form.content, executor, dimension, position, True
+        funcs["form.list_all_form"] = lambda: manager.ref(self.list_all_form)
+        funcs["form.list_long_form_icon_type"] = lambda form_name: manager.ref(
+            self.list_long_form_icon_type(form_name)
         )
-        if not isinstance(content, str):
-            raise Exception(
-                "_generate_long_form: The content of long form must be str (content={})".format(
-                    content
-                )
-            )
-        result.content = content
-
-        for index, value in enumerate(form.buttons):
-            # prepare
-            element = LongFormalFormElement()
-            # text
-            text = self.executor.run_code(
-                value.text, executor, dimension, position, True
-            )
-            if not isinstance(text, str):
-                raise Exception(
-                    "_generate_long_form: The text of button which indexed in {} must be str (text={})".format(
-                        index, text
-                    )
-                )
-            element.text = text
-            # icon
-            if isinstance(value.icon, LongStorageFormIconPathImage):
-                image_path = self.executor.run_code(
-                    value.icon.image_path, executor, dimension, position, True
-                )
-                if not isinstance(image_path, str):
-                    raise Exception(
-                        "_generate_long_form: The image path of button which indexed in {} must be str (image_path={})".format(
-                            index, image_path
-                        )
-                    )
-                element.icon = LongFormalFormIconPathImage(image_path)
-            # append
-            result.buttons.append(element)
-
-        return FormalWithCallback(
-            result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
+        funcs["form.list_modal_form_element_type"] = lambda form_name: manager.ref(
+            self.list_modal_form_element_type(form_name)
+        )
+        funcs["form.custom_form_type"] = lambda form_name: self.custom_form_type(
+            form_name
+        )
+        funcs["form.long_form_element_icon_type"] = (
+            lambda form_name, index: self.long_form_element_icon_type(form_name, index)
+        )
+        funcs["form.modal_form_element_type"] = (
+            lambda form_name, index: self.modal_form_element_type(form_name, index)
+        )
+        funcs["form.modal_form_length"] = lambda form_name: self.modal_form_length(
+            form_name
+        )
+        funcs["form.long_form_length"] = lambda form_name: self.long_form_length(
+            form_name
+        )
+        funcs["form.dropdown_length"] = lambda form_name, index: self.dropdown_length(
+            form_name, index
+        )
+        funcs["form.step_slider_length"] = (
+            lambda form_name, index: self.step_slider_length(form_name, index)
         )
 
-    def _generate_popup_form(
-        self,
-        form,  # type: PopupStorageForm
-        executor,  # type: str
-        dimension,  # type: int
-        position,  # type: tuple[float, float, float]
-    ):  # type: (...) -> FormalWithCallback
-        assert self.executor is not None
-        result = PopupFormalForm()
-
-        title = self.executor.run_code(form.title, executor, dimension, position, True)
-        if not isinstance(title, str):
-            raise Exception(
-                "_generate_popup_form: The title of popup form must be str (title={})".format(
-                    title
-                )
-            )
-        result.title = title
-
-        content = self.executor.run_code(
-            form.content, executor, dimension, position, True
-        )
-        if not isinstance(content, str):
-            raise Exception(
-                "_generate_popup_form: The content of popup form must be str (content={})".format(
-                    content
-                )
-            )
-        result.content = content
-
-        button1 = self.executor.run_code(
-            form.button1, executor, dimension, position, True
-        )
-        if not isinstance(button1, str):
-            raise Exception(
-                "_generate_popup_form: The button1 of popup form must be str (button1={})".format(
-                    button1
-                )
-            )
-        result.button1 = button1
-
-        button2 = self.executor.run_code(
-            form.button2, executor, dimension, position, True
-        )
-        if not isinstance(button2, str):
-            raise Exception(
-                "_generate_popup_form: The button2 of popup form must be str (button2={})".format(
-                    button2
-                )
-            )
-        result.button2 = button2
-
-        return FormalWithCallback(
-            result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
-        )
-
-    def _generate_modal_form(
-        self,
-        form,  # type: ModalStorageForm
-        executor,  # type: str
-        dimension,  # type: int
-        position,  # type: tuple[float, float, float]
-    ):  # type: (...) -> FormalWithCallback
-        assert self.executor is not None
-        result = ModalFormalForm()
-
-        title = self.executor.run_code(form.title, executor, dimension, position, True)
-        if not isinstance(title, str):
-            raise Exception(
-                "_generate_modal_form: The title of modal form must be str (title={})".format(
-                    title
-                )
-            )
-        result.title = title
-
-        for index, value in enumerate(form.content):
-            if isinstance(value, ModalStorageFormElementLabel):
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of label must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                result.content.append(ModalFormalFormElementLabel(text))
-            elif isinstance(value, ModalStorageFormElementInput):
-                # text
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of input must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                # place holder
-                place_holder = self.executor.run_code(
-                    value.place_holder, executor, dimension, position, True
-                )
-                if not isinstance(place_holder, str):
-                    raise Exception(
-                        "_generate_modal_form: The place holder of input must be str (index={}, place_holder={})".format(
-                            index, place_holder
-                        )
-                    )
-                # default
-                default = self.executor.run_code(
-                    value.default, executor, dimension, position, True
-                )
-                if not isinstance(default, str):
-                    raise Exception(
-                        "_generate_modal_form: The default of input must be str (index={}, default={})".format(
-                            index, default
-                        )
-                    )
-                # append
-                result.content.append(
-                    ModalFormalFormElementInput(text, place_holder, default)
-                )
-            elif isinstance(value, ModalStorageFormElementToggle):
-                # text
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of toggle must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                # default
-                default = self.executor.run_code(
-                    value.default, executor, dimension, position, True
-                )
-                if not isinstance(default, bool):
-                    raise Exception(
-                        "_generate_modal_form: The default of toggle must be bool (index={}, default={})".format(
-                            index, default
-                        )
-                    )
-                # append
-                result.content.append(ModalFormalFormElementToggle(text, default))
-            elif isinstance(value, ModalStorageFormElementDropdown):
-                # prepare
-                element = ModalFormalFormElementDropdown()
-                # text
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of dropdown must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                element.text = text
-                # default
-                default = self.executor.run_code(
-                    value.default, executor, dimension, position, True
-                )
-                if isinstance(default, bool) or not isinstance(default, int):
-                    raise Exception(
-                        "_generate_modal_form: The default of dropdown must be integer (index={}, default={})".format(
-                            index, default
-                        )
-                    )
-                if default < 0 or default >= len(value.options):
-                    raise Exception(
-                        "_generate_modal_form: The default of dropdown is index out of range [{}] with length {} (index={})".format(
-                            default, len(value.options), index
-                        )
-                    )
-                element.default = default
-                # options
-                if len(value.options) == 0:
-                    raise Exception(
-                        "_generate_modal_form: The options of dropdown can not be empty (index={})".format(
-                            index
-                        )
-                    )
-                for ind, val in enumerate(value.options):
-                    option = self.executor.run_code(
-                        val, executor, dimension, position, True
-                    )
-                    if not isinstance(option, str):
-                        raise Exception(
-                            "_generate_modal_form: The option of dropdown must be str (index={}, ind={}, option={})".format(
-                                index, ind, option
-                            )
-                        )
-                    element.options.append(option)
-                # append
-                result.content.append(element)
-            elif isinstance(value, ModalStorageFormElementSlider):
-                # text
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of slider must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                # min value
-                min_val = self.executor.run_code(
-                    value.min_val, executor, dimension, position, True
-                )
-                if isinstance(min_val, bool) or not isinstance(min_val, (int, float)):
-                    raise Exception(
-                        "_generate_modal_form: The min value of slider must be number (index={}, min_val={})".format(
-                            index, min_val
-                        )
-                    )
-                # max value
-                max_val = self.executor.run_code(
-                    value.max_val, executor, dimension, position, True
-                )
-                if isinstance(max_val, bool) or not isinstance(max_val, (int, float)):
-                    raise Exception(
-                        "_generate_modal_form: The max value of slider must be number (index={}, max_val={})".format(
-                            index, max_val
-                        )
-                    )
-                if max_val <= min_val:
-                    raise Exception(
-                        "_generate_modal_form: The max value of slider must greater than the min value (index={}, min_val={}, max_val={})".format(
-                            index, min_val, max_val
-                        )
-                    )
-                # step
-                step = self.executor.run_code(
-                    value.step, executor, dimension, position, True
-                )
-                if isinstance(step, bool) or not isinstance(step, (int, float)):
-                    raise Exception(
-                        "_generate_modal_form: The step of slider must be number (index={}, step={})".format(
-                            index, step
-                        )
-                    )
-                if step <= 0:
-                    raise Exception(
-                        "_generate_modal_form: The step of slider mut be a positive number (index={}, step={})".format(
-                            index, step
-                        )
-                    )
-                # default
-                default = self.executor.run_code(
-                    value.default, executor, dimension, position, True
-                )
-                if isinstance(default, bool) or not isinstance(default, (int, float)):
-                    raise Exception(
-                        "_generate_modal_form: The default of slider must be number (index={}, default={})".format(
-                            index, default
-                        )
-                    )
-                if default < min_val or default > max_val:
-                    raise Exception(
-                        "_generate_modal_form: The default of slider can not be less than the min value or more than the max value (index={}, min_val={}, max_val={}, default={})".format(
-                            index, min_val, max_val, default
-                        )
-                    )
-                # append
-                result.content.append(
-                    ModalFormalFormElementSlider(
-                        text,
-                        float(min_val),
-                        float(max_val),
-                        float(step),
-                        float(default),
-                    )
-                )
-            elif isinstance(value, ModalStorageFormElementStepSlider):
-                # prepare
-                element = ModalFormalFormElementStepSlider()
-                # text
-                text = self.executor.run_code(
-                    value.text, executor, dimension, position, True
-                )
-                if not isinstance(text, str):
-                    raise Exception(
-                        "_generate_modal_form: The text of step slider must be str (index={}, text={})".format(
-                            index, text
-                        )
-                    )
-                element.text = text
-                # default
-                default = self.executor.run_code(
-                    value.default, executor, dimension, position, True
-                )
-                if isinstance(default, bool) or not isinstance(default, int):
-                    raise Exception(
-                        "_generate_modal_form: The default of step slider must be integer (index={}, default={})".format(
-                            index, default
-                        )
-                    )
-                if default < 0 or default >= len(value.steps):
-                    raise Exception(
-                        "_generate_modal_form: The default of step slider is index out of range [{}] with length {} (index={})".format(
-                            default, len(value.steps), index
-                        )
-                    )
-                element.default = default
-                # steps
-                if len(value.steps) <= 1:
-                    raise Exception(
-                        "_generate_modal_form: At least provide two elements for step slider (index={})".format(
-                            index
-                        )
-                    )
-                for ind, val in enumerate(value.steps):
-                    step = self.executor.run_code(
-                        val, executor, dimension, position, True
-                    )
-                    if not isinstance(step, str):
-                        raise Exception(
-                            "_generate_modal_form: The step of step slider must be str (index={}, ind={}, step={})".format(
-                                index, ind, step
-                            )
-                        )
-                    element.steps.append(step)
-                # append
-                result.content.append(element)
-
-        return FormalWithCallback(
-            result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
-        )
-
-    def _generate_any_form(
-        self,
-        form,  # type: BaseStorageForm
-        executor,  # type: str
-        dimension,  # type: int
-        position,  # type: tuple[float, float, float]
-    ):  # type: (...) -> FormalWithCallback
-        if isinstance(form, LongStorageForm):
-            return self._generate_long_form(form, executor, dimension, position)
-        if isinstance(form, PopupStorageForm):
-            return self._generate_popup_form(form, executor, dimension, position)
-        if isinstance(form, ModalStorageForm):
-            return self._generate_modal_form(form, executor, dimension, position)
-        raise Exception("unreachable")
+        with self.executor.get_locker():
+            _ = self.executor.set_ref_func(self._ref.ref)
+            _ = self.executor.inject_func(funcs)
 
     def send_modal_form_request(
         self,
@@ -597,22 +139,48 @@ class FormFeature:
         dimension,  # type: int
         position,  # type: tuple[float, float, float]
     ):  # type: (...) -> FormFeature
-        assert self.server is not None
+        """
+        send_modal_form_request 向指定的玩家打开表单。
+        它应该是通过指令调用的，所以您需要提供命令执行上下文
+
+        Args:
+            player_id (str):
+                目标玩家的 ID
+            form_name (str):
+                要打开的表单的名称
+            executor (str):
+                命令执行者
+            dimension (int):
+                命令执行维度
+            position (tuple[float, float, float]):
+                命令执行点
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            FormFeature: 返回 FormFeature 本身
+        """
+        assert self.system is not None
         assert self.storage is not None
         assert self.executor is not None
+        assert self._locker is not None
 
-        with self.executor.get_locker():
-            storage_form = self.storage.get_form(form_name)
-            if storage_form is None:
-                raise Exception(
-                    "send_modal_form_request: Form {} not found".format(
-                        json.dumps(form_name, ensure_ascii=False)
+        with self._locker:
+            with self.storage.get_locker():
+                storage_form = self.storage.get_form(form_name)
+                if storage_form is None:
+                    raise Exception(
+                        "send_modal_form_request: Form {} not found".format(
+                            json.dumps(form_name, ensure_ascii=False)
+                        )
                     )
-                )
+                with self.executor.get_locker():
+                    formal_with_cb = generate_any_form(
+                        storage_form, self.executor, executor, dimension, position
+                    )
 
-            formal_with_cb = self._generate_any_form(
-                storage_form, executor, dimension, position
-            )
             self._sequence += 1
             player_forms = self._pending.get(player_id, {})
             player_forms[self._sequence] = formal_with_cb
@@ -626,37 +194,69 @@ class FormFeature:
             elif isinstance(formal_with_cb.formal, ModalFormalForm):
                 raw["type"] = "custom_form"
 
-            self.server.NotifyToClient(
+            self.system.NotifyToClient(
                 player_id,
                 PACKET_NAME_MODAL_FORM_REQUEST,
                 ModalFormRequest(self._sequence, raw).marshal(),
             )
             return self
 
-    # def on_player_leave
-    # dump from and helpful func (built-in func)
-
     def on_modal_form_response(
         self, player_id, pk
     ):  # type: (str, ModalFormResponse) -> FormFeature
+        """
+        on_modal_form_response 在玩家提交表单时被调用，
+        这通常意味着玩家以提交的方式响应了表单
+
+        Args:
+            player_id (str):
+                提交者的 ID
+            pk (ModalFormResponse):
+                相应的负载
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            FormFeature: 返回 FormFeature 本身
+        """
         assert self.executor is not None
         assert self._ref is not None
+        assert self._locker is not None
 
-        with self.executor.get_locker():
+        with self._locker:
             player_forms = self._pending.get(player_id, {})
             formal_with_cb = player_forms.get(pk.form_id, None)
             if formal_with_cb is None:
-                raise Exception("on_modal_form_response: Bad packet (mark 0)")
+                raise Exception(
+                    "on_modal_form_response: Bad packet (mark 0); packet = {}".format(
+                        pk
+                    )
+                )
 
             cancel = pk.cancel_reason.value()
             if cancel is not None:
+                if cancel not in (
+                    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
+                    MODAL_FORM_CANCEL_REASON_USER_BUSY,
+                ):
+                    raise Exception(
+                        "on_modal_form_response: Bad packet (mark 2); packet = {}".format(
+                            pk
+                        )
+                    )
                 func_to_run = formal_with_cb.oncancel
                 when_meet_err = formal_with_cb.oncanerr
                 self._ref.response = cancel
             else:
                 response = formal_with_cb.validate(pk)
                 if response is None:
-                    raise Exception("on_modal_form_response: Bad packet (mark 1)")
+                    raise Exception(
+                        "on_modal_form_response: Bad packet (mark 1); packet = {}".format(
+                            pk
+                        )
+                    )
                 func_to_run = formal_with_cb.onsubmit
                 when_meet_err = formal_with_cb.onsuberr
                 self._ref.response = response
@@ -665,20 +265,467 @@ class FormFeature:
             dimension = (
                 GetEngineCompFactory().CreateDimension(player_id).GetEntityDimensionId()
             )
-            try:
-                _ = self.executor.run_code(
-                    func_to_run, player_id, dimension, position, False
-                )
-            except Exception as e:
-                _ = self.executor.variable_run(
-                    when_meet_err,
-                    player_id,
-                    dimension,
-                    position,
-                    {"error": str(e)},
-                    False,
-                )
-            finally:
-                self._ref.response = None
+            with self.executor.get_locker():
+                try:
+                    _ = self.executor.run_code(
+                        func_to_run, player_id, dimension, position, False
+                    )
+                except Exception as e:
+                    _ = self.executor.variable_run(
+                        when_meet_err,
+                        player_id,
+                        dimension,
+                        position,
+                        {"error": str(e)},
+                        False,
+                    )
+                finally:
+                    self._ref.response = None
 
             return self
+
+    def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
+        """on_player_leave 在有玩家离开服务器时被调用
+
+        Args:
+            args (dict[str, Any]):
+                PlayerIntendLeaveServerEvent 传入的字典参数
+        """
+        assert self._locker is not None
+
+        with self._locker:
+            player_id = args["playerId"]  # type: str
+            if player_id in self._pending:
+                del self._pending[player_id]
+
+    def list_all_form(self):  # type: () -> dict[str, int]
+        """
+        list_all_form 列出当前所有的表单及它们的类型
+
+        Returns:
+            dict[str, int]:
+                当前所有的表单及它们的类型
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            return self.storage.form_index()
+
+    def list_long_form_icon_type(self, form_name):  # type: (str) -> list[int]
+        """
+        list_long_form_icon_type 列出长表单中所有按钮的图标类型
+
+        Args:
+            form_name (str): 长表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是长表单，
+                则抛出相应的错误
+
+        Returns:
+            list[int]:
+                目标长表单中，
+                所有按钮的图标类型
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            result = []  # type: list[int]
+
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "list_long_form_icon_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_LONG:
+                raise Exception(
+                    "list_long_form_icon_type: Target form is not a long form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, LongStorageForm):
+                return result
+
+            for i in storage_form.buttons:
+                if isinstance(i.icon, LongStorageFormIconPathImage):
+                    result.append(LONG_FORM_ICON_TYPE_PATH_IMAGE)
+                else:
+                    result.append(LONG_FORM_ICON_TYPE_NONE)
+            return result
+
+    def list_modal_form_element_type(self, form_name):  # type: (str) -> list[int]
+        """
+        list_modal_form_element_type 列出模态表单中所有元素的类型
+
+        Args:
+            form_name (str): 模态表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是模态表单，
+                则抛出相应的错误
+
+        Returns:
+            list[int]:
+                目标模态表单中，
+                所有元素的类型
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            result = []  # type: list[int]
+
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "list_modal_form_element_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_MODAL:
+                raise Exception(
+                    "list_modal_form_element_type: Target form is not a modal form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, ModalStorageForm):
+                return result
+
+            for i in storage_form.content:
+                if isinstance(i, ModalStorageFormElementLabel):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_LABEL)
+                elif isinstance(i, ModalStorageFormElementInput):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_INPUT)
+                elif isinstance(i, ModalStorageFormElementToggle):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_TOGGLE)
+                elif isinstance(i, ModalStorageFormElementDropdown):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_DROPDOWN)
+                elif isinstance(i, ModalStorageFormElementSlider):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_SLIDER)
+                elif isinstance(i, ModalStorageFormElementStepSlider):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER)
+            return result
+
+    def custom_form_type(self, form_name):  # type: (str) -> int
+        """custom_form_type 查询一个表单的类型
+
+        Args:
+            form_name (str): 欲查询的表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                则抛出相应的错误
+
+        Returns:
+            int:
+                目标表单的类型，只可能为下列之一。
+                    - FORM_TYPE_LONG: 长表单
+                    - FORM_TYPE_POPUP: 信息表单
+                    - FORM_TYPE_MODAL: 模态表单
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is not None:
+                return form_type
+            raise Exception(
+                "custom_form_type: Form {} not found".format(
+                    json.dumps(form_name, ensure_ascii=False)
+                )
+            )
+
+    def long_form_element_icon_type(self, form_name, index):  # type: (str, int) -> int
+        """long_form_element_icon_type 查询长表单中指定按钮的图标类型
+
+        Args:
+            form_name (str): 目标长表单的名称
+            index (int): 目标按钮在给定长表单中的索引
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是长表单，
+                或索引超过范围，
+                则抛出相应的错误
+
+        Returns:
+            int:
+                目标按钮的图标类型，只可能为下列之一。
+                    - LONG_FORM_ICON_TYPE_NONE: 该按钮无图标
+                    - LONG_FORM_ICON_TYPE_PATH_IMAGE: 该按钮使用材质贴图
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "long_form_element_icon_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_LONG:
+                raise Exception(
+                    "long_form_element_icon_type: Target form is not a long form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, LongStorageForm):
+                return 0
+            if index < 0 or index >= len(storage_form.buttons):
+                raise Exception(
+                    "long_form_element_icon_type: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.buttons)
+                    )
+                )
+
+            button = storage_form.buttons[index]
+            if isinstance(button.icon, LongStorageFormIconPathImage):
+                return LONG_FORM_ICON_TYPE_PATH_IMAGE
+            else:
+                return LONG_FORM_ICON_TYPE_NONE
+
+    def modal_form_element_type(self, form_name, index):  # type: (str, int) -> int
+        """modal_form_element_type 查询模态表单中指定元素的类型
+
+        Args:
+            form_name (str): 目标模态表单的名称
+            index (int): 目标元素在给定模态表单中的索引
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是模态表单，
+                或索引超过范围，
+                则抛出相应的错误
+
+        Returns:
+            int:
+                目标元素的类型，只可能为下列之一。
+                    - MODAL_FORM_ELEMENT_TYPE_LABEL: 普通文本
+                    - MODAL_FORM_ELEMENT_TYPE_INPUT: 输入框
+                    - MODAL_FORM_ELEMENT_TYPE_TOGGLE: 开关
+                    - MODAL_FORM_ELEMENT_TYPE_DROPDOWN: 下拉框
+                    - MODAL_FORM_ELEMENT_TYPE_SLIDER: 隐式步进滑动条
+                    - MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER: 显式步进滑动条
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "modal_form_element_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_MODAL:
+                raise Exception(
+                    "modal_form_element_type: Target form is not a modal form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, ModalStorageForm):
+                return -1
+            if index < 0 or index >= len(storage_form.content):
+                raise Exception(
+                    "modal_form_element_type: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.content)
+                    )
+                )
+
+            element = storage_form.content[index]
+            if isinstance(element, ModalStorageFormElementLabel):
+                return MODAL_FORM_ELEMENT_TYPE_LABEL
+            elif isinstance(element, ModalStorageFormElementInput):
+                return MODAL_FORM_ELEMENT_TYPE_INPUT
+            elif isinstance(element, ModalStorageFormElementToggle):
+                return MODAL_FORM_ELEMENT_TYPE_TOGGLE
+            elif isinstance(element, ModalStorageFormElementDropdown):
+                return MODAL_FORM_ELEMENT_TYPE_DROPDOWN
+            elif isinstance(element, ModalStorageFormElementSlider):
+                return MODAL_FORM_ELEMENT_TYPE_SLIDER
+            elif isinstance(element, ModalStorageFormElementStepSlider):
+                return MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER
+            raise Exception("unreachable")
+
+    def modal_form_length(self, form_name):  # type: (str) -> int
+        """modal_form_length 返回模态表单中元素的数量
+
+        Args:
+            form_name (str): 模态表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是模态表单，
+                则抛出相应的错误
+
+        Returns:
+            int: 模态表单中元素的数量
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.get_form(form_name)
+            if form_type is None:
+                raise Exception(
+                    "modal_form_length: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_MODAL:
+                raise Exception("modal_form_length: Target form is not a modal form")
+
+            storage_form = self.storage.get_form(form_name)
+            if isinstance(storage_form, ModalStorageForm):
+                return len(storage_form.content)
+            return 0
+
+    def long_form_length(self, form_name):  # type: (str) -> int
+        """long_form_length 返回长表单中按钮的数量
+
+        Args:
+            form_name (str): 长表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是长表单，
+                则抛出相应的错误
+
+        Returns:
+            int: 长表单中按钮的数量
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.get_form(form_name)
+            if form_type is None:
+                raise Exception(
+                    "long_form_length: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_LONG:
+                raise Exception("long_form_length: Target form is not a long form")
+
+            storage_form = self.storage.get_form(form_name)
+            if isinstance(storage_form, LongStorageForm):
+                return len(storage_form.buttons)
+            return 0
+
+    def dropdown_length(self, form_name, index):  # type: (str, int) -> int
+        """
+        dropdown_length 返回下拉框的选项数量。
+        应说明的是，下拉框只在模态表单中存在
+
+        Args:
+            form_name (str):
+                下拉框所在模态表单的名称
+            index (int):
+                下拉框在模态表单中的索引
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是模态表单，
+                或索引超过范围，
+                或目标元素不是下拉框，
+                则抛出相应的错误
+
+        Returns:
+            int: 下拉框的选项数量
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "dropdown_length: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_MODAL:
+                raise Exception("dropdown_length: Target form is not a modal form")
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, ModalStorageForm):
+                return 0
+            if index < 0 or index >= len(storage_form.content):
+                raise Exception(
+                    "dropdown_length: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.content)
+                    )
+                )
+
+            element = storage_form.content[index]
+            if not isinstance(element, ModalStorageFormElementDropdown):
+                raise Exception(
+                    "dropdown_length: Target element is not a dropdown (element={})".format(
+                        element
+                    )
+                )
+            return len(element.options)
+
+    def step_slider_length(self, form_name, index):  # type: (str, int) -> int
+        """
+        step_slider_length 返回显式步进滑块的选项数量。
+        应说明的是，显式步进滑块只在模态表单中存在
+
+        Args:
+            form_name (str):
+                显式步进滑块所在模态表单的名称
+            index (int):
+                显式步进滑块在模态表单中的索引
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是模态表单，
+                或索引超过范围，
+                或目标元素不是显式步进滑块，
+                则抛出相应的错误
+
+        Returns:
+            int: 显式步进滑块的选项数量
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "step_slider_length: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_MODAL:
+                raise Exception("step_slider_length: Target form is not a modal form")
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, ModalStorageForm):
+                return 0
+            if index < 0 or index >= len(storage_form.content):
+                raise Exception(
+                    "step_slider_length: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.content)
+                    )
+                )
+
+            element = storage_form.content[index]
+            if not isinstance(element, ModalStorageFormElementStepSlider):
+                raise Exception(
+                    "step_slider_length: Target element is not a step slider (element={})".format(
+                        element
+                    )
+                )
+            return len(element.steps)

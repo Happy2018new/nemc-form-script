@@ -4,7 +4,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
 
-from ..base import BaseForm
+from .base import BaseForm
 from ..base import StringWithHash
 
 EMPTY_STRING_WITH_HASH = StringWithHash()

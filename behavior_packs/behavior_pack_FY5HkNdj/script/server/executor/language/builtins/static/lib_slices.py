@@ -146,6 +146,12 @@ class Slices:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, list):
             raise Exception("slices.get: Target object is not a slice")
+        if index < 0 or index >= len(obj):
+            raise Exception(
+                "slices.get: Index out of range [{}] with length {}".format(
+                    index, len(obj)
+                )
+            )
         return self._manager.ref(obj[index])
 
     def set(self, slice_ptr, index, value_ptr):  # type: (int, int, int) -> bool
@@ -166,7 +172,13 @@ class Slices:
         """
         slice_obj = self._manager.deref(slice_ptr)
         if not isinstance(slice_obj, list):
-            raise Exception("slices.append: Target object is not a slice")
+            raise Exception("slices.set: Target object is not a slice")
+        if index < 0 or index >= len(slice_obj):
+            raise Exception(
+                "slices.set: Index out of range [{}] with length {}".format(
+                    index, len(slice_obj)
+                )
+            )
         slice_obj[index] = self._manager.deref(value_ptr)
         return True
 

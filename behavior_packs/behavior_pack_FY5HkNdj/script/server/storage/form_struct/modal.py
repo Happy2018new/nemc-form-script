@@ -4,7 +4,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
 
-from ..base import BaseForm
+from .base import BaseForm
 from ..base import StringWithHash
 from ....formal.base import Marshaler
 

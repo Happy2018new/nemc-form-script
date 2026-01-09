@@ -38,7 +38,7 @@ class Math:
             int: 返回给定的对象，当且仅当它是整数时
         """
         if isinstance(obj, bool) or not isinstance(obj, int):
-            raise Exception("_validate_int: Result {} is not an integer".format(obj))
+            raise Exception("_validate_int: Result {} must be int".format(obj))
         return obj
 
     def _validate_number(self, obj):  # type: (Any) -> int | float

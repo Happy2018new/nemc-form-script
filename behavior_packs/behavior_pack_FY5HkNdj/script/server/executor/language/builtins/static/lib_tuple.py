@@ -97,6 +97,12 @@ class Tuple:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, tuple):
             raise Exception("tuple.get: Target object is not a tuple")
+        if index < 0 or index >= len(obj):
+            raise Exception(
+                "tuple.get: Index out of range [{}] with length {}".format(
+                    index, len(obj)
+                )
+            )
         return self._manager.ref(obj[index])
 
     def sub(self, ptr, start, end):  # type: (int, int, int) -> int

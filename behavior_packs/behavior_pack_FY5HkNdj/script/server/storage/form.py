@@ -5,8 +5,8 @@ if TYPE_CHECKING:
     from typing import Any
 
 import threading
-from .base import BaseForm
 from .base import StorageManager
+from .form_struct.base import BaseForm
 from .form_struct.long import LongForm
 from .form_struct.popup import PopupForm
 from .form_struct.modal import ModalForm

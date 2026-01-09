@@ -40,7 +40,7 @@ class OptionBase:
             self._val = None
         else:
             self._set = True if value is not None else False
-            self._val = value
+            self._val = cls(value)
         self._cls = cls
 
     def value(self):  # type: () -> Any | None
@@ -100,7 +100,7 @@ class OptionBase:
 
         value = data.get("value", None)
         self._set = False if value is None or not isinstance(value, self._cls) else True
-        self._val = value if self._set else None
+        self._val = self._cls(value) if self._set else None
         return self
 
 
