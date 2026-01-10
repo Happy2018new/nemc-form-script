@@ -89,23 +89,25 @@ class StringWithHash(Marshaler):
 
 class StorageManager:
     """
-    StorageManager 是带有锁的，
-    保证了线程安全的存储管理器
+    StorageManager 是带有锁的，保证了线程安全的存储管理器。
+    所使用的锁是可重入锁，因此可以确保它仅对不同的线程互斥
     """
 
-    _locker = None  # type: threading.Lock | None
+    _locker = None  # type: threading.RLock | None
     _storage = None  # type: ExDataCompServer | None
 
     def __init__(self):  # type: () -> None
         """初始化并返回一个新的 StorageManager"""
-        self._locker = threading.Lock()
+        self._locker = threading.RLock()
         self._storage = GetEngineCompFactory().CreateExtraData(GetLevelId())
 
-    def get_locker(self):  # type: () -> threading.Lock
-        """get_locker 返回存储资源的锁
+    def get_locker(self):  # type: () -> threading.RLock
+        """
+        get_locker 返回存储资源的可重入锁。
+        确保返回的锁只对不同线程之间互斥
 
         Returns:
-            threading.Lock: 存储资源的锁
+            threading.RLock: 存储资源的锁
         """
         assert self._locker is not None
         return self._locker

@@ -43,7 +43,7 @@ class FunctionStorage:
 
     _func = {}  # type: dict[str, CustomFunction]
     _storage = None  # type: StorageManager | None
-    _locker = None  # type: threading.Lock | None
+    _locker = None  # type: threading.RLock | None
 
     def __init__(self, storage):  # type: (StorageManager) -> None
         """初始化并返回一个新的自定义函数存储管理器
@@ -54,15 +54,16 @@ class FunctionStorage:
         """
         self._func = {}
         self._storage = storage
-        self._locker = threading.Lock()
+        self._locker = threading.RLock()
 
-    def get_locker(self):  # type: () -> threading.Lock
+    def get_locker(self):  # type: () -> threading.RLock
         """
-        get_locker 返回自定义函数的存储管理器的锁。
+        get_locker 返回自定义函数的存储管理器的可重入锁。
+        确保 get_locker 返回的锁只对不同线程之间互斥。
         任何对自定义函数的存储操作都须在锁的上下文内完成
 
         Returns:
-            threading.Lock:
+            threading.RLock:
                 自定义函数的存储管理器的锁
         """
         assert self._locker is not None
