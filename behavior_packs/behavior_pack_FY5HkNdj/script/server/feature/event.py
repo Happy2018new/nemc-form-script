@@ -232,8 +232,8 @@ class EventFeature:
 
             func = StringWithHash(func_code)
             onerr = StringWithHash(on_error)
-            _ = self.executor.compile_cache._compile(func)
-            _ = self.executor.compile_cache._compile(onerr)
+            _ = self.executor.compile_cache.get_runner(func)
+            _ = self.executor.compile_cache.get_runner(onerr)
 
             with self._locker:
                 if event_name not in self._handlers:

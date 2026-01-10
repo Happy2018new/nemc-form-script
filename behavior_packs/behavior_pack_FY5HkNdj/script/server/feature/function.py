@@ -93,7 +93,7 @@ class FunctionFeature:
                 )
 
             real_func = CustomFunction(func_code)
-            _ = self.executor.compile_cache._compile(real_func)
+            _ = self.executor.compile_cache.get_runner(real_func)
             _ = self.storage.save_func(func_name, real_func)
 
             return True
