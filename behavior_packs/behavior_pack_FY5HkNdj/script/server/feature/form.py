@@ -368,13 +368,10 @@ class FormFeature:
         Returns:
             FormFeature: 返回 FormFeature 本身
         """
-        assert self.executor is not None
-        assert self._ref is not None
         assert self._locker is not None
 
         with self._locker:
-            self._clean_pending_forms(player_id, pk.form_id)
-            return self
+            return self._clean_pending_forms(player_id, pk.form_id)
 
     def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
         """on_player_leave 在有玩家离开服务器时被调用
