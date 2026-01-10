@@ -14,6 +14,13 @@ from ..storage.form_struct.long import (
     LongFormIconPathImage as LongStorageFormIconPathImage,
 )
 
+SUB_COMMAND_TYPE_APPEND = 1
+SUB_COMMAND_TYPE_CONTENT = 2
+SUB_COMMAND_TYPE_INSERT = 3
+SUB_COMMAND_TYPE_LIST = 4
+SUB_COMMAND_TYPE_POP = 5
+SUB_COMMAND_TYPE_SUB = 6
+SUB_COMMAND_TYPE_TITLE = 7
 
 POP_RAW_ACTION_LEFT = "left"
 POP_RAW_ACTION_RIGHT = "right"
@@ -55,19 +62,19 @@ class LongFormHandler:
         cmdargs = args["args"]  # type: list[dict[str, Any]]
 
         try:
-            if variant == 1:
+            if variant == SUB_COMMAND_TYPE_APPEND:
                 args["return_msg_key"] = self.handle_append(cmdargs)
-            elif variant == 2:
+            elif variant == SUB_COMMAND_TYPE_CONTENT:
                 args["return_msg_key"] = self.handle_content(cmdargs)
-            elif variant == 3:
+            elif variant == SUB_COMMAND_TYPE_INSERT:
                 args["return_msg_key"] = self.handle_insert(cmdargs)
-            elif variant == 4:
+            elif variant == SUB_COMMAND_TYPE_LIST:
                 args["return_msg_key"] = self.handle_list(cmdargs)
-            elif variant == 5:
+            elif variant == SUB_COMMAND_TYPE_POP:
                 args["return_msg_key"] = self.handle_pop(cmdargs)
-            elif variant == 6:
+            elif variant == SUB_COMMAND_TYPE_SUB:
                 args["return_msg_key"] = self.handle_sub(cmdargs)
-            elif variant == 7:
+            elif variant == SUB_COMMAND_TYPE_TITLE:
                 args["return_msg_key"] = self.handle_title(cmdargs)
             pass
         except Exception as e:

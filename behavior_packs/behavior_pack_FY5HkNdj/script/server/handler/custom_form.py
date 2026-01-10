@@ -17,6 +17,14 @@ from ..storage.form_struct.long import LongForm as LongStorageForm
 from ..storage.form_struct.popup import PopupForm as PopupStorageForm
 from ..storage.form_struct.modal import ModalForm as ModalStorageForm
 
+SUB_COMMAND_TYPE_ADD = 1
+SUB_COMMAND_TYPE_LIST = 2
+SUB_COMMAND_TYPE_ONCANCEL = 3
+SUB_COMMAND_TYPE_ONSUBMIT = 4
+SUB_COMMAND_TYPE_REMOVE = 5
+SUB_COMMAND_TYPE_SAVE = 6
+SUB_COMMAND_TYPE_SHOW = 7
+SUB_COMMAND_TYPE_CLOSE = 8
 
 FORM_RAW_TYPE_LONG = "long"
 FORM_RAW_TYPE_POPUP = "popup"
@@ -57,21 +65,21 @@ class CustomFormHandler:
         dimension = args["origin"]["dimension"]  # type: int
 
         try:
-            if variant == 1:
+            if variant == SUB_COMMAND_TYPE_ADD:
                 args["return_msg_key"] = self.handle_add(cmdargs)
-            elif variant == 2:
+            elif variant == SUB_COMMAND_TYPE_LIST:
                 args["return_msg_key"] = self.handle_list(cmdargs)
-            elif variant == 3:
+            elif variant == SUB_COMMAND_TYPE_ONCANCEL:
                 args["return_msg_key"] = self.handle_on_cancel(cmdargs)
-            elif variant == 4:
+            elif variant == SUB_COMMAND_TYPE_ONSUBMIT:
                 args["return_msg_key"] = self.handle_on_submit(cmdargs)
-            elif variant == 5:
+            elif variant == SUB_COMMAND_TYPE_REMOVE:
                 args["return_msg_key"] = self.handle_remove(cmdargs)
-            elif variant == 6:
+            elif variant == SUB_COMMAND_TYPE_SAVE:
                 args["return_msg_key"] = self.handle_save(cmdargs)
-            elif variant == 7:
+            elif variant == SUB_COMMAND_TYPE_SHOW:
                 args["return_msg_key"] = self.handle_show(cmdargs, dimension)
-            elif variant == 8:
+            elif variant == SUB_COMMAND_TYPE_CLOSE:
                 args["return_msg_key"] = self.handle_close(cmdargs)
         except Exception as e:
             args["return_failed"] = True
