@@ -1,0 +1,13 @@
+{
+    "format_version": "0.0.1",
+    "name": "commandblockoutput",
+    "description": "commands.commandblockoutput.description",
+    "permission_level": "game_directors",
+    "requires_cheats": true,
+    "args": [
+        {
+            "name": "commandBlockPosition",
+            "type": "pos"
+        }
+    ]
+}
