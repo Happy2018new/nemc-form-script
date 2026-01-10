@@ -1,11 +1,10 @@
-/customform add <name: string> long|popup|modal [auoCompile: Boolean]
-/customform compile <name: string> [auoCompile: Boolean]
+/customform add <name: string> long|popup|modal
 /customform list [name: string]
 /customform oncancel <name: string> <code: string> [onCodeError: string]
 /customform onsubmit <name: string> <code: string> [onCodeError: string]
 /customform remove <name: string>
 /customform save <name: string>
-/customform show <executor: target> <player: target> <name: string>
+/customform show <executor: target> <position:pos> <player: target> <name: string>
 /customform close <player: target>
 
 
@@ -69,7 +68,7 @@
 
 
 /customfunction add <name: string> <code: string>
-/customfunction call <entity: target> <name: string>
+/customfunction call <executor: target> <position: pos> <name: string>
 /customfunction list [name: string]
 /customfunction remove <name: string>
 

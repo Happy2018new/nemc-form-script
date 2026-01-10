@@ -30,8 +30,12 @@
             ]
         },
         {
-            "name": "entity",
+            "name": "executor",
             "type": "target"
+        },
+        {
+            "name": "position",
+            "type": "pos"
         },
         {
             "name": "name",

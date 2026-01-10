@@ -101,7 +101,7 @@ class FormFeature:
         manager = self.executor.static_builtin.manager
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        funcs["form.list_all_form"] = lambda: manager.ref(self.list_all_form)
+        funcs["form.list_all_form"] = lambda: manager.ref(self.list_form)
         funcs["form.list_long_form_icon_type"] = lambda form_name: manager.ref(
             self.list_long_form_icon_type(form_name)
         )
@@ -260,8 +260,9 @@ class FormFeature:
         assert self._locker is not None
 
         with self._locker:
+            onlines = set(GetPlayerList())
             self.system.NotifyToMultiClients(
-                [i for i in players if i in set(GetPlayerList())],
+                [i for i in players if i in onlines],
                 PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
                 ClientBoundCloseForm().marshal(),
             )
@@ -387,18 +388,29 @@ class FormFeature:
             if player_id in self._pending:
                 del self._pending[player_id]
 
-    def list_all_form(self):  # type: () -> dict[str, int]
+    def list_form(self, form_name=""):  # type: (str) -> dict[str, int] | int | None
         """
-        list_all_form 列出当前所有的表单及它们的类型
+        list_form 给出指定表单的类型，
+        或当前所有的表单及它们的类型
+
+        Args:
+            form_name (str, optional):
+                要获取类型的表单名称。
+                将其置空以获取所有表单的类型。
+                默认值为空字符串
 
         Returns:
-            dict[str, int]:
-                当前所有的表单及它们的类型
+            dict[str, int] | int | None:
+                如果 form_name 为空字符串，则返回前者，指示所有表单以及它们的类型；
+                否则，返回 form_name 指示的表单的类型。若不存在，则返回 None
         """
         assert self.storage is not None
 
         with self.storage.get_locker():
-            return self.storage.form_index()
+            if len(form_name) == 0:
+                return self.storage.form_index()
+            else:
+                return self.storage.form_type(form_name)
 
     def list_long_form_icon_type(self, form_name):  # type: (str) -> list[int]
         """

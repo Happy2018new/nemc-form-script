@@ -24,32 +24,9 @@
                 "popup",
                 "modal"
             ]
-        },
-        {
-            "name": "auoCompile",
-            "type": "bool",
-            "default": false
         }
     ],
     "args2": [
-        {
-            "name": "compile",
-            "type": "enum",
-            "options": [
-                "compile"
-            ]
-        },
-        {
-            "name": "name",
-            "type": "str"
-        },
-        {
-            "name": "auoCompile",
-            "type": "bool",
-            "default": false
-        }
-    ],
-    "args3": [
         {
             "name": "list",
             "type": "enum",
@@ -63,7 +40,7 @@
             "default": ""
         }
     ],
-    "args4": [
+    "args3": [
         {
             "name": "oncancel",
             "type": "enum",
@@ -85,7 +62,7 @@
             "default": ""
         }
     ],
-    "args5": [
+    "args4": [
         {
             "name": "onsubmit",
             "type": "enum",
@@ -107,7 +84,7 @@
             "default": ""
         }
     ],
-    "args6": [
+    "args5": [
         {
             "name": "remove",
             "type": "enum",
@@ -120,7 +97,7 @@
             "type": "str"
         }
     ],
-    "args7": [
+    "args6": [
         {
             "name": "save",
             "type": "enum",
@@ -133,7 +110,7 @@
             "type": "str"
         }
     ],
-    "args8": [
+    "args7": [
         {
             "name": "show",
             "type": "enum",
@@ -146,6 +123,10 @@
             "type": "target"
         },
         {
+            "name": "position",
+            "type": "pos"
+        },
+        {
             "name": "player",
             "type": "target"
         },
@@ -154,7 +135,7 @@
             "type": "str"
         }
     ],
-    "args9": [
+    "args8": [
         {
             "name": "close",
             "type": "enum",
