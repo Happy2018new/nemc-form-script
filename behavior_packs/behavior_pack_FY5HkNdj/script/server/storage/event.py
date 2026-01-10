@@ -134,9 +134,9 @@ class EventStorage:
 
             return self
 
-    def get_event(self, event_name):  # type: (str) -> dict[str, CustomFunction] | None
+    def get_funcs(self, event_name):  # type: (str) -> dict[str, CustomFunction] | None
         """
-        get_event 从缓存中获取注册在给定事件下的所有函数。
+        get_funcs 从缓存中获取注册在给定事件下的所有函数。
         如果缓存未命中，则从底层存储获取。
 
         返回的字典不容许进一步修改。
@@ -232,7 +232,7 @@ class EventStorage:
             _ = manager.SetExtraData("form_system_storage", root)
             return self
 
-    def remove_func(self, func_name):  # type: (str) -> str | None
+    def remove_func(self, func_name):  # type: (str) -> bool
         """
         remove_func 同时从缓存和底层存储中删除指定名称的自定义函数。
         即便 func_name 指示的自定义函数不存在，remove_func 也不会出错
@@ -241,12 +241,12 @@ class EventStorage:
             func_name (str): 欲删除的自定义函数的名称
 
         Returns:
-            str | None:
+            bool:
                 如果该函数所在的事件在 remove_func 调用后没有剩余的函数，
-                则返回该 func_name 对应事件的名称；否则，那么返回 None
+                则返回该 remove_func 将返回 True，否则返回 False
         """
         if self._storage is None:
-            return None
+            return False
 
         with self._storage.get_locker():
             manager = self._storage.get_storage()
@@ -257,7 +257,7 @@ class EventStorage:
 
             func_index = root.get("event_func_index", {})  # type: dict[str, str]
             if func_name not in func_index:
-                return None
+                return False
 
             data = root.get(
                 "event_data", {}
@@ -284,11 +284,10 @@ class EventStorage:
 
             _ = manager.SetExtraData("form_system_storage", root)
 
-        result = None
         for key, value in list(self._event.items()):
             if func_name in value:
                 del value[func_name]
             if len(value) == 0:
                 del self._event[key]
-                result = key
-        return result
+                return True
+        return False

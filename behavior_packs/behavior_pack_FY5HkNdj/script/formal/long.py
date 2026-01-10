@@ -209,6 +209,8 @@ class LongFormElement(Marshaler):
             self.text = text
 
         image = data.get("image", {})
+        if not isinstance(image, dict):
+            return self
         if len(image) == 0:
             return self
 

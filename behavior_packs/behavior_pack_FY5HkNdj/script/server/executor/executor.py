@@ -29,8 +29,8 @@ class GameCodeExecutor:
 
     static_builtin = None  # type: StaticBuiltInFunction | None
     dynamic_builtin = None  # type: DynamicBuiltInFunction | None
+    compile_cache = None  # type: CompileCache | None
 
-    _compile_cache = None  # type: CompileCache | None
     _game_interact = None  # type: GameInteract | None
     _built_in_func = None  # type: BuiltInFunction | None
 
@@ -50,8 +50,8 @@ class GameCodeExecutor:
         manager = new_base_manager()
         self.static_builtin = StaticBuiltInFunction(manager)
         self.dynamic_builtin = DynamicBuiltInFunction(manager, system)
+        self.compile_cache = cache
 
-        self._compile_cache = cache
         self._init_game_interact()
         self._init_builtins()
 
@@ -71,11 +71,11 @@ class GameCodeExecutor:
         """_init_builtins 初始化大多数内置函数"""
         assert self.static_builtin is not None
         assert self.dynamic_builtin is not None
-        assert self._compile_cache is not None
+        assert self.compile_cache is not None
         self._built_in_func = BuiltInFunction()
         self.static_builtin.build_func(self._built_in_func.static)
         self.dynamic_builtin.build_func(self._built_in_func.dynamic)
-        self._compile_cache.build_func(self._built_in_func.dynamic)
+        self.compile_cache.build_func(self._built_in_func.dynamic)
 
     def _context(self):  # type: () -> Context
         """_context 返回当前的命令执行上下文
@@ -266,7 +266,7 @@ class GameCodeExecutor:
         """
         assert self.static_builtin is not None
         assert self.static_builtin.manager is not None
-        assert self._compile_cache is not None
+        assert self.compile_cache is not None
         assert self._game_interact is not None
         assert self._built_in_func is not None
 
@@ -282,7 +282,7 @@ class GameCodeExecutor:
 
         try:
             # Running the code
-            runner = self._compile_cache.get_runner(code)
+            runner = self.compile_cache.get_runner(code)
             result = runner.running(
                 require_return=require_return,
                 interact=self._game_interact,
@@ -346,7 +346,7 @@ class GameCodeExecutor:
         # Prepare
         assert self.static_builtin is not None
         assert self.static_builtin.manager is not None
-        assert self._compile_cache is not None
+        assert self.compile_cache is not None
         assert self._game_interact is not None
         assert self._built_in_func is not None
 
@@ -362,7 +362,7 @@ class GameCodeExecutor:
 
         try:
             # Running the code
-            runner = self._compile_cache.get_runner(code)
+            runner = self.compile_cache.get_runner(code)
             result = runner.debug(
                 require_return=require_return,
                 variables=variables,

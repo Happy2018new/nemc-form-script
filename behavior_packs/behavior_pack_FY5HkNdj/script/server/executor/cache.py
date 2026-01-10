@@ -205,10 +205,10 @@ class CompileCache:
                         _ = self._compile(func)
                 # process event functions
                 for event_name in event_storage.all_index():
-                    event = event_storage.get_event(event_name)
-                    if event is None:
+                    funcs = event_storage.get_funcs(event_name)
+                    if funcs is None:
                         continue
-                    for _, func in event.items():
+                    for _, func in funcs.items():
                         _ = self._compile(func)
             finally:
                 event_storage.get_locker().release()
