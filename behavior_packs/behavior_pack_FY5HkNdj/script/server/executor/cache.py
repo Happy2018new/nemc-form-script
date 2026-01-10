@@ -70,10 +70,12 @@ class CompileCache:
 
         ratio = COMPILE_CACHE_DEFAULT_COMPACT_RATIO
         length = int(len(self._sequence) * ratio)
+        if len(self._sequence) - length > self._max_size:
+            length = len(self._sequence) - self._max_size
+
         for i in self._sequence[:length]:
             del self._cache[i]
         self._sequence = self._sequence[length:]
-
         return self
 
     def _compile(self, code):  # type: (StringWithHash) -> CodeRunner
@@ -138,12 +140,30 @@ class CompileCache:
             size (int):
                 欲设置的最大缓存容量
 
+        Raises:
+            Exception:
+                如果给出的 size 不是整数，
+                或给出的 size 是负数，
+                则抛出相应的错误
+
         Returns:
             bool: 总是返回 True
         """
         assert self._locker is not None
 
         with self._locker:
+            if isinstance(size, bool) or not isinstance(size, int):
+                raise Exception(
+                    "set_max_cache_size: The given size must be int (size={})".format(
+                        size
+                    )
+                )
+            if size < 0:
+                raise Exception(
+                    "set_max_cache_size: The given size must be non-negative integer (size={})".format(
+                        size
+                    )
+                )
             self._max_size = size
             _ = self._compact(False)
             return True

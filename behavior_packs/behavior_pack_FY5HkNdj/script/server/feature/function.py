@@ -181,29 +181,27 @@ class FunctionFeature:
                     )
                 )
 
-            with self.executor.get_locker():
-                context = self.executor.execute_context()
-                manager = self.executor.static_builtin.manager
-
-                if len(args) == 0:
-                    return self.executor.run_code(
-                        func,
-                        "",
-                        context.get_executor(),
-                        context.get_dimension(),
-                        context.get_position(),
-                        True,
-                    )  # type: ignore
-                else:
-                    return self.executor.variable_run(
-                        func,
-                        "",
-                        context.get_executor(),
-                        context.get_dimension(),
-                        context.get_position(),
-                        {"args": manager.ref(args)},
-                        True,
-                    )  # type: ignore
+        with self.executor.get_locker():
+            context = self.executor.execute_context()
+            if len(args) == 0:
+                return self.executor.run_code(
+                    func,
+                    "",
+                    context.get_executor(),
+                    context.get_dimension(),
+                    context.get_position(),
+                    True,
+                )  # type: ignore
+            else:
+                return self.executor.variable_run(
+                    func,
+                    "",
+                    context.get_executor(),
+                    context.get_dimension(),
+                    context.get_position(),
+                    {"args": self.executor.static_builtin.manager.ref(args)},
+                    True,
+                )  # type: ignore
 
     def try_call(self, func_name, *args):  # type: (str, ...) -> int
         """
