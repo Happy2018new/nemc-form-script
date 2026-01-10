@@ -9,7 +9,8 @@ import threading
 import copy
 import json
 from mod.server.extraServerApi import GetEngineNamespace, GetEngineSystemName
-from ..storage.event import CustomFunction, EventStorage
+from ..storage.base import StringWithHash
+from ..storage.event import EventFuncData, EventStorage
 from ..executor.executor import GameCodeExecutor
 
 
@@ -65,10 +66,20 @@ class SingleEventProcesser:
 
                     try:
                         _ = self._executor.variable_run(
-                            code=func, variables=copied, require_return=False
+                            code=func.get_func(), variables=copied, require_return=False
                         )
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        try:
+                            _ = self._executor.variable_run(
+                                code=func.get_on_error(),
+                                variables={
+                                    "error": str(e),
+                                    "args": manager.ref(copy.deepcopy(args)),
+                                },
+                                require_return=False,
+                            )
+                        except Exception:
+                            pass
 
                     if "cancel" in args and copied.get("cancel", False):
                         args["cancel"] = True
@@ -123,8 +134,10 @@ class EventFeature:
         funcs["event.list"] = lambda event_name="": manager.ref(
             self.list_event(event_name)
         )
-        funcs["event.listen"] = lambda event_name, func_name, func_code: self.listen(
-            event_name, func_name, func_code
+        funcs["event.listen"] = (
+            lambda event_name, func_name, func_code, on_error: self.listen(
+                event_name, func_name, func_code, on_error
+            )
         )
         funcs["event.destroy"] = lambda func_name: self.destroy(func_name)
 
@@ -176,7 +189,9 @@ class EventFeature:
                     _ = self._create_listener(event_name)
                 return self
 
-    def listen(self, event_name, func_name, func_code):  # type: (str, str, str) -> bool
+    def listen(
+        self, event_name, func_name, func_code, on_error
+    ):  # type: (str, str, str, str) -> bool
         """
         listen 将指定的函数注册在给定的事件下
 
@@ -187,6 +202,9 @@ class EventFeature:
                 目标函数的名称
             func_code (str):
                 目标函数的代码
+            on_error (str):
+                当目标函数执行发生错误时，
+                要执行的错误处理代码
 
         Raises:
             Exception:
@@ -212,13 +230,17 @@ class EventFeature:
                     )
                 )
 
-            real_func = CustomFunction(func_code)
-            _ = self.executor.compile_cache._compile(real_func)
+            func = StringWithHash(func_code)
+            onerr = StringWithHash(on_error)
+            _ = self.executor.compile_cache._compile(func)
+            _ = self.executor.compile_cache._compile(onerr)
+
             with self._locker:
                 if event_name not in self._handlers:
                     _ = self._create_listener(event_name)
-                _ = self.storage.save_func(event_name, func_name, real_func)
-
+                _ = self.storage.save_func(
+                    event_name, func_name, EventFuncData(func, onerr)
+                )
             return True
 
     def destroy(self, func_name):  # type: (str) -> bool

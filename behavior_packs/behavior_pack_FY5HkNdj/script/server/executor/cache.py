@@ -188,9 +188,9 @@ class CompileCache:
 
             try:
                 # load all saved things
-                form_storage.load_all()
-                func_storage.load_all()
-                event_storage.load_all()
+                _ = form_storage.load_all()
+                _ = func_storage.load_all()
+                _ = event_storage.load_all()
                 # process form objects
                 for form_name in form_storage.form_index():
                     form = form_storage.get_form(form_name)
@@ -209,7 +209,8 @@ class CompileCache:
                     if funcs is None:
                         continue
                     for _, func in funcs.items():
-                        _ = self._compile(func)
+                        _ = self._compile(func.get_func())
+                        _ = self._compile(func.get_on_error())
             finally:
                 event_storage.get_locker().release()
                 func_storage.get_locker().release()

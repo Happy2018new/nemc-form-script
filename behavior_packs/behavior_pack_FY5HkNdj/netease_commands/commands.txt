@@ -77,7 +77,7 @@
 
 /systemevent destroy <funcName: string>
 /systemevent list [eventName: string]
-/systemevent listen <eventName: string> <funcName: string> <code: string>
+/systemevent listen <eventName: string> <funcName: string> <code: string> [onCodeError: string]
 /systemevent query <funcName: string>
 
 
@@ -85,6 +85,10 @@
 /compilecache compile <code: string>
 /compilecache query
 /compilecache set [size: int]
+
+
+
+/commandblockoutput <commandBlockPosition: pos>
 
 
 
@@ -123,7 +127,8 @@ compile.register_cache
 
 
 
-debug.test_compile_time
+debug.test_code_compile_time
+debug.test_function_call_time
 debug.collect_compile_garbage
 debug.clean_compile_cache
 debug.compile_all_preparation

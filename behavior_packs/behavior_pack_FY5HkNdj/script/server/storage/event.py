@@ -5,14 +5,86 @@ if TYPE_CHECKING:
     from typing import Any
 
 import threading
-from .function import CustomFunction
+from .base import StringWithHash
 from .base import StorageManager
+from ...formal.base import Marshaler
+
+
+EMPTY_STRING_WITH_HASH = StringWithHash()
+
+
+class EventFuncData(Marshaler):
+    """
+    EventFuncData 描述一个事件中的单个侦听函数的存储形式。
+    它保存了侦听到相应事件时应执行的代码，
+    以及在该代码运行出错时应执行的错误处理
+    """
+
+    _func = EMPTY_STRING_WITH_HASH
+    _onerror = EMPTY_STRING_WITH_HASH
+
+    def __init__(
+        self, func=EMPTY_STRING_WITH_HASH, onerror=EMPTY_STRING_WITH_HASH
+    ):  # type: (StringWithHash, StringWithHash) -> None
+        self._func = func
+        self._onerror = onerror
+
+    def get_func(self):  # type: () -> StringWithHash
+        """
+        get_func 返回相应事件
+        发生时，要执行的源代码
+
+        Returns:
+            StringWithHash:
+                相应的源代码
+        """
+        return self._func
+
+    def get_on_error(self):  # type: () -> StringWithHash
+        """
+        get_on_error 返回当事件处理函数执行出错时，
+        要执行的用于进行错误处理的源代码
+
+        Returns:
+            StringWithHash:
+                相应的源代码
+        """
+        return self._onerror
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """
+        marshal 将该 EventFuncData 编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]:
+                该 EventFuncData 对应的 JSON 表示
+        """
+        return {
+            "func": self._func.marshal(),
+            "onerror": self._onerror.marshal(),
+        }
+
+    def unmarshal(self, data):  # type: (Any) -> EventFuncData
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据置入该 EventFuncData 中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            EventFuncData: 返回 EventFuncData 本身
+        """
+        self._func = StringWithHash().unmarshal(data["func"])
+        self._onerror = StringWithHash().unmarshal(data["onerror"])
+        return self
 
 
 class EventStorage:
     """EventStorage 是所有事件的存储管理器"""
 
-    _event = {}  # type: dict[str, dict[str, CustomFunction]]
+    _event = {}  # type: dict[str, dict[str, EventFuncData]]
     _storage = None  # type: StorageManager | None
     _locker = None  # type: threading.RLock | None
 
@@ -42,16 +114,16 @@ class EventStorage:
 
     def event_name(self, func_name):  # type: (str) -> str | None
         """
-        event_name 返回给定函数绑定在哪个事件下
+        event_name 返回给定的事件函数绑定在哪个事件下
 
         Args:
             func_name (str):
-                目标函数名
+                目标事件函数的名称
 
         Returns:
             str | None:
-                如果目标函数存在，则返回对应的事件名；
-                否则目标函数不存在，那么返回 None
+                如果目标事件函数存在，则返回对应的事件名；
+                否则目标事件函数不存在，那么返回 None
         """
         if self._storage is None:
             return None
@@ -63,7 +135,8 @@ class EventStorage:
     def all_index(self):  # type: () -> dict[str, set[str]]
         """
         all_index 返回所有事件的索引。
-        键是事件名，值是该事件下注册的所有函数
+        对于返回的索引，键是事件名，
+        值是该事件下注册的所有事件函数
 
         Returns:
             dict[str, set[str]]:
@@ -85,12 +158,13 @@ class EventStorage:
 
     def func_index(self):  # type: () -> dict[str, str]
         """
-        func_index 返回所有函数的索引。
-        键是自定义函数的名称，
-        值是该自定义函数注册时对应的事件名
+        func_index 返回所有事件函数的索引。
+        对于返回的索引，键是事件函数的名称，
+        值是该事件函数注册时对应的事件名
 
         Returns:
-            dict[str, str]: 所有函数的索引
+            dict[str, str]:
+                所有事件函数的索引
         """
         if self._storage is None:
             return {}
@@ -127,28 +201,28 @@ class EventStorage:
             )  # type: dict[str, dict[str, dict[str, Any]]]
 
             for key, value in data.items():
-                event = {}  # type: dict[str, CustomFunction]
+                event = {}  # type: dict[str, EventFuncData]
                 for k, v in value.items():
-                    event[k] = CustomFunction().unmarshal(v)
+                    event[k] = EventFuncData().unmarshal(v)
                 self._event[key] = event
 
             return self
 
-    def get_funcs(self, event_name):  # type: (str) -> dict[str, CustomFunction] | None
+    def get_funcs(self, event_name):  # type: (str) -> dict[str, EventFuncData] | None
         """
-        get_funcs 从缓存中获取注册在给定事件下的所有函数。
+        get_funcs 从缓存中获取注册在给定事件下的所有事件函数。
         如果缓存未命中，则从底层存储获取。
 
         返回的字典不容许进一步修改。
-        您只能通过重新构造新的 CustomFunction 实例，
+        您只能通过重新构造新的 EventFuncData 实例，
         并通过 save_func 持久化到底层存储
 
         Args:
             event_name (str): 给定的事件名
 
         Returns:
-            dict[str, CustomFunction] | None:
-                如果存在，则返回该事件下的所有函数；
+            dict[str, EventFuncData] | None:
+                如果存在，则返回该事件下的所有事件函数；
                 否则不存在，那么返回 None
         """
         if self._storage is None:
@@ -169,27 +243,27 @@ class EventStorage:
             if event_name not in data:
                 return None
 
-            event = {}  # type: dict[str, CustomFunction]
+            event = {}  # type: dict[str, EventFuncData]
             for key, value in data[event_name].items():
-                event[key] = CustomFunction().unmarshal(value)
+                event[key] = EventFuncData().unmarshal(value)
             self._event[event_name] = event
 
             return self._event[event_name]
 
     def save_func(
         self, event_name, func_name, real_func
-    ):  # type: (str, str, CustomFunction) -> EventStorage
+    ):  # type: (str, str, EventFuncData) -> EventStorage
         """
-        save_func 将给定的自定义函数注册到指定的事件下，
+        save_func 将给定的事件函数注册到指定的事件下，
         同时将本次更改同步到底层的持久化存储中
 
         Args:
             event_name (str):
-                目标事件名
+                目标事件的名称
             func_name (str):
-                目标函数名
-            real_func (CustomFunction):
-                给定的自定义函数
+                目标事件函数的名称
+            real_func (EventFuncData):
+                给定的事件函数
 
         Returns:
             EventStorage:
@@ -198,7 +272,7 @@ class EventStorage:
         if self._storage is None:
             return self
 
-        funcs = self._event.get(event_name, {})  # type: dict[str, CustomFunction]
+        funcs = self._event.get(event_name, {})  # type: dict[str, EventFuncData]
         funcs[func_name] = real_func
         self._event[event_name] = funcs
 
@@ -234,16 +308,16 @@ class EventStorage:
 
     def remove_func(self, func_name):  # type: (str) -> bool
         """
-        remove_func 同时从缓存和底层存储中删除指定名称的自定义函数。
-        即便 func_name 指示的自定义函数不存在，remove_func 也不会出错
+        remove_func 同时从缓存和底层存储中删除指定名称的事件函数。
+        即便 func_name 指示的事件函数不存在，remove_func 也不会出错
 
         Args:
-            func_name (str): 欲删除的自定义函数的名称
+            func_name (str): 欲删除的事件函数的名称
 
         Returns:
             bool:
-                如果该函数所在的事件在 remove_func 调用后没有剩余的函数，
-                则返回该 remove_func 将返回 True，否则返回 False
+                如果在 remove_func 操作后，目标事件下没有剩余的事件函数，
+                则 remove_func 将返回 True，否则返回 False
         """
         if self._storage is None:
             return False
