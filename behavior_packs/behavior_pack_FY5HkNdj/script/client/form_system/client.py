@@ -22,7 +22,9 @@ from ...packet.packet import (
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
+    ServerBoundCloseForm,
     PACKET_NAME_MODAL_FORM_RESPONSE,
+    PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
 )
 from mod.client.extraClientApi import (
@@ -219,17 +221,25 @@ class ClientFormSystem:
         pk.unmarshal(args)
 
         with self.base.locker:
-            if self.base.pending_pk is not None:
-                self.base.pending_pk = None
-
             if GetTopUI() != "form_main_screen":
                 return
             if self.base.states != STATES_SCREEN_IS_SHOWING:
                 return
 
+            resp = ServerBoundCloseForm()
+            if self.base.pending_pk is not None:
+                resp.form_id.append(self.base.pending_pk.form_id)
+                self.base.pending_pk = None
+            if self.base.server_pk is not None:
+                resp.form_id.append(self.base.server_pk.form_id)
+                self.base.server_pk = None
             self.base.states = STATES_SCREEN_FORCE_POPPING
-            self.base.server_pk = None
             PopScreen()
+
+            self.base.NotifyToServer(
+                PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
+                resp.marshal(),
+            )
 
     def on_long_form_submit(self, _, index):  # type: (dict[str, Any], int) -> None
         """on_long_form_submit 是玩家提交长表单时执行的回调函数

@@ -6,6 +6,7 @@
 /customform remove <name: string>
 /customform save <name: string>
 /customform show <executor: target> <player: target> <name: string>
+/customform close <player: target>
 
 
 
@@ -111,6 +112,7 @@ function.list
 function.register
 function.unregister
 function.call
+function.try
 
 
 

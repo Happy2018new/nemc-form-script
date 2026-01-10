@@ -153,5 +153,18 @@
             "name": "name",
             "type": "str"
         }
+    ],
+    "args9": [
+        {
+            "name": "close",
+            "type": "enum",
+            "options": [
+                "close"
+            ]
+        },
+        {
+            "name": "player",
+            "type": "target"
+        }
     ]
 }

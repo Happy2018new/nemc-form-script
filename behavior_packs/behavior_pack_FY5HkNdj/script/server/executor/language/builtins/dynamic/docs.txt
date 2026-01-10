@@ -6,6 +6,7 @@
     command.set_dimension
     command.get_dimension
     command.dimension_name
+    command.fast_set
 
 
 

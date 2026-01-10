@@ -4,6 +4,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Callable
 
+from mod.server.extraServerApi import GetEngineCompFactory
 from ..static.lib_object import BaseManager
 
 
@@ -145,6 +146,30 @@ class Context:
         """
         return self._dim_name
 
+    def fast_set(self, entity_id):  # type: (str) -> bool
+        """
+        fast_set 将命令执行上下文切换到指定的实体。
+        这不仅改变了命令执行者，还改变了其他所有上下文
+
+        Args:
+            entity_id (str):
+                目标实体的 ID
+
+        Raises:
+            Exception:
+                如果给定的实体不存在，
+                则将抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        self.set_executor(entity_id)
+        self.set_position(*GetEngineCompFactory().CreatePos(entity_id).GetPos())
+        self.set_dimension(
+            GetEngineCompFactory().CreateDimension(entity_id).GetEntityDimensionId()
+        )
+        return True
+
     def current_context(
         self,
     ):  # type: () -> tuple[str, int, tuple[float, float, float]]
@@ -196,6 +221,7 @@ class Context:
         funcs["command.set_dimension"] = self.set_dimension
         funcs["command.get_dimension"] = self.get_dimension
         funcs["command.dimension_name"] = self.dimension_name
+        funcs["command.fast_set"] = self.fast_set
 
         for key, value in funcs.items():
             origin[key] = value

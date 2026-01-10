@@ -3,7 +3,7 @@
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any, Callable
-    from mod.server.extraServerApi import ServerSystem
+    from mod.server.extraServerApi import ServerSystem, GetPlayerList
 
 import json
 import threading
@@ -30,10 +30,13 @@ from ...formal.popup import PopupForm as PopupFormalForm
 from ...formal.modal import ModalForm as ModalFormalForm
 from ...packet.packet import (
     PACKET_NAME_MODAL_FORM_REQUEST,
+    PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
     ModalFormRequest,
     ModalFormResponse,
+    ClientBoundCloseForm,
+    ServerBoundCloseForm,
 )
 
 
@@ -131,21 +134,51 @@ class FormFeature:
             _ = self.executor.set_ref_func(self._ref.ref)
             _ = self.executor.inject_func(funcs)
 
+    def _clean_pending_forms(
+        self, player_id, closed_forms
+    ):  # type: (str, list[int]) -> FormFeature
+        """
+        _clean_pending_forms 将 close_forms 指示的所有表单从服务端处移除。
+        这通常发生在玩家提交（响应）了表单，或服务端强制关闭了所有已打开的表单
+
+        Args:
+            player_id (str):
+                这些表单所属的玩家 ID
+            closed_forms (list[int]):
+                要移除的所有表单
+
+        Returns:
+            FormFeature: 返回 FormFeature 本身
+        """
+        if player_id not in self._pending:
+            return self
+
+        player_forms = self._pending[player_id]
+        for i in set(closed_forms):
+            if i in player_forms:
+                del player_forms[i]
+        if len(player_forms) == 0:
+            del self._pending[player_id]
+        else:
+            self._pending[player_id] = player_forms
+
+        return self
+
     def send_modal_form_request(
         self,
-        player_id,  # type: str
+        players,  # type: list[str]
         form_name,  # type: str
         executor,  # type: str
         dimension,  # type: int
         position,  # type: tuple[float, float, float]
     ):  # type: (...) -> FormFeature
         """
-        send_modal_form_request 向指定的玩家打开表单。
+        send_modal_form_request 向多个玩家打开表单。
         它应该是通过指令调用的，所以您需要提供命令执行上下文
 
         Args:
-            player_id (str):
-                目标玩家的 ID
+            players (list[str]):
+                要显示表单的玩家 ID 列表
             form_name (str):
                 要打开的表单的名称
             executor (str):
@@ -168,6 +201,8 @@ class FormFeature:
         assert self._locker is not None
 
         with self._locker:
+            onlines = set(GetPlayerList())
+
             with self.storage.get_locker():
                 storage_form = self.storage.get_form(form_name)
                 if storage_form is None:
@@ -181,23 +216,54 @@ class FormFeature:
                         storage_form, self.executor, executor, dimension, position
                     )
 
-            self._sequence += 1
-            player_forms = self._pending.get(player_id, {})
-            player_forms[self._sequence] = formal_with_cb
-            self._pending[player_id] = player_forms
+            for player_id in players:
+                if player_id not in onlines:
+                    continue
 
-            raw = formal_with_cb.formal.marshal()
-            if isinstance(formal_with_cb.formal, LongFormalForm):
-                raw["type"] = "form"
-            elif isinstance(formal_with_cb.formal, PopupFormalForm):
-                raw["type"] = "modal"
-            elif isinstance(formal_with_cb.formal, ModalFormalForm):
-                raw["type"] = "custom_form"
+                self._sequence += 1
+                player_forms = self._pending.get(player_id, {})
+                player_forms[self._sequence] = formal_with_cb
+                self._pending[player_id] = player_forms
 
-            self.system.NotifyToClient(
-                player_id,
-                PACKET_NAME_MODAL_FORM_REQUEST,
-                ModalFormRequest(self._sequence, raw).marshal(),
+                raw = formal_with_cb.formal.marshal()
+                if isinstance(formal_with_cb.formal, LongFormalForm):
+                    raw["type"] = "form"
+                elif isinstance(formal_with_cb.formal, PopupFormalForm):
+                    raw["type"] = "modal"
+                elif isinstance(formal_with_cb.formal, ModalFormalForm):
+                    raw["type"] = "custom_form"
+
+                self.system.NotifyToClient(
+                    player_id,
+                    PACKET_NAME_MODAL_FORM_REQUEST,
+                    ModalFormRequest(self._sequence, raw).marshal(),
+                )
+
+            return self
+
+    def force_close_all_forms(self, players):  # type: (list[str]) -> FormFeature
+        """
+        force_close_all_forms 强制关闭多个玩家的所有表单
+
+        Args:
+            players (list[str]):
+                要关闭表单的玩家 ID 列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            FormFeature: 返回 FormFeature 本身
+        """
+        assert self.system is not None
+        assert self._locker is not None
+
+        with self._locker:
+            self.system.NotifyToMultiClients(
+                [i for i in players if i in set(GetPlayerList())],
+                PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
+                ClientBoundCloseForm().marshal(),
             )
             return self
 
@@ -234,6 +300,7 @@ class FormFeature:
                         pk
                     )
                 )
+            _ = self._clean_pending_forms(player_id, [pk.form_id])
 
             cancel = pk.cancel_reason.value()
             if cancel is not None:
@@ -242,7 +309,7 @@ class FormFeature:
                     MODAL_FORM_CANCEL_REASON_USER_BUSY,
                 ):
                     raise Exception(
-                        "on_modal_form_response: Bad packet (mark 2); packet = {}".format(
+                        "on_modal_form_response: Bad packet (mark 1); packet = {}".format(
                             pk
                         )
                     )
@@ -253,7 +320,7 @@ class FormFeature:
                 response = formal_with_cb.validate(pk)
                 if response is None:
                     raise Exception(
-                        "on_modal_form_response: Bad packet (mark 1); packet = {}".format(
+                        "on_modal_form_response: Bad packet (mark 2); packet = {}".format(
                             pk
                         )
                     )
@@ -283,6 +350,30 @@ class FormFeature:
                 finally:
                     self._ref.response = None
 
+            return self
+
+    def on_server_bound_close_form(
+        self, player_id, pk
+    ):  # type: (str, ServerBoundCloseForm) -> FormFeature
+        """
+        on_server_bound_close_form 在玩家发送数据包 ServerBoundCloseForm 时调用。
+        这在通常情况下意味着玩家响应了服务端先前发送的 ClientBoundCloseForm 数据包
+
+        Args:
+            player_id (str):
+                数据包的发送者 ID
+            pk (ServerBoundCloseForm):
+                数据包的负载
+
+        Returns:
+            FormFeature: 返回 FormFeature 本身
+        """
+        assert self.executor is not None
+        assert self._ref is not None
+        assert self._locker is not None
+
+        with self._locker:
+            self._clean_pending_forms(player_id, pk.form_id)
             return self
 
     def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
