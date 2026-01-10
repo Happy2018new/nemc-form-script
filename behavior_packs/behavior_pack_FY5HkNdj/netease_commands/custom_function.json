@@ -40,27 +40,6 @@
     ],
     "args3": [
         {
-            "name": "callwithargs",
-            "type": "enum",
-            "options": [
-                "callwithargs"
-            ]
-        },
-        {
-            "name": "entity",
-            "type": "target"
-        },
-        {
-            "name": "funcToCall",
-            "type": "str"
-        },
-        {
-            "name": "argFuncName",
-            "type": "str"
-        }
-    ],
-    "args4": [
-        {
             "name": "list",
             "type": "enum",
             "options": [
@@ -73,7 +52,7 @@
             "default": ""
         }
     ],
-    "args5": [
+    "args4": [
         {
             "name": "remove",
             "type": "enum",

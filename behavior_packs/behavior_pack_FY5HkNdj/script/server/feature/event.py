@@ -17,9 +17,9 @@ from ..executor.executor import GameCodeExecutor
 class SingleEventProcesser:
     """SingleEventProcesser 是单个事件的处理器"""
 
-    _storage = None  # type: EventStorage | None
-    _executor = None  # type: GameCodeExecutor | None
-    _event_name = ""  # type: str
+    storage = None  # type: EventStorage | None
+    executor = None  # type: GameCodeExecutor | None
+    event_name = ""  # type: str
 
     def __init__(
         self, storage, executor, event_name
@@ -34,9 +34,9 @@ class SingleEventProcesser:
             event_name (str):
                 该处理器所负责的事件
         """
-        self._storage = storage
-        self._executor = executor
-        self._event_name = event_name
+        self.storage = storage
+        self.executor = executor
+        self.event_name = event_name
 
     def callback(self, args):  # type: (dict[str, Any]) -> None
         """
@@ -46,18 +46,18 @@ class SingleEventProcesser:
             args (dict[str, Any]):
                 MC 引擎传入的字典参数
         """
-        assert self._storage is not None
-        assert self._executor is not None
-        assert self._executor.static_builtin is not None
-        assert self._executor.static_builtin.manager is not None
+        assert self.storage is not None
+        assert self.executor is not None
+        assert self.executor.static_builtin is not None
+        assert self.executor.static_builtin.manager is not None
 
-        with self._storage.get_locker():
-            manager = self._executor.static_builtin.manager
-            funcs = self._storage.get_funcs(self._event_name)
+        with self.storage.get_locker():
+            manager = self.executor.static_builtin.manager
+            funcs = self.storage.get_funcs(self.event_name)
             if funcs is None:
                 return
 
-            with self._executor.get_locker():
+            with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
                     copied = copy.deepcopy(args)
                     for k, v in copied.items():
@@ -65,12 +65,12 @@ class SingleEventProcesser:
                             copied[k] = manager.ref(v)
 
                     try:
-                        _ = self._executor.variable_run(
+                        _ = self.executor.variable_run(
                             code=func.get_func(), variables=copied, require_return=False
                         )
                     except Exception as e:
                         try:
-                            _ = self._executor.variable_run(
+                            _ = self.executor.variable_run(
                                 code=func.get_on_error(),
                                 variables={
                                     "error": str(e),

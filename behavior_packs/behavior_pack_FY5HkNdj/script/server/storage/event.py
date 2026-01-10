@@ -251,7 +251,7 @@ class EventStorage:
             return self._event[event_name]
 
     def save_func(
-        self, event_name, func_name, real_func
+        self, event_name, func_name, func_data
     ):  # type: (str, str, EventFuncData) -> EventStorage
         """
         save_func 将给定的事件函数注册到指定的事件下，
@@ -262,8 +262,8 @@ class EventStorage:
                 目标事件的名称
             func_name (str):
                 目标事件函数的名称
-            real_func (EventFuncData):
-                给定的事件函数
+            func_data (EventFuncData):
+                目标事件函数的负载
 
         Returns:
             EventStorage:
@@ -273,7 +273,7 @@ class EventStorage:
             return self
 
         funcs = self._event.get(event_name, {})  # type: dict[str, EventFuncData]
-        funcs[func_name] = real_func
+        funcs[func_name] = func_data
         self._event[event_name] = funcs
 
         with self._storage.get_locker():
@@ -299,7 +299,7 @@ class EventStorage:
                 "event_data", {}
             )  # type: dict[str, dict[str, dict[str, Any]]]
             event = data.get(event_name, {})  # type: dict[str, dict[str, Any]]
-            event[func_name] = real_func.marshal()
+            event[func_name] = func_data.marshal()
             data[event_name] = event
             root["event_data"] = data
 

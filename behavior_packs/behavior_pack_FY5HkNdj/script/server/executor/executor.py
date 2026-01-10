@@ -77,16 +77,6 @@ class GameCodeExecutor:
         self.dynamic_builtin.build_func(self._built_in_func.dynamic)
         self.compile_cache.build_func(self._built_in_func.dynamic)
 
-    def _context(self):  # type: () -> Context
-        """_context 返回当前的命令执行上下文
-
-        Returns:
-            Context: 当前的命令执行上下文
-        """
-        assert self.dynamic_builtin is not None
-        assert self.dynamic_builtin.context is not None
-        return self.dynamic_builtin.context
-
     def _selector(self, target):  # type: (str) -> str
         """
         _selector 解析目标选择器为实体名。
@@ -104,7 +94,7 @@ class GameCodeExecutor:
         Returns:
             str: 目标选择器对应的实体名
         """
-        executor = self._context().get_executor()
+        executor = self.execute_context().get_executor()
         if len(executor) == 0:
             raise Exception("_selector: Must set executor before parse a selector")
 
@@ -150,7 +140,7 @@ class GameCodeExecutor:
         """
         assert self._game_comp is not None
 
-        executor = self._context().get_executor()
+        executor = self.execute_context().get_executor()
         if len(executor) == 0:
             raise Exception("_score: Must set executor before parse a score")
         if len(objective) == 0:
@@ -200,7 +190,7 @@ class GameCodeExecutor:
         """
         assert self._cmd_comp is not None
 
-        context = self._context()
+        context = self.execute_context()
         selector = context.get_executor()
         if len(selector) == 0:
             raise Exception("_command: Must set executor before running a command")
@@ -228,6 +218,17 @@ class GameCodeExecutor:
         """
         assert self._locker is not None
         return self._locker
+
+    def execute_context(self):  # type: () -> Context
+        """
+        execute_context 返回当前的命令执行上下文
+
+        Returns:
+            Context: 当前的命令执行上下文
+        """
+        assert self.dynamic_builtin is not None
+        assert self.dynamic_builtin.context is not None
+        return self.dynamic_builtin.context
 
     def run_code(
         self,
@@ -272,7 +273,7 @@ class GameCodeExecutor:
 
         # Backup current context
         frame = self.static_builtin.manager.current()
-        context = self._context()
+        context = self.execute_context()
         backup = context.current_context()
 
         # Update context
@@ -352,7 +353,7 @@ class GameCodeExecutor:
 
         # Backup current context
         frame = self.static_builtin.manager.current()
-        context = self._context()
+        context = self.execute_context()
         backup = context.current_context()
 
         # Update context

@@ -70,7 +70,6 @@
 
 /customfunction add <name: string> <code: string>
 /customfunction call <entity: target> <name: string>
-/customfunction callwithargs <entity: target> <funcToCall: string> <argFuncName: string>
 /customfunction list [name: string]
 /customfunction remove <name: string>
 
