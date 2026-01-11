@@ -198,7 +198,7 @@ class GameCodeExecutor:
         dim_name = context.dimension_name()
         position = context.get_position()
         final_cmd = "execute as @s at @s in {} positioned {} {} {} run {}".format(
-            dim_name, *position, command
+            dim_name, position[0], position[1], position[2], command
         )
 
         result = self._cmd_comp.SetCommand(final_cmd, selector, showOutput=False)

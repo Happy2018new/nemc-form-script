@@ -4,7 +4,7 @@
     "description": "commands.editlabel.description",
     "permission_level": "game_directors",
     "requires_cheats": true,
-    "args": [
+    "args1": [
         {
             "name": "formName",
             "type": "str"

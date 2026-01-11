@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 import json
 from ..feature.function import FunctionFeature
-from ..storage.function import CustomFunction, FunctionStorage
+from ..storage.function import FunctionStorage
 
 SUB_COMMAND_TYPE_ADD = 1
 SUB_COMMAND_TYPE_CALL = 2

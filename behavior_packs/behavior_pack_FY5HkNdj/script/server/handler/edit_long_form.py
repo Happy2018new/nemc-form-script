@@ -15,7 +15,6 @@ from ..storage.form import FormStorage
 from ..storage.form_struct.long import (
     LongForm as LongStorageForm,
     LongFormElement as LongStorageFormElement,
-    LongFormIconPathImage as LongStorageFormIconPathImage,
 )
 
 SUB_COMMAND_TYPE_APPEND = 1

@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from typing import Any
     from mod.server.component.blockInfoCompServer import BlockInfoComponentServer
 
+import math
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 
 
@@ -56,7 +57,11 @@ class CommandBlockOutputHandler:
         assert self._block_comp is not None
         position = args[0]["value"]  # type: tuple[float, float, float]
 
-        block_pos = (int(position[0]), int(position[1]), int(position[2]))
+        block_pos = (
+            int(math.floor(position[0])),
+            int(math.floor(position[1])),
+            int(math.floor(position[2])),
+        )
         block_nbt = self._block_comp.GetBlockEntityData(dimension, block_pos)
         if block_nbt is None:
             raise Exception("({}, {}, {}) 处的方块不是方块实体".format(*block_pos))
@@ -66,5 +71,8 @@ class CommandBlockOutputHandler:
         last_output = block_nbt["LastOutput"]["__value__"]  # type: str
         if len(last_output) == 0:
             return "({}, {}, {}) 处的命令方块没有输出".format(*block_pos)
+
         last_output = "\n".join(["  " + i for i in last_output.split("\n")])
-        return "({}, {}, {}) 处的命令方块的输出为: \n{}".format(*block_pos, last_output)
+        return "({}, {}, {}) 处的命令方块的输出为: \n{}".format(
+            block_pos[0], block_pos[1], block_pos[2], last_output
+        )
