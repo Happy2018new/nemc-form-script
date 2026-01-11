@@ -108,11 +108,12 @@ class FormalWithCallback:
                         return None
                 elif isinstance(value, ModalFormalFormElementInput):
                     val = resp[index]
-                    try:
-                        val.encode(encoding="utf-8")
+                    if isinstance(val, str):
+                        continue
+                    if isinstance(val, unicode):  # type: ignore
                         resp[index] = str(val)
-                    except Exception:
-                        return None
+                        continue
+                    return None
                 elif isinstance(value, ModalFormalFormElementToggle):
                     if not isinstance(resp[index], bool):
                         return None

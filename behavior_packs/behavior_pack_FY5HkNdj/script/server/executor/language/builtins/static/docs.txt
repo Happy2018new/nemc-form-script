@@ -137,8 +137,6 @@ strings.length
 strings.sub
 strings.capitalize
 strings.center
-strings.encode
-strings.decode
 strings.startswith
 strings.endswith
 strings.find

@@ -77,41 +77,6 @@ class Strings:
         """
         return self._validate(string)[start:end]
 
-    def encode(self, string):  # type: (str) -> int | str
-        """encode 将字符串按 UTF-8 编码
-
-        Args:
-            string (str): 给定的字符串
-
-        Returns:
-            int | str:
-                如果返回了一个整数，则它是一个指向了 bytes 的指针；
-                否则，返回了一个字符串，表示其在较低 Python 版本中的结果
-        """
-        result = self._validate(string).encode(encoding="utf-8")
-        if isinstance(result, str):
-            return result
-        return self._manager.ref(result)
-
-    def decode(self, ptr_or_str):  # type: (int | str) -> str
-        """decode 试图以 UTF-8 解码一个 Bytes
-
-        Args:
-            ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
-
-        Returns:
-            str: 解码所得的字符串
-        """
-        if isinstance(ptr_or_str, int):
-            obj_a = self._manager.deref(ptr_or_str)  # type: bytes
-            return obj_a.decode(encoding="utf-8")
-        else:
-            temp = ptr_or_str  # type: Any
-            obj_b = temp  # type: bytes
-            return obj_b.decode(encoding="utf-8")
-
     def join(self, string, slice_ptr):  # type: (str, int) -> str
         """
         join 将切片中的元素以 string 作为分隔符连接形成一个新的字符串。
@@ -215,8 +180,6 @@ class Strings:
         funcs["strings.center"] = lambda string, width, fillchar=" ": self._validate(
             string
         ).center(width, fillchar)
-        funcs["strings.encode"] = self.encode
-        funcs["strings.decode"] = self.decode
         funcs["strings.startswith"] = (
             lambda string, prefix, start=None, end=None: self._validate(
                 string

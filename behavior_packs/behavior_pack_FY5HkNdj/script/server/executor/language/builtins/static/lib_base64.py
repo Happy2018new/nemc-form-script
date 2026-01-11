@@ -49,8 +49,8 @@ class Base64:
 
         Args:
             ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
+                如果提供的是整数，则将从它指向的 bytes 对象编码；
+                否则，提供的是字符串，则将直接对其进行编码
 
         Returns:
             str: 编码所得的 Base16 字符串
@@ -61,7 +61,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return base64.b16encode(obj_b).decode(encoding="utf-8")
+            return str(base64.b16encode(obj_b))
 
     def b32decode(self, string, casefold=False):  # type: (str, bool) -> int | str
         """b32decode 解码一个 Base32 编码的字符串
@@ -88,8 +88,8 @@ class Base64:
 
         Args:
             ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
+                如果提供的是整数，则将从它指向的 bytes 对象编码；
+                否则，提供的是字符串，则将直接对其进行编码
 
         Returns:
             str: 编码所得的 Base32 字符串
@@ -100,7 +100,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return base64.b32encode(obj_b).decode(encoding="utf-8")
+            return str(base64.b32encode(obj_b))
 
     def b64decode(self, string, altchars=None):  # type: (str, str | None) -> int | str
         """b64decode 解码一个 Base64 编码的字符串
@@ -126,8 +126,8 @@ class Base64:
 
         Args:
             ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
+                如果提供的是整数，则将从它指向的 bytes 对象编码；
+                否则，提供的是字符串，则将直接对其进行编码
 
         Returns:
             str: 编码所得的 Base64 字符串
@@ -138,7 +138,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return base64.b64encode(obj_b).decode(encoding="utf-8")
+            return str(base64.b64encode(obj_b))
 
     def standard_b64decode(self, string):  # type: (str) -> int | str
         """standard_b64decode 按 Base64 标准解码一个字符串
@@ -161,8 +161,8 @@ class Base64:
 
         Args:
             ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
+                如果提供的是整数，则将从它指向的 bytes 对象编码；
+                否则，提供的是字符串，则将直接对其进行编码
 
         Returns:
             str: 编码所得的 Base64 字符串
@@ -173,7 +173,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return base64.standard_b64encode(obj_b).decode(encoding="utf-8")
+            return str(base64.standard_b64encode(obj_b))
 
     def urlsafe_b64decode(self, string):  # type: (str) -> int | str
         """urlsafe_b64decode 解码一个 URL 安全的 Base64 编码字符串
@@ -198,8 +198,8 @@ class Base64:
 
         Args:
             ptr_or_str (int | str):
-                如果提供的是整数，则将从它指向的 bytes 对象解码；
-                否则，提供的是字符串，则将直接对其进行解码
+                如果提供的是整数，则将从它指向的 bytes 对象编码；
+                否则，提供的是字符串，则将直接对其进行编码
 
         Returns:
             str: 编码所得的 Base64 字符串
@@ -210,7 +210,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return base64.urlsafe_b64encode(obj_b).decode(encoding="utf-8")
+            return str(base64.urlsafe_b64encode(obj_b))
 
     def build_func(
         self,
