@@ -98,9 +98,7 @@ class EditPopupFormHandler:
             _ = self.feature.executor.compile_cache.get_runner(real_first_button_code)
             form.button1 = real_first_button_code
 
-            return "已成功为信息表单 {} 中代表“确定”的按钮设置其所显示的文本".format(
-                json.dumps(form_name, ensure_ascii=False)
-            )
+            return "commands.editpopupformbutton1.success"
 
     def handle_second_button(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_second_button 处理 button2 子命令
@@ -139,9 +137,7 @@ class EditPopupFormHandler:
             _ = self.feature.executor.compile_cache.get_runner(real_second_button_code)
             form.button2 = real_second_button_code
 
-            return "已成功为信息表单 {} 中代表“取消”的按钮设置其所显示的文本".format(
-                json.dumps(form_name, ensure_ascii=False)
-            )
+            return "commands.editpopupformbutton2.success"
 
     def handle_content(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_content 处理 content 子命令
@@ -180,7 +176,7 @@ class EditPopupFormHandler:
             _ = self.feature.executor.compile_cache.get_runner(real_content_code)
             form.content = real_content_code
 
-            return "已成功为信息表单 {} 设置内容文本".format(
+            return "已成功设置信息表单 {} 的内容文本".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
 
@@ -221,6 +217,6 @@ class EditPopupFormHandler:
             _ = self.feature.executor.compile_cache.get_runner(real_title_code)
             form.title = real_title_code
 
-            return "已成功为信息表单 {} 设置标题文本".format(
+            return "已成功设置信息表单 {} 的标题文本".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
