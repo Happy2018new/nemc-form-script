@@ -31,3 +31,7 @@ commands.editinput.elementnotmatch=目标元素不是输入框
 commands.editinputdefault.success=已成功设置输入框的默认已输入文本
 commands.editinputplaceholder.success=已成功设置输入框的提示文本
 commands.editinputtext.success=已成功设置输入框的标题文本
+commands.edittoggle.formnotmatch=目标表单不是模态表单
+commands.edittoggle.elementnotmatch=目标元素不是开关
+commands.edittoggledefault.success=已成功设置开关的默认状态
+commands.edittoggletext.success=已成功设置开关的标题文本
