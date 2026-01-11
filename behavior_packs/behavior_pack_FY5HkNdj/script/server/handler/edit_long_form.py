@@ -168,6 +168,7 @@ class EditLongFormHandler:
             str: 命令执行输出
         """
         assert self.storage is not None
+
         form_name = args[0]["value"]  # type: str
         index = args[2]["value"]  # type: int
 
@@ -278,7 +279,7 @@ class EditLongFormHandler:
             elif pop_action == POP_RAW_ACTION_RIGHT:
                 _ = form.buttons.pop(-1)
 
-            return "已成功移除长表单 {} 中的最后一个按钮".format(
+            return "已成功移除长表单 {} 中的一个按钮".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
 

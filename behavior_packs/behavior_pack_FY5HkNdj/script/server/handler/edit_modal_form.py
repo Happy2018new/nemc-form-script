@@ -337,7 +337,7 @@ class EditModalFormHandler:
             elif pop_action == POP_RAW_ACTION_RIGHT:
                 _ = form.content.pop(-1)
 
-            return "已成功移除模态表单 {} 中的最后一个元素".format(
+            return "已成功移除模态表单 {} 中的一个元素".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
 
