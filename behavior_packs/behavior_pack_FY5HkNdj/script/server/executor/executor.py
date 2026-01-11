@@ -292,7 +292,7 @@ class GameCodeExecutor:
         except Exception as e:
             if len(ctx) == 0:
                 raise e
-            raise Exception(str(e) + "\n\n- Context -\n{}".format(ctx))
+            raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)
@@ -373,7 +373,7 @@ class GameCodeExecutor:
         except Exception as e:
             if len(ctx) == 0:
                 raise e
-            raise Exception(str(e) + "\n\n- Context -\n{}".format(ctx))
+            raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)

@@ -24,6 +24,7 @@ class CompileCache:
 
     _cache = {}  # type: dict[bytes, CodeRunner]
     _sequence = []  # type: list[bytes]
+    _storage = None  # type: StorageManager | None
     _locker = None  # type: threading.Lock | None
     _max_size = COMPILE_CACHE_DEFAULT_MAX_SIZE  # type: int
 
@@ -36,6 +37,7 @@ class CompileCache:
         """
         self._cache = {}
         self._sequence = []
+        self._storage = storage
         self._locker = threading.Lock()
         self._max_size = COMPILE_CACHE_DEFAULT_MAX_SIZE
 
@@ -48,9 +50,9 @@ class CompileCache:
 
             if "compile_max_cache" in root:
                 self._max_size = root["compile_max_cache"]
-
-            root["compile_max_cache"] = self._max_size
-            _ = manager.SetExtraData("form_system_storage", root)
+            else:
+                root["compile_max_cache"] = self._max_size
+                _ = manager.SetExtraData("form_system_storage", root)
 
     def _compact(self, force=False):  # type: (bool) -> CompileCache
         """
@@ -149,6 +151,7 @@ class CompileCache:
         Returns:
             bool: 总是返回 True
         """
+        assert self._storage is not None
         assert self._locker is not None
 
         with self._locker:
@@ -164,6 +167,15 @@ class CompileCache:
                         size
                     )
                 )
+
+            with self._storage.get_locker():
+                manager = self._storage.get_storage()
+                root = manager.GetExtraData("form_system_storage")
+                if not isinstance(root, dict):
+                    root = {}  # type: dict[str, Any]
+                root["compile_max_cache"] = size
+                _ = manager.SetExtraData("form_system_storage", root)
+
             self._max_size = size
             _ = self._compact(False)
             return True
