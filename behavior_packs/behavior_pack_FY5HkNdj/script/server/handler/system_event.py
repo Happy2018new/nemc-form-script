@@ -26,9 +26,9 @@ class SystemEventHandler:
         """初始化并返回一个新的 SystemEventHandler
 
         Args:
-            storage (FunctionStorage):
+            storage (EventStorage):
                 所有事件的存储管理器
-            feature (FunctionFeature):
+            feature (EventFeature):
                 事件侦听系统的主要实现
         """
         self.storage = storage
