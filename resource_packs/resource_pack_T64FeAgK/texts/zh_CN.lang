@@ -26,3 +26,7 @@ commands.editbuttonicon.failed=目标表单不是长表单
 commands.editbuttonicon.success=已成功设置目标按钮所使用的图标
 commands.editbuttontext.failed=目标表单不是长表单
 commands.editbuttontext.success=已成功设置目标按钮所显示的文本
+commands.editpopupformbutton1.failed=目标表单不是信息表单
+commands.editpopupformbutton2.failed=目标表单不是信息表单
+commands.editpopupformcontent.failed=目标表单不是信息表单
+commands.editpopupformtitle.failed=目标表单不是信息表单
