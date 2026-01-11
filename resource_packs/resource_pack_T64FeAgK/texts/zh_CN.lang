@@ -62,3 +62,5 @@ commands.editstepsliderpop.success=已成功从显式步进滑块移除一个选
 commands.editstepslidersubkeep.success=已成功为显式步进滑块的选项列表执行保留的截取操作
 commands.editstepslidersubdiscard.success=已成功为显式步进滑块的选项列表执行丢弃的截取操作
 commands.editstepslidertext.success=已成功设置显式步进滑块的标题文本
+commands.compilecachecompile.success=已成功预编译目标代码
+commands.compilecacheset.success=已更新预编译缓冲区的最大容量
