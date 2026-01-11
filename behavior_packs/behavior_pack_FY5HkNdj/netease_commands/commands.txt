@@ -48,6 +48,7 @@
 /editdropdown <formName: string> <index: int> append <optionCode: string>
 /editdropdown <formName: string> <index: int> default <indexCode: string>
 /editdropdown <formName: string> <index: int> insert <index: int> <optionCode: string>
+/editdropdown <formName: string> <index: int> list
 /editdropdown <formName: string> <index: int> pop left|right
 /editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
 /editdropdown <formName: string> <index: int> text <textCode: string>
@@ -61,6 +62,7 @@
 /editstepslider <formName: string> <index: int> append <stepCode: string>
 /editstepslider <formName: string> <index: int> default <indexCode: string>
 /editstepslider <formName: string> <index: int> insert <index: int> <stepCode: string>
+/editstepslider <formName: string> <index: int> list
 /editstepslider <formName: string> <index: int> pop left|right
 /editstepslider <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
 /editstepslider <formName: string> <index: int> text <textCode: string>
