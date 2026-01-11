@@ -366,7 +366,7 @@ class EditModalFormHandler:
             form = self.storage.get_form(form_name)
             if form is None:
                 raise Exception(
-                    "名为 {} 的长表单不存在".format(
+                    "名为 {} 的模态表单不存在".format(
                         json.dumps(form_name, ensure_ascii=False)
                     )
                 )

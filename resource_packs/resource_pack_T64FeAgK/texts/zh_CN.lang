@@ -38,3 +38,6 @@ commands.editmodalformlist.failed=目标表单不是模态表单
 commands.editmodalformpop.failed=目标表单不是模态表单
 commands.editmodalformsub.failed=目标表单不是模态表单
 commands.editmodalformtitle.failed=目标表单不是模态表单
+commands.editlabel.formnotmatch=目标表单不是模态表单
+commands.editlabel.elementnotmatch=目标元素不是普通文本
+commands.editlabel.success="已成功设置普通文本所显示的内容"
