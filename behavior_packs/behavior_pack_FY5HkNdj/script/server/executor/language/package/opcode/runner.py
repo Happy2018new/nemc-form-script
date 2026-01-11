@@ -70,10 +70,10 @@ EMPTY_GAME_INTERACT = GameInteract()
 EMPTY_BUILTIN_FUNCTION = BuiltInFunction()
 
 
-class CodeBlockException(Exception):
+class InternalException(Exception):
     """
-    CodeBlockException 是运行特殊代码块出现错误时抛出的异常。
-    就目前而言，它被用于条件代码块和循环代码块中
+    InternalException 是解释器运行时，其自身抛出的异常。
+    该异常可以与其他异常进行区分，以解决错误格式化问题
     """
 
     pass
@@ -119,10 +119,10 @@ class CodeRunner:
                 需要抛出的错误信息
 
         Raises:
-            Exception:
+            InternalException:
                 err 所指示的错误
         """
-        raise Exception(
+        raise InternalException(
             "Runtime Error.\n\n- Error -\n  {}\n\n- Code -\n  {}".format(
                 err, code_block.origin_line
             )
@@ -146,7 +146,7 @@ class CodeRunner:
                 默认值为空字符串
 
         Raises:
-            CodeBlockException:
+            InternalException:
                 err 所指示的错误
         """
         prefix = "Runtime Error in Condition.\n\n- Error -\n  {}\n\n- Condition -\n  {}".format(
@@ -156,7 +156,7 @@ class CodeRunner:
             prefix += "\n\n- Code -\n  {}".format(
                 condition.code_block[index].origin_line
             )
-        raise CodeBlockException(prefix)
+        raise InternalException(prefix)
 
     def _fast_for_loop_panic(
         self, for_loop, index=-1, err=""
@@ -176,7 +176,7 @@ class CodeRunner:
                 默认值为空字符串
 
         Raises:
-            CodeBlockException:
+            InternalException:
                 err 所指示的错误
         """
         prefix = "Runtime Error in For Loop.\n\n- Error -\n  {}\n\n- For Loop -\n  {}".format(
@@ -186,7 +186,7 @@ class CodeRunner:
             prefix += "\n\n- Code -\n  {}".format(
                 for_loop.code_block[index].origin_line
             )
-        raise CodeBlockException(prefix)
+        raise InternalException(prefix)
 
     def _process_literal(
         self, element
@@ -530,7 +530,7 @@ class CodeRunner:
                             if states != STATES_KEEP_RUNNING:
                                 return states
                         except Exception as e:
-                            if isinstance(e, CodeBlockException):
+                            if isinstance(e, InternalException):
                                 raise e
                             else:
                                 self._fast_condition_panic(i, ind, str(e))
@@ -568,7 +568,7 @@ class CodeRunner:
                         elif states == STATES_CODE_RETURN:
                             return STATES_CODE_RETURN
                     except Exception as e:
-                        if isinstance(e, CodeBlockException):
+                        if isinstance(e, InternalException):
                             raise e
                         else:
                             self._fast_for_loop_panic(for_loop, ind, str(e))
@@ -612,7 +612,7 @@ class CodeRunner:
                         "Continue and break statement only accepted under for loop code block"
                     )
             except Exception as e:
-                if isinstance(e, CodeBlockException):
+                if isinstance(e, InternalException):
                     raise e
                 else:
                     self._fast_normal_panic(i, str(e))
