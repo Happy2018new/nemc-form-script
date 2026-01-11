@@ -60,13 +60,12 @@ class SingleEventProcesser:
             with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
                     copied = copy.deepcopy(args)
-                    for k, v in copied.items():
-                        if not isinstance(v, (int, bool, float, str)):
-                            copied[k] = manager.ref(v)
 
                     try:
                         _ = self.executor.variable_run(
-                            code=func.get_func(), variables=copied, require_return=False
+                            code=func.get_func(),
+                            variables={"args": manager.ref(copied)},
+                            require_return=False,
                         )
                     except Exception as e:
                         try:
@@ -74,7 +73,7 @@ class SingleEventProcesser:
                                 code=func.get_on_error(),
                                 variables={
                                     "error": str(e),
-                                    "args": manager.ref(copy.deepcopy(args)),
+                                    "args": manager.ref(copied),
                                 },
                                 require_return=False,
                             )
