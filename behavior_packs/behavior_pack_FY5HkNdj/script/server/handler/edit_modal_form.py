@@ -5,7 +5,15 @@ if TYPE_CHECKING:
     from typing import Any
 
 import json
-from ..feature.form import FormFeature
+from ..feature.form import (
+    MODAL_FORM_ELEMENT_TYPE_LABEL,
+    MODAL_FORM_ELEMENT_TYPE_INPUT,
+    MODAL_FORM_ELEMENT_TYPE_TOGGLE,
+    MODAL_FORM_ELEMENT_TYPE_DROPDOWN,
+    MODAL_FORM_ELEMENT_TYPE_SLIDER,
+    MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER,
+    FormFeature,
+)
 from ..storage.base import StringWithHash
 from ..storage.form import FormStorage
 from ..storage.form_struct.modal import (
@@ -259,42 +267,32 @@ class EditModalFormHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
+        assert self.feature is not None
         form_name = args[0]["value"]  # type: str
 
-        with self.storage.get_locker():
-            form = self.storage.get_form(form_name)
-            if form is None:
-                raise Exception(
-                    "名为 {} 的模态表单不存在".format(
-                        json.dumps(form_name, ensure_ascii=False)
-                    )
-                )
-            if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalform.formnotmatch")
-
-            if len(form.content) == 0:
-                return "模态表单 {} 目前没有任何元素".format(
-                    json.dumps(form_name, ensure_ascii=False)
-                )
-            result = "模态表单 {} 目前已存在 {} 个元素: ".format(
-                json.dumps(form_name, ensure_ascii=False), len(form.content)
+        resp = self.feature.list_modal_form_element_type(form_name)
+        if len(resp) == 0:
+            return "模态表单 {} 目前没有任何元素".format(
+                json.dumps(form_name, ensure_ascii=False)
             )
-            for i in form.content:
-                if isinstance(i, ModalStorageFormElementLabel):
-                    result += "\n  - 普通文本"
-                elif isinstance(i, ModalStorageFormElementInput):
-                    result += "\n  - 输入框"
-                elif isinstance(i, ModalStorageFormElementToggle):
-                    result += "\n  - 开关"
-                elif isinstance(i, ModalStorageFormElementDropdown):
-                    result += "\n  - 下拉框"
-                elif isinstance(i, ModalStorageFormElementSlider):
-                    result += "\n  - 隐式步进滑块"
-                elif isinstance(i, ModalStorageFormElementStepSlider):
-                    result += "\n  - 显式步进滑块"
 
-            return result
+        result = "模态表单 {} 目前已存在 {} 个元素: ".format(
+            json.dumps(form_name, ensure_ascii=False), len(resp)
+        )
+        for i in resp:
+            if i == MODAL_FORM_ELEMENT_TYPE_LABEL:
+                result += "\n  - 普通文本"
+            elif i == MODAL_FORM_ELEMENT_TYPE_INPUT:
+                result += "\n  - 输入框"
+            elif i == MODAL_FORM_ELEMENT_TYPE_TOGGLE:
+                result += "\n  - 开关"
+            elif i == MODAL_FORM_ELEMENT_TYPE_DROPDOWN:
+                result += "\n  - 下拉框"
+            elif i == MODAL_FORM_ELEMENT_TYPE_SLIDER:
+                result += "\n  - 隐式步进滑块"
+            elif i == MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER:
+                result += "\n  - 显式步进滑块"
+        return result
 
     def handle_pop(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_pop 处理 pop 子命令

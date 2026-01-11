@@ -76,29 +76,15 @@ class CustomFunctionHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
         assert self.feature is not None
-        assert self.feature.executor is not None
-        assert self.feature.executor.compile_cache is not None
 
         func_name = args[1]["value"]  # type: str
         func_code = args[2]["value"]  # type: str
 
-        with self.storage.get_locker():
-            if self.storage.check_exist(func_name):
-                raise Exception(
-                    "名为 {} 的自定义函数已经存在".format(
-                        json.dumps(func_name, ensure_ascii=False)
-                    )
-                )
-
-            real_func_code = CustomFunction(func_code)
-            _ = self.feature.executor.compile_cache.get_runner(real_func_code)
-            self.storage.save_func(func_name, real_func_code)
-
-            return "已成功创建名为 {} 的自定义函数".format(
-                json.dumps(func_name, ensure_ascii=False)
-            )
+        _ = self.feature.register(func_name, func_code)
+        return "已成功创建名为 {} 的自定义函数".format(
+            json.dumps(func_name, ensure_ascii=False)
+        )
 
     def handle_call(self, args, dimension):  # type: (list[dict[str, Any]], int) -> str
         """handle_call 处理 call 子命令
@@ -114,39 +100,30 @@ class CustomFunctionHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
         assert self.feature is not None
         assert self.feature.executor is not None
-        assert self.feature.executor.compile_cache is not None
 
         executor = args[1]["value"]  # type: tuple[str, ...]
         position = args[2]["value"]  # type: tuple[float, float, float]
         func_name = args[3]["value"]  # type: str
 
-        with self.storage.get_locker():
-            if len(executor) != 1:
-                raise Exception("您最多设置一个命令执行者")
-            if not self.storage.check_exist(func_name):
-                raise Exception(
-                    "名为 {} 的自定义函数不存在".format(
-                        json.dumps(func_name, ensure_ascii=False)
-                    )
-                )
+        if len(executor) != 1:
+            raise Exception("您最多设置一个命令执行者")
 
-            with self.feature.executor.get_locker():
-                context = self.feature.executor.execute_context()
-                backup = context.current_context()
-                try:
-                    context.set_executor(executor[0])
-                    context.set_dimension(dimension)
-                    context.set_position(*position)
-                    _ = self.feature.call(func_name)
-                finally:
-                    context.recover_context(backup)
+        with self.feature.executor.get_locker():
+            context = self.feature.executor.execute_context()
+            backup = context.current_context()
+            try:
+                context.set_executor(executor[0])
+                context.set_dimension(dimension)
+                context.set_position(*position)
+                _ = self.feature.call(func_name)
+            finally:
+                context.recover_context(backup)
 
-            return "已执行名为 {} 的自定义函数".format(
-                json.dumps(func_name, ensure_ascii=False)
-            )
+        return "已执行名为 {} 的自定义函数".format(
+            json.dumps(func_name, ensure_ascii=False)
+        )
 
     def handle_list(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_list 处理 list 子命令
@@ -155,34 +132,29 @@ class CustomFunctionHandler:
             args (list[dict[str, Any]]):
                 用户通过命令行提供的参数列表
 
-        Raises:
-            Exception:
-                如果出现错误，则将抛出
-
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
+        assert self.feature is not None
         func_name = args[1]["value"]  # type: str
 
-        with self.storage.get_locker():
-            if len(func_name) == 0:
-                resp = self.storage.func_index()
-                if len(resp) == 0:
-                    return "当前没有已注册的自定义函数"
+        resp = self.feature.list_all(func_name)
 
-                result = "当前已注册了 {} 个自定义函数: ".format(len(resp))
-                for i in sorted(list(resp)):
-                    result += "\n  - {}".format(i)
-                return result
+        if isinstance(resp, set):
+            if len(resp) == 0:
+                return "当前没有已注册的自定义函数"
+            result = "当前已注册了 {} 个自定义函数: ".format(len(resp))
+            for i in sorted(list(resp)):
+                result += "\n  - {}".format(i)
+            return result
 
-            if self.storage.check_exist(func_name):
-                return "不存在名为 {} 的自定义函数".format(
-                    json.dumps(func_name, ensure_ascii=False)
-                )
-            return "已找到名为 {} 的自定义函数".format(
+        if not resp:
+            return "不存在名为 {} 的自定义函数".format(
                 json.dumps(func_name, ensure_ascii=False)
             )
+        return "已找到名为 {} 的自定义函数".format(
+            json.dumps(func_name, ensure_ascii=False)
+        )
 
     def handle_remove(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_remove 处理 remove 子命令
@@ -198,17 +170,10 @@ class CustomFunctionHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
+        assert self.feature is not None
         func_name = args[1]["value"]  # type: str
 
-        with self.storage.get_locker():
-            if not self.storage.check_exist(func_name):
-                raise Exception(
-                    "名为 {} 的自定义函数不存在".format(
-                        json.dumps(func_name, ensure_ascii=False)
-                    )
-                )
-            _ = self.storage.remove_func(func_name)
-            return "已成功移除名为 {} 的自定义函数".format(
-                json.dumps(func_name, ensure_ascii=False)
-            )
+        _ = self.feature.unregister(func_name)
+        return "已成功移除名为 {} 的自定义函数".format(
+            json.dumps(func_name, ensure_ascii=False)
+        )

@@ -244,31 +244,14 @@ class EditDropdownHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
+        assert self.feature is not None
 
         form_name = args[0]["value"]  # type: str
         index = args[1]["value"]  # type: int
 
-        with self.storage.get_locker():
-            form = self.storage.get_form(form_name)
-            if form is None:
-                raise Exception(
-                    "名为 {} 的模态表单不存在".format(
-                        json.dumps(form_name, ensure_ascii=False)
-                    )
-                )
-            if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editdropdown.formnotmatch")
-
-            if index < 0 or index >= len(form.content):
-                raise Exception(
-                    "给出的索引 {} 超出长度 {}".format(index, len(form.content))
-                )
-            element = form.content[index]
-            if not isinstance(element, ModalStorageFormElementDropdown):
-                raise Exception("commands.editdropdown.elementnotmatch")
-
-            return "目标下拉框具有 {} 个选项".format(len(element.options))
+        return "目标下拉框目前具有 {} 个选项".format(
+            self.feature.dropdown_length(form_name, index)
+        )
 
     def handle_pop(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_pop 处理 pop 子命令

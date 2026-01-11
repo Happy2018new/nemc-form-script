@@ -5,7 +5,11 @@ if TYPE_CHECKING:
     from typing import Any
 
 import json
-from ..feature.form import FormFeature
+from ..feature.form import (
+    LONG_FORM_ICON_TYPE_NONE,
+    LONG_FORM_ICON_TYPE_PATH_IMAGE,
+    FormFeature,
+)
 from ..storage.base import StringWithHash
 from ..storage.form import FormStorage
 from ..storage.form_struct.long import (
@@ -209,34 +213,24 @@ class EditLongFormHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
+        assert self.feature is not None
         form_name = args[0]["value"]  # type: str
 
-        with self.storage.get_locker():
-            form = self.storage.get_form(form_name)
-            if form is None:
-                raise Exception(
-                    "名为 {} 的长表单不存在".format(
-                        json.dumps(form_name, ensure_ascii=False)
-                    )
-                )
-            if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongform.formnotmatch")
-
-            if len(form.buttons) == 0:
-                return "长表单 {} 目前没有任何按钮".format(
-                    json.dumps(form_name, ensure_ascii=False)
-                )
-            result = "长表单 {} 目前已存在 {} 个按钮: ".format(
-                json.dumps(form_name, ensure_ascii=False), len(form.buttons)
+        resp = self.feature.list_long_form_icon_type(form_name)
+        if len(resp) == 0:
+            return "长表单 {} 目前没有任何按钮".format(
+                json.dumps(form_name, ensure_ascii=False)
             )
-            for i in form.buttons:
-                if isinstance(i.icon, LongStorageFormIconPathImage):
-                    result += "\n  - 使用材质贴图"
-                else:
-                    result += "\n  - 无图标"
 
-            return result
+        result = "长表单 {} 目前已存在 {} 个按钮: ".format(
+            json.dumps(form_name, ensure_ascii=False), len(resp)
+        )
+        for i in resp:
+            if i == LONG_FORM_ICON_TYPE_NONE:
+                result += "\n  - 无图标"
+            elif i == LONG_FORM_ICON_TYPE_PATH_IMAGE:
+                result += "\n  - 使用材质贴图"
+        return result
 
     def handle_pop(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_pop 处理 pop 子命令

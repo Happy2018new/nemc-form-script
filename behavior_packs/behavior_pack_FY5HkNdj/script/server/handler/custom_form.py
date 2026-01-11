@@ -157,48 +157,42 @@ class CustomFormHandler:
             args (list[dict[str, Any]]):
                 用户通过命令行提供的参数列表
 
-        Raises:
-            Exception:
-                如果出现错误，则将抛出
-
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
         assert self.feature is not None
         form_name = args[1]["value"]  # type: str
 
-        with self.storage.get_locker():
-            resp = self.feature.list_form(form_name)
-            if resp is None:
-                return "没有找到名为 {} 的表单".format(
-                    json.dumps(form_name, ensure_ascii=False)
-                )
-
-            if isinstance(resp, dict):
-                if len(resp) == 0:
-                    return "当前没有已注册的表单"
-                result = "当前已注册了 {} 个表单: ".format(len(resp))
-                for key, value in sorted(list(resp.items()), key=lambda x: x[0]):
-                    result += "\n  - {}: ".format(key)
-                    if value == FORM_STORAGE_TYPE_LONG:
-                        result += "长表单"
-                    elif value == FORM_STORAGE_TYPE_POPUP:
-                        result += "信息表单"
-                    elif value == FORM_STORAGE_TYPE_MODAL:
-                        result += "模态表单"
-                return result
-
-            result = "名为 {} 的表单是 {}".format(
+        resp = self.feature.list_form(form_name)
+        if resp is None:
+            return "没有找到名为 {} 的表单".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
-            if resp == FORM_STORAGE_TYPE_LONG:
-                result += "长表单"
-            elif resp == FORM_STORAGE_TYPE_POPUP:
-                result += "信息表单"
-            elif resp == FORM_STORAGE_TYPE_MODAL:
-                result += "模态表单"
+
+        if isinstance(resp, dict):
+            if len(resp) == 0:
+                return "当前没有已注册的表单"
+            result = "当前已注册了 {} 个表单: ".format(len(resp))
+            for key, value in sorted(list(resp.items()), key=lambda x: x[0]):
+                result += "\n  - {}: ".format(key)
+                if value == FORM_STORAGE_TYPE_LONG:
+                    result += "长表单"
+                elif value == FORM_STORAGE_TYPE_POPUP:
+                    result += "信息表单"
+                elif value == FORM_STORAGE_TYPE_MODAL:
+                    result += "模态表单"
             return result
+
+        result = "名为 {} 的表单的类型为{}".format(
+            json.dumps(form_name, ensure_ascii=False)
+        )
+        if resp == FORM_STORAGE_TYPE_LONG:
+            result += "长表单"
+        elif resp == FORM_STORAGE_TYPE_POPUP:
+            result += "信息表单"
+        elif resp == FORM_STORAGE_TYPE_MODAL:
+            result += "模态表单"
+        return result
 
     def handle_on_cancel(self, args):  # type: (list[dict[str, Any]]) -> str
         """
@@ -377,7 +371,6 @@ class CustomFormHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
         assert self.feature is not None
 
         executor = args[1]["value"]  # type: tuple[str, ...]
@@ -385,17 +378,12 @@ class CustomFormHandler:
         player = args[3]["value"]  # type: tuple[str, ...]
         name = args[4]["value"]  # type: str
 
-        with self.storage.get_locker():
-            if len(executor) != 1:
-                raise Exception("您最多设置一个命令执行者")
-            if self.storage.form_type(name) is None:
-                raise Exception(
-                    "名为 {} 的表单不存在".format(json.dumps(name, ensure_ascii=False))
-                )
-            _ = self.feature.send_modal_form_request(
-                list(player), name, executor[0], dimension, position
-            )
-            return "commands.customformshow.success"
+        if len(executor) != 1:
+            raise Exception("您最多设置一个命令执行者")
+        _ = self.feature.send_modal_form_request(
+            list(player), name, executor[0], dimension, position
+        )
+        return "commands.customformshow.success"
 
     def handle_close(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_close 处理 close 子命令
@@ -411,10 +399,8 @@ class CustomFormHandler:
         Returns:
             str: 命令执行输出
         """
-        assert self.storage is not None
         assert self.feature is not None
         player = args[1]["value"]  # type: tuple[str, ...]
 
-        with self.storage.get_locker():
-            _ = self.feature.force_close_all_forms(list(player))
-            return "commands.customformclose.success"
+        _ = self.feature.force_close_all_forms(list(player))
+        return "commands.customformclose.success"

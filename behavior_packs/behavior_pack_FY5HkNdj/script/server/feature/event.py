@@ -192,22 +192,22 @@ class EventFeature:
         self, event_name, func_name, func_code, on_error
     ):  # type: (str, str, str, str) -> bool
         """
-        listen 将指定的函数注册在给定的事件下
+        listen 将指定的事件函数注册在给定的事件下
 
         Args:
             event_name (str):
-                目标函数所要监听的事件名
+                目标事件函数所要监听的事件名
             func_name (str):
-                目标函数的名称
+                目标事件函数的名称
             func_code (str):
-                目标函数的代码
+                目标事件函数的代码
             on_error (str):
-                当目标函数执行发生错误时，
+                当目标事件函数执行发生错误时，
                 要执行的错误处理代码
 
         Raises:
             Exception:
-                如果给出的函数名已被使用，
+                如果给出的名称已被使用，
                 或给出的代码存在语法错误，
                 则抛出相应的错误
 
@@ -244,16 +244,16 @@ class EventFeature:
 
     def destroy(self, func_name):  # type: (str) -> bool
         """
-        destroy 销毁 func_name 所指示的函数。
-        这意味着该函数将不再侦听对应的事件
+        destroy 销毁 func_name 所指示的事件函数。
+        这意味着该事件函数将不再侦听对应的事件
 
         Args:
             func_name (str):
-                目标函数的名称
+                事件函数的名称
 
         Raises:
             Exception:
-                如果目标函数不存在，
+                如果给定的事件函数不存在，
                 则抛出相应的错误
 
         Returns:
@@ -291,7 +291,7 @@ class EventFeature:
     ):  # type: (str) -> dict[str, set[str]] | set[str]
         """
         list_event 列出所有事件，
-        或列出侦听给定事件的所有函数
+        或列出侦听给定事件的所有事件函数
 
         Args:
             event_name (str, optional):
@@ -301,8 +301,8 @@ class EventFeature:
 
         Returns:
             dict[str, set[str]] | set[str]:
-                当 event_name 为空时返回前者，键是事件名，值是所有侦听该事件的函数；
-                否则，返回后者，指示所有侦听 event_name 事件的函数
+                当 event_name 为空时返回前者，键是事件名，值是所有侦听该事件的事件函数；
+                否则，返回后者，指示所有侦听 event_name 事件的事件函数
         """
         assert self.storage is not None
         assert self.executor is not None
