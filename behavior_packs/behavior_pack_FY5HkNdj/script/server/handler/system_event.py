@@ -135,7 +135,12 @@ class SystemEventHandler:
         func_code = args[3]["value"]  # type: str
         on_code_err = args[4]["value"]  # type: str
 
+        if len(event_name) == 0:
+            raise Exception("欲侦听的事件名不得为空")
+        if len(func_name) == 0:
+            raise Exception("事件函数的名称不得为空")
         _ = self.feature.listen(event_name, func_name, func_code, on_code_err)
+
         return "已成功将事件函数 {} 侦听在事件 {} 上".format(
             json.dumps(func_name, ensure_ascii=False),
             json.dumps(event_name, ensure_ascii=False),

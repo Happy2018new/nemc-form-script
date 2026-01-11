@@ -105,6 +105,8 @@ class CustomFormHandler:
         form_type = args[2]["value"]  # type: str
 
         with self.storage.get_locker():
+            if len(form_name) == 0:
+                raise Exception("表单名称不得为空")
             if self.storage.form_type(form_name) is not None:
                 raise Exception(
                     "名为 {} 的表单已经存在".format(
@@ -183,7 +185,7 @@ class CustomFormHandler:
                     result += "模态表单"
             return result
 
-        result = "名为 {} 的表单的类型为{}".format(
+        result = "名为 {} 的表单的类型为".format(
             json.dumps(form_name, ensure_ascii=False)
         )
         if resp == FORM_STORAGE_TYPE_LONG:

@@ -24,6 +24,8 @@ from mod.server.extraServerApi import (
     GetServerSystemCls,
     GetEngineNamespace,
     GetEngineSystemName,
+    GetEngineCompFactory,
+    GetLevelId,
 )
 
 ServerSystem = GetServerSystemCls()
@@ -72,6 +74,9 @@ class FormSystem(ServerSystem):
             PACKET_NAME_SERVER_BOUND_CLOSE_FORM, self, self.on_server_bound_close_form
         )
 
+        game_comp = GetEngineCompFactory().CreateGame(GetLevelId())
+        game_comp.AddRepeatedTimer(1, self.auto_collect_garbage)  # type: ignore
+
     def _start_init(self):  # type: () -> None
         """
         _start_init 开始初始化本模组在客户端上的各个类。
@@ -111,6 +116,18 @@ class FormSystem(ServerSystem):
             self.form_storage, self.func_storage, self.event_storage
         )
         _ = self.event_feature.prepare()
+
+    def auto_collect_garbage(self):  # type: () -> None
+        """
+        auto_collect_garbage 每秒会被调用一次，
+        以自动回收那些已解除固定而仍未回收的指针
+        """
+        assert self.executor is not None
+        assert self.executor.static_builtin is not None
+        assert self.executor.static_builtin.manager is not None
+
+        with self.executor.get_locker():
+            _ = self.executor.static_builtin.manager.release_internal(set())
 
     def on_custom_command_trigger(self, args):  # type: (dict[str, Any]) -> None
         """

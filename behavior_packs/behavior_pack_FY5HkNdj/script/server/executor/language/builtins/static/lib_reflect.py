@@ -5,7 +5,6 @@ if TYPE_CHECKING:
     from typing import Callable, Any
 
 import copy
-import json
 from .lib_object import BaseManager
 from .checker.checker import check_object
 

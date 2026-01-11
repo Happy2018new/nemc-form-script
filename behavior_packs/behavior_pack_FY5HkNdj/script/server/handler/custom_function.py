@@ -81,7 +81,10 @@ class CustomFunctionHandler:
         func_name = args[1]["value"]  # type: str
         func_code = args[2]["value"]  # type: str
 
+        if len(func_name) == 0:
+            raise Exception("自定义函数的名称不得为空")
         _ = self.feature.register(func_name, func_code)
+
         return "已成功创建名为 {} 的自定义函数".format(
             json.dumps(func_name, ensure_ascii=False)
         )
