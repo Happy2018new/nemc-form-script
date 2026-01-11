@@ -55,7 +55,7 @@ class Block:
         funcs["block.GetBlockEntityData"] = (
             lambda dimension, pos_ptr: self._manager.ref(
                 GetEngineCompFactory()
-                .CreateBlockEntityData(GetLevelId())
+                .CreateBlockInfo(GetLevelId())
                 .GetBlockEntityData(dimension, self._manager.deref(pos_ptr))
             )
         )
@@ -84,24 +84,22 @@ class Block:
                 .GetCommandBlock(self._manager.deref(pos_ptr), dimension_id)
             )
         )
-        funcs["block.GetFrameItem"] = (
-            lambda player_id, pos_ptr, dimension_id: self._manager.ref(
-                GetEngineCompFactory()
-                .CreateBlockEntity(player_id)
-                .GetFrameItem(self._manager.deref(pos_ptr), dimension_id)
-            )
+        funcs["block.GetFrameItem"] = lambda pos_ptr, dimension_id: self._manager.ref(
+            GetEngineCompFactory()
+            .CreateBlockEntity(GetLevelId())
+            .GetFrameItem(self._manager.deref(pos_ptr), dimension_id)
         )
         funcs["block.GetFrameRotation"] = (
-            lambda player_id, pos_ptr, dimension_id: self._manager.ref(
+            lambda pos_ptr, dimension_id: self._manager.ref(
                 GetEngineCompFactory()
-                .CreateBlockEntity(player_id)
+                .CreateBlockEntity(GetLevelId())
                 .GetFrameRotation(self._manager.deref(pos_ptr), dimension_id)
             )
         )
         funcs["block.SetCommandBlock"] = (
-            lambda player_id, pos_ptr, dimension_id, cmd, name, mode, is_conditional, redstone_mode: self._manager.ref(
+            lambda pos_ptr, dimension_id, cmd, name, mode, is_conditional, redstone_mode: self._manager.ref(
                 GetEngineCompFactory()
-                .CreateBlockEntity(player_id)
+                .CreateBlockEntity(GetLevelId())
                 .SetCommandBlock(
                     self._manager.deref(pos_ptr),
                     dimension_id,
@@ -114,9 +112,9 @@ class Block:
             )
         )
         funcs["block.SetFrameRotation"] = (
-            lambda player_id, pos_ptr, dimension_id, rot: self._manager.ref(
+            lambda pos_ptr, dimension_id, rot: self._manager.ref(
                 GetEngineCompFactory()
-                .CreateBlockEntity(player_id)
+                .CreateBlockEntity(GetLevelId())
                 .SetFrameRotation(self._manager.deref(pos_ptr), dimension_id, rot)
             )
         )
