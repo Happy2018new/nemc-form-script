@@ -29,16 +29,16 @@ SUB_RAW_ACTION_KEEP = "keep"
 SUB_RAW_ACTION_DISCARD = "discard"
 
 
-class LongFormHandler:
+class EditLongFormHandler:
     """
-    LongFormHandler 是所有 /editlongform 命令的处理设备
+    EditLongFormHandler 是所有 /editlongform 命令的处理设备
     """
 
     storage = None  # type: FormStorage | None
     feature = None  # type: FormFeature | None
 
     def __init__(self, storage, feature):  # type: (FormStorage, FormFeature) -> None
-        """初始化并返回一个新的 LongFormHandler
+        """初始化并返回一个新的 EditLongFormHandler
 
         Args:
             storage (FormStorage):
@@ -76,7 +76,6 @@ class LongFormHandler:
                 args["return_msg_key"] = self.handle_sub(cmdargs)
             elif variant == SUB_COMMAND_TYPE_TITLE:
                 args["return_msg_key"] = self.handle_title(cmdargs)
-            pass
         except Exception as e:
             args["return_failed"] = True
             args["return_msg_key"] = str(e)

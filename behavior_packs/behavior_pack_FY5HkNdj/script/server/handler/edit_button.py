@@ -1,0 +1,153 @@
+# -*- coding: utf-8 -*-
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing import Any
+
+import json
+from ..feature.form import FormFeature
+from ..storage.base import StringWithHash
+from ..storage.form import FormStorage
+from ..storage.form_struct.long import (
+    LongForm as LongStorageForm,
+    LongFormIconNone as LongStorageFormIconNone,
+    LongFormIconPathImage as LongStorageFormIconPathImage,
+)
+
+SUB_COMMAND_TYPE_ICON = 1
+SUB_COMMAND_TYPE_TEXT = 2
+
+
+class EditButtonHandler:
+    """
+    EditButtonHandler 是所有 /editbutton 命令的处理设备
+    """
+
+    storage = None  # type: FormStorage | None
+    feature = None  # type: FormFeature | None
+
+    def __init__(self, storage, feature):  # type: (FormStorage, FormFeature) -> None
+        """初始化并返回一个新的 EditButtonHandler
+
+        Args:
+            storage (FormStorage):
+                所有表单的存储管理器
+            feature (FormFeature):
+                表单系统的主要实现
+        """
+        self.storage = storage
+        self.feature = feature
+
+    def on_custom_command_trigger(self, args):  # type: (dict[str, Any]) -> None
+        """
+        on_custom_command_trigger 在自定义命令被触发时调用。
+        有必要确保它的上层调用者验证了调用的命令是 /editbutton
+
+        Args:
+            args (dict[str, Any]):
+                CustomCommandTriggerServerEvent 传入的字典参数
+        """
+        variant = args["variant"]  # type: int
+        cmdargs = args["args"]  # type: list[dict[str, Any]]
+
+        try:
+            if variant == SUB_COMMAND_TYPE_ICON:
+                args["return_msg_key"] = self.handle_icon(cmdargs)
+            elif variant == SUB_COMMAND_TYPE_TEXT:
+                args["return_msg_key"] = self.handle_text(cmdargs)
+        except Exception as e:
+            args["return_failed"] = True
+            args["return_msg_key"] = str(e)
+
+    def handle_icon(self, args):  # type: (list[dict[str, Any]]) -> str
+        """handle_icon 处理 icon 子命令
+
+        Args:
+            args (list[dict[str, Any]]):
+                用户通过命令行提供的参数列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            str: 命令执行输出
+        """
+        assert self.storage is not None
+        assert self.feature is not None
+        assert self.feature.executor is not None
+        assert self.feature.executor.compile_cache is not None
+
+        form_name = args[0]["value"]  # type: str
+        button_index = args[1]["value"]  # type: int
+        texture_code = args[3]["value"]  # type: str
+
+        with self.storage.get_locker():
+            form = self.storage.get_form(form_name)
+            if form is None:
+                raise Exception(
+                    "名为 {} 的长表单不存在".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if not isinstance(form, LongStorageForm):
+                raise Exception("commands.editbuttonicon.failed")
+
+            if button_index < 0 or button_index >= len(form.buttons):
+                raise Exception(
+                    "给出的索引 {} 超出长度 {}".format(button_index, len(form.buttons))
+                )
+            if len(texture_code) == 0:
+                form.buttons[button_index].icon = LongStorageFormIconNone()
+            else:
+                real_texture_code = StringWithHash(texture_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_texture_code)
+                form.buttons[button_index].icon = LongStorageFormIconPathImage(
+                    real_texture_code
+                )
+
+            return "commands.editbuttonicon.success"
+
+    def handle_text(self, args):  # type: (list[dict[str, Any]]) -> str
+        """handle_text 处理 text 子命令
+
+        Args:
+            args (list[dict[str, Any]]):
+                用户通过命令行提供的参数列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            str: 命令执行输出
+        """
+        assert self.storage is not None
+        assert self.feature is not None
+        assert self.feature.executor is not None
+        assert self.feature.executor.compile_cache is not None
+
+        form_name = args[0]["value"]  # type: str
+        button_index = args[1]["value"]  # type: int
+        text_code = args[3]["value"]  # type: str
+
+        with self.storage.get_locker():
+            form = self.storage.get_form(form_name)
+            if form is None:
+                raise Exception(
+                    "名为 {} 的长表单不存在".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if not isinstance(form, LongStorageForm):
+                raise Exception("commands.editbuttontext.failed")
+
+            if button_index < 0 or button_index >= len(form.buttons):
+                raise Exception(
+                    "给出的索引 {} 超出长度 {}".format(button_index, len(form.buttons))
+                )
+            real_text_code = StringWithHash(text_code)
+            _ = self.feature.executor.compile_cache.get_runner(real_text_code)
+            form.buttons[button_index].text = real_text_code
+
+            return "commands.editbuttontext.success"

@@ -22,3 +22,7 @@ commands.editlongformlist.failed=目标表单不是长表单
 commands.editlongformpop.failed=目标表单不是长表单
 commands.editlongformsub.failed=目标表单不是长表单
 commands.editlongformtitle.failed=目标表单不是长表单
+commands.editbuttonicon.failed=目标表单不是长表单
+commands.editbuttonicon.success=已成功设置目标按钮所使用的图标
+commands.editbuttontext.failed=目标表单不是长表单
+commands.editbuttontext.success=已成功设置目标按钮所显示的文本
