@@ -92,7 +92,7 @@ class EditPopupFormHandler:
                     )
                 )
             if not isinstance(form, PopupStorageForm):
-                raise Exception("commands.editpopupformbutton1.failed")
+                raise Exception("commands.editpopupform.formnotmatch")
 
             real_first_button_code = StringWithHash(first_button_code)
             _ = self.feature.executor.compile_cache.get_runner(real_first_button_code)
@@ -131,7 +131,7 @@ class EditPopupFormHandler:
                     )
                 )
             if not isinstance(form, PopupStorageForm):
-                raise Exception("commands.editpopupformbutton2.failed")
+                raise Exception("commands.editpopupform.formnotmatch")
 
             real_second_button_code = StringWithHash(second_button_code)
             _ = self.feature.executor.compile_cache.get_runner(real_second_button_code)
@@ -170,7 +170,7 @@ class EditPopupFormHandler:
                     )
                 )
             if not isinstance(form, PopupStorageForm):
-                raise Exception("commands.editpopupformcontent.failed")
+                raise Exception("commands.editpopupform.formnotmatch")
 
             real_content_code = StringWithHash(content_code)
             _ = self.feature.executor.compile_cache.get_runner(real_content_code)
@@ -211,7 +211,7 @@ class EditPopupFormHandler:
                     )
                 )
             if not isinstance(form, PopupStorageForm):
-                raise Exception("commands.editpopupformtitle.failed")
+                raise Exception("commands.editpopupform.formnotmatch")
 
             real_title_code = StringWithHash(title_code)
             _ = self.feature.executor.compile_cache.get_runner(real_title_code)

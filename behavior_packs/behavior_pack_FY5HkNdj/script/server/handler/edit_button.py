@@ -91,7 +91,7 @@ class EditButtonHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editbuttonicon.failed")
+                raise Exception("commands.editbutton.formnotmatch")
 
             if button_index < 0 or button_index >= len(form.buttons):
                 raise Exception(
@@ -140,7 +140,7 @@ class EditButtonHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editbuttontext.failed")
+                raise Exception("commands.editbutton.formnotmatch")
 
             if button_index < 0 or button_index >= len(form.buttons):
                 raise Exception(

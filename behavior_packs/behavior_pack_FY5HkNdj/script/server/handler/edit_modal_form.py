@@ -189,7 +189,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalformappend.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
             form.content.append(
                 self._default_modal_form_element(
                     element_type,
@@ -229,7 +229,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalforminsert.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
 
             if index < 0 or index > len(form.content):
                 raise Exception(
@@ -271,7 +271,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalformlist.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
 
             if len(form.content) == 0:
                 return "模态表单 {} 目前没有任何元素".format(
@@ -324,7 +324,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalformpop.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
 
             if len(form.content) == 0:
                 raise Exception(
@@ -371,7 +371,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalformsub.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
 
             if start_index < 0 or start_index > len(form.content):
                 raise Exception(
@@ -432,7 +432,7 @@ class EditModalFormHandler:
                     )
                 )
             if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editmodalformtitle.failed")
+                raise Exception("commands.editmodalform.formnotmatch")
 
             real_title_code = StringWithHash(title_code)
             _ = self.feature.executor.compile_cache.get_runner(real_title_code)

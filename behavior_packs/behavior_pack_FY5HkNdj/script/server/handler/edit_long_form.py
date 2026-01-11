@@ -106,7 +106,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformappend.failed")
+                raise Exception("commands.editlongform.formnotmatch")
             form.buttons.append(LongStorageFormElement(StringWithHash("return ''")))
             return "已成功向长表单 {} 追加一个按钮".format(
                 json.dumps(form_name, ensure_ascii=False)
@@ -143,7 +143,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformcontent.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             real_content_code = StringWithHash(content_code)
             _ = self.feature.executor.compile_cache.get_runner(real_content_code)
@@ -180,7 +180,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongforminsert.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             if index < 0 or index > len(form.buttons):
                 raise Exception(
@@ -220,7 +220,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformlist.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             if len(form.buttons) == 0:
                 return "长表单 {} 目前没有任何按钮".format(
@@ -265,7 +265,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformpop.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             if len(form.buttons) == 0:
                 raise Exception(
@@ -312,7 +312,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformsub.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             if start_index < 0 or start_index > len(form.buttons):
                 raise Exception(
@@ -373,7 +373,7 @@ class EditLongFormHandler:
                     )
                 )
             if not isinstance(form, LongStorageForm):
-                raise Exception("commands.editlongformtitle.failed")
+                raise Exception("commands.editlongform.formnotmatch")
 
             real_title_code = StringWithHash(title_code)
             _ = self.feature.executor.compile_cache.get_runner(real_title_code)
