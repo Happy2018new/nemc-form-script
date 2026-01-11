@@ -103,10 +103,12 @@ class CustomFunctionHandler:
         assert self.feature is not None
         assert self.feature.executor is not None
 
-        executor = args[1]["value"]  # type: tuple[str, ...]
+        executor = args[1]["value"]  # type: tuple[str, ...] | None
         position = args[2]["value"]  # type: tuple[float, float, float]
         func_name = args[3]["value"]  # type: str
 
+        if executor is None:
+            raise Exception("commands.generic.noTargetMatch")
         if len(executor) != 1:
             raise Exception("您最多设置一个命令执行者")
 

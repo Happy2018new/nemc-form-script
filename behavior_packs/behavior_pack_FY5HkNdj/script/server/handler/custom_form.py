@@ -122,7 +122,7 @@ class CustomFormHandler:
                     StringWithHash(""),
                     StringWithHash(""),
                 )
-                _ = self.storage.save_form(form_name, real_form)
+                _ = self.storage.cache_form(form_name, real_form)
             elif form_type == FORM_RAW_TYPE_POPUP:
                 real_form = PopupStorageForm(
                     StringWithHash("return ''"),
@@ -134,7 +134,7 @@ class CustomFormHandler:
                     StringWithHash(""),
                     StringWithHash(""),
                 )
-                _ = self.storage.save_form(form_name, real_form)
+                _ = self.storage.cache_form(form_name, real_form)
             elif form_type == FORM_RAW_TYPE_MODAL:
                 real_form = ModalStorageForm(
                     StringWithHash("return ''"),
@@ -144,7 +144,7 @@ class CustomFormHandler:
                     StringWithHash(""),
                     StringWithHash(""),
                 )
-                _ = self.storage.save_form(form_name, real_form)
+                _ = self.storage.cache_form(form_name, real_form)
 
             return "已成功创建名为 {} 的表单".format(
                 json.dumps(form_name, ensure_ascii=False)
@@ -373,16 +373,19 @@ class CustomFormHandler:
         """
         assert self.feature is not None
 
-        executor = args[1]["value"]  # type: tuple[str, ...]
+        executor = args[1]["value"]  # type: tuple[str, ...] | None
         position = args[2]["value"]  # type: tuple[float, float, float]
-        player = args[3]["value"]  # type: tuple[str, ...]
+        player = args[3]["value"]  # type: tuple[str, ...] | None
         name = args[4]["value"]  # type: str
 
+        if executor is None or player is None:
+            raise Exception("commands.generic.noTargetMatch")
         if len(executor) != 1:
             raise Exception("您最多设置一个命令执行者")
         _ = self.feature.send_modal_form_request(
             list(player), name, executor[0], dimension, position
         )
+
         return "commands.customformshow.success"
 
     def handle_close(self, args):  # type: (list[dict[str, Any]]) -> str
@@ -400,7 +403,10 @@ class CustomFormHandler:
             str: 命令执行输出
         """
         assert self.feature is not None
-        player = args[1]["value"]  # type: tuple[str, ...]
+        player = args[1]["value"]  # type: tuple[str, ...] | None
 
+        if player is None:
+            raise Exception("commands.generic.noTargetMatch")
         _ = self.feature.force_close_all_forms(list(player))
+
         return "commands.customformclose.success"

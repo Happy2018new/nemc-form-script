@@ -190,6 +190,23 @@ class FormStorage:
                 self._form[form_name] = ModalForm().unmarshal(form_data)
 
             return self._form[form_name]
+        
+    def cache_form(self, form_name, real_form): # type: (str, BaseForm) -> FormStorage
+        """
+        cache_form 将指定名称的表单缓存到内存中。
+        它不会影响已持久化到底层存储的表单内容
+
+        Args:
+            form_name (str):
+                该表单的名称
+            real_form (BaseForm):
+                该表单的实际内容
+
+        Returns:
+            FormStorage: 返回 FormStorage 本身
+        """
+        self._form[form_name] = real_form
+        return self
 
     def save_form(
         self, form_name, real_form=None

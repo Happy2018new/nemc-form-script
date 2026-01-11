@@ -4,7 +4,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Callable
 
-from mod.server.extraServerApi import GetEngineCompFactory
+from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 from ..static.lib_object import BaseManager
 
 
@@ -146,28 +146,59 @@ class Context:
         """
         return self._dim_name
 
-    def fast_set(self, entity_id):  # type: (str) -> bool
+    def fast_set(
+        self, selector_or_entity_id, is_selector=True
+    ):  # type: (str, bool) -> bool
         """
         fast_set 将命令执行上下文切换到指定的实体。
-        这不仅改变了命令执行者，还改变了其他所有上下文
+        这不仅改变了命令执行者，还改变了其他所有上下文。
+
+        如果 is_selector 为真，则将提供的字符串视作目标选择器，
+        并试图将该目标选择器对应的唯一实体作为新的命令执行上下文。
+
+        解析目标选择器时，将尝试以原有的命令执行者作为参考点。
+        如果当前环境没有指定，则以存档本身作为参考点
 
         Args:
-            entity_id (str):
-                目标实体的 ID
+            selector_or_entity_id (str):
+                目标选择器或目标实体的 ID
+            is_selector (bool, optional):
+                提供的字符串是否指示目标选择器。
+                默认值为 True
 
         Raises:
             Exception:
                 如果给定的实体不存在，
+                或匹配到的实体超过一个，
                 则将抛出相应的错误
 
         Returns:
             bool: 总是返回 True
         """
+        if not is_selector:
+            entity_id = selector_or_entity_id
+        else:
+            if self._executor == 0:
+                entity_comp = GetEngineCompFactory().CreateEntityComponent(GetLevelId())
+            else:
+                entity_comp = GetEngineCompFactory().CreateEntityComponent(
+                    self._executor
+                )
+            entities = entity_comp.GetEntitiesBySelector(selector_or_entity_id)
+            if entities is None:
+                raise Exception("fast_set: No target is matched")
+            if len(entities) != 1:
+                raise Exception(
+                    "fast_set: Only can match one entity, but got {}".format(entities)
+                )
+            entity_id = entities[0]
+
         self.set_executor(entity_id)
         self.set_position(*GetEngineCompFactory().CreatePos(entity_id).GetPos())
         self.set_dimension(
             GetEngineCompFactory().CreateDimension(entity_id).GetEntityDimensionId()
         )
+
         return True
 
     def current_context(
