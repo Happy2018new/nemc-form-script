@@ -240,4 +240,4 @@ class FunctionFeature:
             if len(err) == 0:
                 err = "Unknown empty error"
             with self.executor.get_locker():
-                return manager.ref(manager.ref((0, err)))
+                return manager.ref((0, err))

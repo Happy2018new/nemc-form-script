@@ -14,6 +14,7 @@ from .executor.executor import GameCodeExecutor
 from .feature.form import FormFeature
 from .feature.function import FunctionFeature
 from .feature.event import EventFeature
+from .feature.debug import DebugFeature
 from ..packet.packet import (
     PACKET_NAME_MODAL_FORM_RESPONSE,
     PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
@@ -45,6 +46,7 @@ class FormSystem(ServerSystem):
     form_feature = None  # type: FormFeature | None
     func_feature = None  # type: FunctionFeature | None
     event_feature = None  # type: EventFeature | None
+    debug_feature = None  # type: DebugFeature | None
     cmd_handlers = None  # type: CommandHandlers | None
 
     def __init__(self, namespace, system_name):  # type: (str, str) -> None
@@ -91,6 +93,14 @@ class FormSystem(ServerSystem):
         self.form_feature = FormFeature(self, self.form_storage, self.executor)
         self.func_feature = FunctionFeature(self, self.func_storage, self.executor)
         self.event_feature = EventFeature(self, self.event_storage, self.executor)
+        self.debug_feature = DebugFeature(
+            self.executor,
+            self.form_storage,
+            self.func_storage,
+            self.event_storage,
+            self.func_feature,
+            self.compile_cache,
+        )
         self.cmd_handlers = CommandHandlers(
             self.compile_cache,
             self.form_storage,

@@ -290,6 +290,7 @@ class GameCodeExecutor:
                 builtins=self._built_in_func,
             )
         except Exception as e:
+            # Handle exception
             if len(ctx) == 0:
                 raise e
             raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))
@@ -371,6 +372,7 @@ class GameCodeExecutor:
                 builtins=self._built_in_func,
             )
         except Exception as e:
+            # Handle exception
             if len(ctx) == 0:
                 raise e
             raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))

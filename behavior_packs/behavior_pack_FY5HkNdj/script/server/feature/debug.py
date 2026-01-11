@@ -65,6 +65,7 @@ class DebugFeature:
         self.event_storage = event_storage
         self.func_feature = func_feature
         self.compile_cache = compile_cache
+        self._dynamic_init()
 
     def _dynamic_init(self):  # type: () -> None
         """
