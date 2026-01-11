@@ -160,7 +160,7 @@ class ExpressionReference(ExpressionElement):
     所以“引用”因而得名
     """
 
-    element_id = 0  # type: int
+    element_id = ELEMENT_ID_REF  # type: int
     element_payload = []  # type: list[Any]
 
     def __init__(self, payload=[]):  # type: (list[Any]) -> None
@@ -397,7 +397,7 @@ class ExpressionFunction(ExpressionElement):
     它保存了函数名和参数列表，用于函数调用
     """
 
-    element_id = 0  # type: int
+    element_id = ELEMENT_ID_FUNC  # type: int
     element_payload = []  # type: list[Any]
 
     def __init__(self, element_payload=[]):  # type: (list[Any]) -> None

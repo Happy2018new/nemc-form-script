@@ -64,6 +64,7 @@ ELEMENT_ID_TO_NAME = {
     ELEMENT_ID_REF: "{ref, ...}",
     ELEMENT_ID_SELECTOR: "{selector, ...}",
     ELEMENT_ID_SCORE: "{score, ...}",
+    ELEMENT_ID_COMMAND: "{command, ...}",
     ELEMENT_ID_FUNC: "{func, ...}",
     ELEMENT_ID_AND: "... and ...",
     ELEMENT_ID_OR: "... or ...",
