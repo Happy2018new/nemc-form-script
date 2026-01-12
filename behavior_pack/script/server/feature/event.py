@@ -59,12 +59,10 @@ class SingleEventProcesser:
 
             with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
-                    copied = copy.deepcopy(args)
-
                     try:
                         _ = self.executor.variable_run(
                             code=func.get_func(),
-                            variables={"args": manager.ref(copied)},
+                            variables={"args": manager.ref(args)},
                             require_return=False,
                         )
                     except Exception as e:
@@ -73,15 +71,13 @@ class SingleEventProcesser:
                                 code=func.get_on_error(),
                                 variables={
                                     "error": str(e),
-                                    "args": manager.ref(copied),
+                                    "args": manager.ref(args),
                                 },
                                 require_return=False,
                             )
                         except Exception:
                             pass
-
-                    if "cancel" in args and copied.get("cancel", False):
-                        args["cancel"] = True
+                    if args.get("cancel", False):
                         break
 
 

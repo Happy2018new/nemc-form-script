@@ -178,7 +178,7 @@ class Context:
         if not is_selector:
             entity_id = selector_or_entity_id
         else:
-            if self._executor == 0:
+            if len(self._executor) == 0:
                 entity_comp = GetEngineCompFactory().CreateEntityComponent(GetLevelId())
             else:
                 entity_comp = GetEngineCompFactory().CreateEntityComponent(
