@@ -175,13 +175,13 @@ class Reflect:
             return 0
 
         try:
-            result = getattr(self._manager.deref(ptr), attr)
+            obj = getattr(self._manager.deref(ptr), attr)
         except Exception:
             return 0
-        if attr.startswith("_") or not check_object(result):
+        if not check_object(obj):
             return 0
 
-        return self._manager.ref(result)
+        return self._manager.ref(obj)
 
     def setattr(self, obj_ptr, obj_attr, value_ptr):  # type: (int, str, int) -> bool
         """
