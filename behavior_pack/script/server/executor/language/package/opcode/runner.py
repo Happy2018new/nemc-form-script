@@ -53,6 +53,7 @@ from ..expression.baisc import (
     ExpressionSelector,
     ExpressionScore,
     ExpressionCommand,
+    ExpressionFunction,
 )
 
 try:
@@ -365,6 +366,42 @@ class CodeRunner:
             )
         return self._interact.command_func()(command)
 
+    def _process_function(
+        self, element
+    ):  # type: (ExpressionFunction) -> int | bool | float | str
+        """
+        _process_function 对给定的函数表达式元素进行求值
+
+        Args:
+            element (ExpressionFunction):
+                给定的函数表达式元素
+
+        Raises:
+            Exception:
+                当求值出错时抛出
+
+        Returns:
+            int | bool | float | str:
+                给定表达式元素的求值结果
+        """
+        val = self._builtins.get_func(element.element_payload[0])(
+            *[self._process_element(i) for i in element.element_payload[1]]
+        )
+
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return str(val)
+        except Exception:
+            pass
+
+        raise Exception(
+            "_process_function: The data type of return value from func {} must be int/bool/float/str, but got {}".format(
+                element.element_payload[0], val
+            )
+        )
+
     def _process_element(
         self, element
     ):  # type: (ExpressionElement) -> int | bool | float | str
@@ -376,7 +413,7 @@ class CodeRunner:
 
         Raises:
             Exception:
-                求值发生错误时抛出
+                当求值出错时抛出
 
         Returns:
             int | bool | float | str:
@@ -459,10 +496,7 @@ class CodeRunner:
         if element.element_id == ELEMENT_ID_COMMAND:
             return self._process_command(element)  # type: ignore
         if element.element_id == ELEMENT_ID_FUNC:
-            name = element.element_payload[0]  # type: ignore
-            func = self._builtins.get_func(name)
-            args = [self._process_element(i) for i in element.element_payload[1]]  # type: ignore
-            return func(*args)
+            return self._process_function(element)  # type: ignore
         if element.element_id == ELEMENT_ID_SCORE:
             return self._process_score(element)  # type: ignore
         if element.element_id == ELEMENT_ID_SELECTOR:

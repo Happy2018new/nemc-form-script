@@ -61,7 +61,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(base64.b16encode(obj_b))
+            return base64.b16encode(obj_b)  # type: ignore
 
     def b32decode(self, string, casefold=False):  # type: (str, bool) -> int | str
         """b32decode 解码一个 Base32 编码的字符串
@@ -100,7 +100,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(base64.b32encode(obj_b))
+            return base64.b32encode(obj_b)  # type: ignore
 
     def b64decode(self, string, altchars=None):  # type: (str, str | None) -> int | str
         """b64decode 解码一个 Base64 编码的字符串
@@ -138,7 +138,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(base64.b64encode(obj_b))
+            return base64.b64encode(obj_b)  # type: ignore
 
     def standard_b64decode(self, string):  # type: (str) -> int | str
         """standard_b64decode 按 Base64 标准解码一个字符串
@@ -173,7 +173,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(base64.standard_b64encode(obj_b))
+            return base64.standard_b64encode(obj_b)  # type: ignore
 
     def urlsafe_b64decode(self, string):  # type: (str) -> int | str
         """urlsafe_b64decode 解码一个 URL 安全的 Base64 编码字符串
@@ -210,7 +210,7 @@ class Base64:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(base64.urlsafe_b64encode(obj_b))
+            return base64.urlsafe_b64encode(obj_b)  # type: ignore
 
     def build_func(
         self,

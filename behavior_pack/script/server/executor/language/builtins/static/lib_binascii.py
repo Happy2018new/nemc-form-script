@@ -77,7 +77,7 @@ class Binascii:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(binascii.b2a_base64(obj_b))
+            return binascii.b2a_base64(obj_b)  # type: ignore
 
     def b2a_hex(self, ptr_or_str):  # type: (int | str) -> str
         """
@@ -97,7 +97,7 @@ class Binascii:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(binascii.b2a_hex(obj_b))
+            return binascii.b2a_hex(obj_b)  # type: ignore
 
     def hexlify(self, ptr_or_str):  # type: (int | str) -> str
         """
@@ -118,7 +118,7 @@ class Binascii:
         else:
             temp = ptr_or_str  # type: Any
             obj_b = temp  # type: bytes
-            return str(binascii.hexlify(obj_b))
+            return binascii.hexlify(obj_b)  # type: ignore
 
     def build_func(
         self,
