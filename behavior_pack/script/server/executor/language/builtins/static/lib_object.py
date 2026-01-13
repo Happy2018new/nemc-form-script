@@ -135,9 +135,9 @@ class BaseManager:
         if ptr not in self._mapping:
             raise Exception("deref: Invalid address or nil pointer dereference")
         obj = self._mapping[ptr]
-        if internal or isinstance(obj, (int, bool, float, str)):
-            return obj
-        raise Exception("deref: Target object cannot be dereferenced")
+        if not internal and not isinstance(obj, (int, bool, float, str)):
+            raise Exception("deref: Target object cannot be dereferenced")
+        return obj
 
     def current(self):  # type: () -> set[int]
         """

@@ -105,8 +105,33 @@ class Maps:
             raise Exception("maps.format: Target object is not a map")
         return obj.__repr__()
 
-    def exist(self, map_ptr, key_ptr):  # type: (int, int) -> bool
-        """exist 检查映射中是否存在指定的键
+    def exist(self, ptr, raw_key):  # type: (int, int | bool | float | str) -> bool
+        """
+        exist 检查给定的映射中是否存在指定的键
+
+        Args:
+            ptr (int):
+                目标映射的指针
+            raw_key (int | bool | float | str):
+                欲被检查的键
+
+        Raises:
+            Exception:
+                如果目标对象不是映射，
+                则抛出相应的错误
+
+        Returns:
+            bool: 目标映射中是否存在给定的键
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, dict):
+            raise Exception("maps.exist: Target object is not a map")
+        return raw_key in obj
+
+    def ptr_exist(self, map_ptr, key_ptr):  # type: (int, int) -> bool
+        """
+        ptr_exist 检查给定的映射中是否存在指定的键。
+        它与 exist 的不同之处在于它完全基于指针进行操作
 
         Args:
             map_ptr (int): 目标映射的指针
@@ -114,81 +139,212 @@ class Maps:
 
         Raises:
             Exception:
-                如果目标对象不是映射，则抛出相应的错误
+                如果目标对象不是映射，
+                则抛出相应的错误
 
         Returns:
             bool: 目标映射中是否存在给定的键
         """
         obj = self._manager.deref(map_ptr)
         if not isinstance(obj, dict):
-            raise Exception("maps.exist: Target object is not a map")
+            raise Exception("maps.ptr_exist: Target object is not a map")
         return self._manager.deref(key_ptr) in obj
 
-    def get(self, map_ptr, key_ptr):  # type: (int, int) -> int
-        """get 从映射中获取指定键对应的值
+    def get(
+        self, ptr, raw_key
+    ):  # type: (int, int | bool | float | str) -> int | bool | float | str
+        """get 从映射中获取对于给定的键所对应的值
 
         Args:
-            map_ptr (int): 目标映射的指针
-            key_ptr (int): 欲获取值的键（的指针）
+            ptr (int):
+                目标映射的指针
+            raw_key (int | bool | float | str):
+                目标值对应的键
 
         Raises:
             Exception:
-                如果目标对象不是映射，则抛出相应的错误
+                如果目标对象不是映射，
+                或给定的键不存在，
+                或目标值不是整数、布尔值、浮点数或字符串，
+                则抛出相应的错误
+
+        Returns:
+            int | bool | float | str:
+                给定键对应的值
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, dict):
+            raise Exception("maps.get: Target object is not a map")
+        val = obj[raw_key]
+        if not isinstance(val, (int, bool, float, str)):
+            raise Exception(
+                "maps.get: Can only get a value that data type is int, bool, float or str"
+            )
+        return val
+
+    def ptr_get(self, map_ptr, key_ptr):  # type: (int, int) -> int
+        """
+        ptr_get 从映射中获取对于给定的键所对应的值。
+        它与 get 的不同之处在于它完全基于指针进行操作
+
+        Args:
+            map_ptr (int): 目标映射的指针
+            key_ptr (int): 目标值对应的键（的指针）
+
+        Raises:
+            Exception:
+                如果目标对象不是映射，
+                或给定的键不存在，
+                则抛出相应的错误
 
         Returns:
             int: 给定键对应的值（的指针）
         """
         obj = self._manager.deref(map_ptr)
         if not isinstance(obj, dict):
-            raise Exception("maps.get: Target object is not a map")
+            raise Exception("maps.ptr_get: Target object is not a map")
         return self._manager.ref(obj[self._manager.deref(key_ptr)])
 
-    def pop(self, map_ptr, key_ptr):  # type: (int, int) -> int
+    def pop(
+        self, ptr, raw_key
+    ):  # type: (int, int | bool | float | str) -> int | bool | float | str
         """
-        pop 获取并移除映射中指定键对应的值
+        pop 弹出映射中指定的键，并返回它对应的值
 
         Args:
-            map_ptr (int): 目标映射的指针
-            key_ptr (int): 涉及的键的指针
+            ptr (int):
+                目标映射的指针
+            raw_key (int | bool | float | str):
+                要弹出的键
 
         Raises:
             Exception:
                 如果目标对象不是映射，
                 或给定的键不存在，
+                或目标值不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
-            int: 被移除的值的指针
+            int | bool | float | str:
+                被弹出的键所对应的值
         """
-        obj = self._manager.deref(map_ptr)
+        obj = self._manager.deref(ptr)
         if not isinstance(obj, dict):
             raise Exception("maps.pop: Target object is not a map")
+        val = obj.pop(raw_key)
+        if not isinstance(val, (int, bool, float, str)):
+            raise Exception(
+                "maps.pop: Can only pop a value that data type is int, bool, float or str"
+            )
+        return val
+
+    def ptr_pop(self, map_ptr, key_ptr):  # type: (int, int) -> int
+        """
+        ptr_pop 弹出映射中指定的键，并返回它对应的值。
+        它与 pop 的不同之处在于它完全基于指针进行操作
+
+        Args:
+            map_ptr (int): 目标映射的指针
+            key_ptr (int): 要弹出的键（的指针）
+
+        Raises:
+            Exception:
+                如果目标对象不是映射，
+                或给定的键不存在，
+                则抛出相应的错误
+
+        Returns:
+            int: 被弹出的键所对应的值（的指针）
+        """
+        obj = self._manager.deref(map_ptr)
+        if not isinstance(obj, dict):
+            raise Exception("maps.ptr_pop: Target object is not a map")
         return self._manager.ref(obj.pop(self._manager.deref(key_ptr)))
 
-    def set(self, map_ptr, key_ptr, value_ptr):  # type: (int, int, int) -> bool
-        """set 在映射中设置指定键对应的值
+    def set(
+        self,
+        ptr,  # type: int
+        raw_key,  # type: int | bool | float | str
+        raw_val,  # type: int | bool | float | str
+    ):  # type: (...) -> bool
+        """
+        set 在给定的映射中设置指定的键所对应的值
+
+        Args:
+            ptr (int):
+                目标映射的指针
+            raw_key (int | bool | float | str):
+                给定的键
+            raw_val (int | bool | float | str):
+                欲设置的值
+
+        Raises:
+            Exception:
+                如果目标对象不是映射，
+                则抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, dict):
+            raise Exception("maps.set: Target object is not a map")
+        obj[raw_key] = raw_val
+        return True
+
+    def ptr_set(self, map_ptr, key_ptr, val_ptr):  # type: (int, int, int) -> bool
+        """
+        ptr_set 在给定的映射中设置指定的键所对应的值。
+        它与 set 的不同之处在于它完全基于指针进行操作
 
         Args:
             map_ptr (int): 目标映射的指针
             key_ptr (int): 给定的键的指针
-            value_ptr (int): 欲设置的值的指针
+            val_ptr (int): 欲设置的值的指针
 
         Raises:
             Exception:
-                如果目标对象不是映射，则抛出相应的错误
+                如果目标对象不是映射，
+                则抛出相应的错误
 
         Returns:
             bool: 总是返回 True
         """
         obj = self._manager.deref(map_ptr)
         if not isinstance(obj, dict):
-            raise Exception("maps.set: Target object is not a map")
-        obj[self._manager.deref(key_ptr)] = self._manager.deref(value_ptr)
+            raise Exception("maps.ptr_set: Target object is not a map")
+        obj[self._manager.deref(key_ptr)] = self._manager.deref(val_ptr)
         return True
 
-    def delete(self, map_ptr, key_ptr):  # type: (int, int) -> bool
+    def delete(self, ptr, raw_key):  # type: (int, int | bool | float | str) -> bool
         """
-        delete 从映射中移除给定的键以及该键的值
+        delete 从给定的映射中移除给定的键以及该键的值
+
+        Args:
+            ptr (int):
+                目标映射的指针
+            raw_key (int | bool | float | str):
+                欲移除的键
+
+        Raises:
+            Exception:
+                如果目标对象不是映射，
+                或给定的键不存在，
+                则抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, dict):
+            raise Exception("maps.del: Target object is not a map")
+        del obj[raw_key]
+        return True
+
+    def ptr_delete(self, map_ptr, key_ptr):  # type: (int, int) -> bool
+        """
+        ptr_delete 从给定的映射中移除给定的键以及该键的值。
+        它与 delete 的不同之处在于它完全基于指针进行操作
 
         Args:
             map_ptr (int): 目标映射的指针
@@ -205,7 +361,7 @@ class Maps:
         """
         obj = self._manager.deref(map_ptr)
         if not isinstance(obj, dict):
-            raise Exception("maps.delete: Target object is not a map")
+            raise Exception("maps.ptr_del: Target object is not a map")
         del obj[self._manager.deref(key_ptr)]
         return True
 
@@ -327,10 +483,15 @@ class Maps:
         funcs["maps.copy"] = self.copy
         funcs["maps.format"] = self.format
         funcs["maps.exist"] = self.exist
+        funcs["maps.ptr_exist"] = self.ptr_exist
         funcs["maps.get"] = self.get
+        funcs["maps.ptr_get"] = self.ptr_get
         funcs["maps.pop"] = self.pop
+        funcs["maps.ptr_pop"] = self.ptr_pop
         funcs["maps.set"] = self.set
-        funcs["maps.delete"] = self.delete
+        funcs["maps.ptr_set"] = self.ptr_set
+        funcs["maps.del"] = self.delete
+        funcs["maps.ptr_del"] = self.ptr_delete
         funcs["maps.clear"] = self.clear
         funcs["maps.keys"] = self.keys
         funcs["maps.values"] = self.values

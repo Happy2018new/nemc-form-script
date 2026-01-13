@@ -75,6 +75,8 @@ class Math:
         """
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
+        funcs["math.floordiv"] = lambda x, y: self._validate_int(x // y)
+        funcs["math.mod"] = lambda a, b: self._validate_int(a % b)
         funcs["math.bit_and"] = lambda a, b: self._validate_int(a & b)
         funcs["math.bit_or"] = lambda a, b: self._validate_int(a | b)
         funcs["math.bit_xor"] = lambda a, b: self._validate_int(a ^ b)
@@ -114,7 +116,6 @@ class Math:
         funcs["math.log1p"] = lambda x: math.log1p(x)
         funcs["math.modf"] = lambda x: self._manager.ref(math.modf(x))
         funcs["math.pi"] = lambda: math.pi
-        funcs["math.mod"] = lambda a, b: self._validate_int(a % b)
         funcs["math.pow"] = lambda x, y: math.pow(x, y)
         funcs["math.powmod"] = lambda x, y, mod: self._validate_number(pow(x, y, mod))
         funcs["math.radians"] = lambda x: math.radians(x)

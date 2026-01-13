@@ -63,18 +63,26 @@ slices.length
 slices.copy
 slices.format
 slices.append
+slices.ptr_append
 slices.get
+slices.ptr_get
 slices.set
+slices.ptr_set
 slices.max
 slices.min
 slices.sum
 slices.sub
 slices.insert
+slices.ptr_insert
 slices.pop
+slices.ptr_pop
 slices.reverse
 slices.sort (Support order)
 slices.concat
 slices.binsearch (= BinarySearch)
+slices.ptr_binsearch (= BinarySearch)
+slices.in
+slices.ptr_in
 
 
 
@@ -84,10 +92,15 @@ maps.length
 maps.copy
 maps.format
 maps.exist
+maps.ptr_exist
 maps.get
+maps.ptr_get
 maps.pop
+maps.ptr_pop
 maps.set
+maps.ptr_set
 maps.del
+maps.ptr_del
 maps.clear
 maps.keys
 maps.values
@@ -101,10 +114,13 @@ tuple.cast
 tuple.length
 tuple.format
 tuple.get
+tuple.ptr_get
 tuple.sub
 tuple.max
 tuple.min
 tuple.sum
+tuple.in
+tuple.ptr_in
 
 
 
@@ -114,10 +130,15 @@ set.length
 set.copy
 set.format
 set.exist
+set.ptr_exist
 set.add
+set.ptr_add
 set.remove
+set.ptr_remove
 set.discard
+set.ptr_discard
 set.pop
+set.ptr_pop
 set.clear
 set.max
 set.min
@@ -207,6 +228,8 @@ struct_time.tm_isdst
 
 
 
+math.floordiv
+math.mod
 math.bit_and
 math.bit_or
 math.bit_xor
@@ -246,7 +269,6 @@ math.log10
 math.log1p
 math.modf
 math.pi
-math.mod
 math.pow
 math.powmod (= pow(x, y, mod))
 math.radians

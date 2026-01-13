@@ -98,8 +98,33 @@ class Set:
             raise Exception("set.format: Target object is not a set")
         return obj.__repr__()
 
-    def exist(self, set_ptr, element_ptr):  # type: (int, int) -> bool
-        """exist 检查元素是否存在于集合中
+    def exist(self, ptr, raw):  # type: (int, int | bool | float | str) -> bool
+        """
+        exist 检查给定的元素是否存在于指定的集合中
+
+        Args:
+            ptr (int):
+                目标集合的指针
+            raw (int | bool | float | str):
+                欲被检查的元素
+
+        Raises:
+            Exception:
+                如果目标对象不是集合，
+                则抛出相应的错误
+
+        Returns:
+            bool: 给定的元素是否存在于集合中
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, set):
+            raise Exception("set.exist: Target object is not a set")
+        return raw in obj
+
+    def ptr_exist(self, set_ptr, element_ptr):  # type: (int, int) -> bool
+        """
+        ptr_exist 检查给定的元素是否存在于指定的集合中。
+        它与 exist 的不同之处在于它完全基于指针进行操作
 
         Args:
             set_ptr (int): 目标集合的指针
@@ -107,18 +132,44 @@ class Set:
 
         Raises:
             Exception:
-                如果目标对象不是集合，则抛出相应的错误
+                如果目标对象不是集合，
+                则抛出相应的错误
 
         Returns:
             bool: 给定的元素是否存在于集合中
         """
         obj = self._manager.deref(set_ptr)
         if not isinstance(obj, set):
-            raise Exception("set.exist: Target object is not a set")
+            raise Exception("set.ptr_exist: Target object is not a set")
         return self._manager.deref(element_ptr) in obj
 
-    def add(self, set_ptr, element_ptr):  # type: (int, int) -> bool
-        """add 向集合中添加一个元素
+    def add(self, ptr, raw):  # type: (int, int | bool | float | str) -> bool
+        """add 向给定的集合中添加一个指定的元素
+
+        Args:
+            ptr (int):
+                目标集合的指针
+            raw (int | bool | float | str):
+                欲被添加的元素
+
+        Raises:
+            Exception:
+                如果目标对象不是集合，
+                则抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, set):
+            raise Exception("set.add: Target object is not a set")
+        obj.add(raw)
+        return True
+
+    def ptr_add(self, set_ptr, element_ptr):  # type: (int, int) -> bool
+        """
+        ptr_add 向给定的集合中添加一个指定的元素。
+        它与 add 的不同之处在于它完全基于指针进行操作
 
         Args:
             set_ptr (int): 目标集合的指针
@@ -126,19 +177,47 @@ class Set:
 
         Raises:
             Exception:
-                如果目标对象不是集合，则抛出相应的错误
+                如果目标对象不是集合，
+                则抛出相应的错误
 
         Returns:
             bool: 总是返回 True
         """
         obj = self._manager.deref(set_ptr)
         if not isinstance(obj, set):
-            raise Exception("set.add: Target object is not a set")
+            raise Exception("set.ptr_add: Target object is not a set")
         obj.add(self._manager.deref(element_ptr))
         return True
 
-    def remove(self, set_ptr, element_ptr):  # type: (int, int) -> bool
-        """remove 从集合中移除一个元素
+    def remove(self, ptr, raw):  # type: (int, int | bool | float | str) -> bool
+        """
+        remove 从给定的集合中移除一个指定的元素
+
+        Args:
+            ptr (int):
+                目标集合的指针
+            raw (int | bool | float | str):
+                欲被移除的元素
+
+        Raises:
+            Exception:
+                如果目标对象不是集合，
+                或元素不存在于集合中，
+                则抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, set):
+            raise Exception("set.remove: Target object is not a set")
+        obj.remove(raw)
+        return True
+
+    def ptr_remove(self, set_ptr, element_ptr):  # type: (int, int) -> bool
+        """
+        ptr_remove 从给定的集合中移除一个指定的元素。
+        它与 remove 的不同之处在于它完全基于指针进行操作
 
         Args:
             set_ptr (int): 目标集合的指针
@@ -155,14 +234,40 @@ class Set:
         """
         obj = self._manager.deref(set_ptr)
         if not isinstance(obj, set):
-            raise Exception("set.remove: Target object is not a set")
+            raise Exception("set.ptr_remove: Target object is not a set")
         obj.remove(self._manager.deref(element_ptr))
         return True
 
-    def discard(self, set_ptr, element_ptr):  # type: (int, int) -> bool
+    def discard(self, ptr, raw):  # type: (int, int | bool | float | str) -> bool
         """
-        discard 从集合中移除一个元素。
-        即便目标元素不存在，也不会抛出错误
+        discard 从给定的集合中移除一个指定的元素。
+        这意味着即便目标元素不存在，也不会抛出错误
+
+        Args:
+            ptr (int):
+                目标集合的指针
+            raw (int | bool | float | str):
+                欲被移除的元素
+
+        Raises:
+            Exception:
+                如果目标对象不是集合，
+                则抛出相应的错误
+
+        Returns:
+            bool: 总是返回 True
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, set):
+            raise Exception("set.discard: Target object is not a set")
+        obj.discard(raw)
+        return True
+
+    def ptr_discard(self, set_ptr, element_ptr):  # type: (int, int) -> bool
+        """
+        ptr_discard 从给定的集合中移除一个指定的元素。
+        它与 discard 的不同之处在于它完全基于指针进行操作。
+        这意味着即便目标元素不存在，也不会抛出错误
 
         Args:
             set_ptr (int): 目标集合的指针
@@ -170,35 +275,68 @@ class Set:
 
         Raises:
             Exception:
-                如果目标对象不是集合，则抛出相应的错误
+                如果目标对象不是集合，
+                则抛出相应的错误
 
         Returns:
             bool: 总是返回 True
         """
         obj = self._manager.deref(set_ptr)
         if not isinstance(obj, set):
-            raise Exception("set.discard: Target object is not a set")
+            raise Exception("set.ptr_discard: Target object is not a set")
         obj.discard(self._manager.deref(element_ptr))
         return True
 
-    def pop(self, set_ptr):  # type: (int) -> int
+    def pop(self, ptr):  # type: (int) -> int | bool | float | str
         """
         pop 从集合中移除一个任意的元素，
-        并返回移除的这个元素
+        并返回所移除的这个元素
 
         Args:
-            set_ptr (int): 目标集合的指针
+            ptr (int):
+                目标集合的指针
 
         Raises:
             Exception:
-                如果目标对象不是集合，则抛出相应的错误
+                如果目标对象不是集合，
+                或目标集合没有任何元素，
+                或被移除的元素不是整数、布尔值、浮点数或字符串，
+                则抛出相应的错误
+
+        Returns:
+            int | bool | float | str:
+                被移除的元素
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, set):
+            raise Exception("set.pop: Target object is not a set")
+        val = obj.pop()
+        if not isinstance(val, (int, bool, float, str)):
+            raise Exception(
+                "set.pop: Can only pop data that data type is int, bool, float or str"
+            )
+        return val
+
+    def ptr_pop(self, ptr):  # type: (int) -> int
+        """
+        ptr_pop 从集合中移除一个任意的元素，并返回所移除的这个元素。
+        它与 pop 的不同之处在于它完全基于指针进行操作
+
+        Args:
+            ptr (int): 目标集合的指针
+
+        Raises:
+            Exception:
+                如果目标对象不是集合，
+                或目标集合没有任何元素，
+                则抛出相应的错误
 
         Returns:
             int: 被移除元素的指针
         """
-        obj = self._manager.deref(set_ptr)
+        obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
-            raise Exception("set.pop: Target object is not a set")
+            raise Exception("set.ptr_pop: Target object is not a set")
         return self._manager.ref(obj.pop())
 
     def clear(self, ptr):  # type: (int) -> bool
@@ -483,10 +621,15 @@ class Set:
         funcs["set.copy"] = self.copy
         funcs["set.format"] = self.format
         funcs["set.exist"] = self.exist
+        funcs["set.ptr_exist"] = self.ptr_exist
         funcs["set.add"] = self.add
+        funcs["set.ptr_add"] = self.ptr_add
         funcs["set.remove"] = self.remove
+        funcs["set.ptr_remove"] = self.ptr_remove
         funcs["set.discard"] = self.discard
+        funcs["set.ptr_discard"] = self.ptr_discard
         funcs["set.pop"] = self.pop
+        funcs["set.ptr_pop"] = self.ptr_pop
         funcs["set.clear"] = self.clear
         funcs["set.max"] = self.max
         funcs["set.min"] = self.min

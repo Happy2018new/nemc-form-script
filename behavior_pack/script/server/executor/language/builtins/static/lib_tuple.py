@@ -80,26 +80,65 @@ class Tuple:
             raise Exception("tuple.format: Target object is not a tuple")
         return obj.__repr__()
 
-    def get(self, ptr, index):  # type: (int, int) -> int
-        """get 从元组中获取指定索引的元素
+    def get(self, ptr, index):  # type: (int, int) -> int | float | bool | str
+        """
+        get 从给定的元组中获取在指定索引的元素
 
         Args:
             ptr (int): 目标元组的指针
-            index (int): 要获取的元素的索引
+            index (int): 给定的索引值
 
         Raises:
             Exception:
-                如果目标对象不是元组，则抛出相应的错误
+                如果目标对象不是元组，
+                则抛出相应的错误
 
         Returns:
-            int: 所获元素的指针
+            int | float | bool | str:
+                位于目标索引的元素
         """
         obj = self._manager.deref(ptr)
         if not isinstance(obj, tuple):
             raise Exception("tuple.get: Target object is not a tuple")
+
         if index < 0 or index >= len(obj):
             raise Exception(
                 "tuple.get: Index out of range [{}] with length {}".format(
+                    index, len(obj)
+                )
+            )
+        val = obj[index]
+        if not isinstance(val, (int, bool, float, str)):
+            raise Exception(
+                "tuple.get: Can only get a value that data type is int, bool, float or str"
+            )
+
+        return val
+
+    def ptr_get(self, ptr, index):  # type: (int, int) -> int
+        """
+        ptr_get 从给定的元组中获取在指定索引的元素。
+        它与 get 的不同之处在于它完全基于指针进行操作
+
+        Args:
+            ptr (int): 目标元组的指针
+            index (int): 给定的索引值
+
+        Raises:
+            Exception:
+                如果目标对象不是元组，
+                则抛出相应的错误
+
+        Returns:
+            int:
+                位于目标索引的元素（的指针）
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, tuple):
+            raise Exception("tuple.ptr_get: Target object is not a tuple")
+        if index < 0 or index >= len(obj):
+            raise Exception(
+                "tuple.ptr_get: Index out of range [{}] with length {}".format(
                     index, len(obj)
                 )
             )
@@ -207,6 +246,52 @@ class Tuple:
 
         return result
 
+    def compare_in(self, ptr, raw):  # type: (int, int | bool | float | str) -> bool
+        """compare_in 检查给定的元组是否包含指定的元素
+
+        Args:
+            ptr (int):
+                目标元组的指针
+            raw (int | bool | float | str):
+                欲被检查的元素
+
+        Raises:
+            Exception:
+                如果目标对象不是元组，
+                则抛出相应的错误
+
+        Returns:
+            bool: 目标元组是否包含给定的元素
+        """
+        obj = self._manager.deref(ptr)
+        if not isinstance(obj, tuple):
+            raise Exception("tuple.in: Target object is not a tuple")
+        return raw in obj
+
+    def ptr_compare_in(self, tuple_ptr, value_ptr):  # type: (int, int) -> bool
+        """
+        ptr_compare_in 检查给定的元组是否包含指定的元素。
+        它与 compare_in 的不同之处在于它完全基于指针进行操作
+
+        Args:
+            tuple_ptr (int):
+                目标元组的指针
+            value_ptr (int):
+                欲被检查的元素（的指针）
+
+        Raises:
+            Exception:
+                如果目标对象不是元组，
+                则抛出相应的错误
+
+        Returns:
+            bool: 目标元组是否包含给定的元素
+        """
+        obj = self._manager.deref(tuple_ptr)
+        if not isinstance(obj, tuple):
+            raise Exception("tuple.ptr_in: Target object is not a tuple")
+        return self._manager.deref(value_ptr) in obj
+
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -226,10 +311,13 @@ class Tuple:
         funcs["tuple.length"] = self.length
         funcs["tuple.format"] = self.format
         funcs["tuple.get"] = self.get
+        funcs["tuple.ptr_get"] = self.ptr_get
         funcs["tuple.sub"] = self.sub
         funcs["tuple.max"] = self.max
         funcs["tuple.min"] = self.min
         funcs["tuple.sum"] = self.sum
+        funcs["tuple.in"] = self.compare_in
+        funcs["tuple.ptr_in"] = self.ptr_compare_in
 
         for key, value in funcs.items():
             origin[key] = value
