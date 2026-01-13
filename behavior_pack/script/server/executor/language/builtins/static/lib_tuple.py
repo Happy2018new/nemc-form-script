@@ -154,7 +154,10 @@ class Tuple:
 
         Raises:
             Exception:
-                如果目标对象不是元组，则抛出相应的错误
+                如果目标对象不是元组，
+                或给出的起始或结束索引超出元组的范围，
+                或结束索引小于起始索引，
+                则抛出相应的错误
 
         Returns:
             int: 子元组的指针
@@ -162,6 +165,26 @@ class Tuple:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, tuple):
             raise Exception("tuple.sub: Target object is not a tuple")
+
+        if start < 0 or start > len(obj):
+            raise Exception(
+                "tuple.sub: Start index out of range [{}] with length {}".format(
+                    start, len(obj)
+                )
+            )
+        if end < 0 or end > len(obj):
+            raise Exception(
+                "tuple.sub: End index out of range [{}] with length {}".format(
+                    end, len(obj)
+                )
+            )
+        if end < start:
+            raise Exception(
+                "tuple.sub: The end index can't be less than the start index (start={}, end={})".format(
+                    start, end
+                )
+            )
+
         return self._manager.ref(obj[start:end])
 
     def max(self, ptr):  # type: (int) -> int | bool | float | str

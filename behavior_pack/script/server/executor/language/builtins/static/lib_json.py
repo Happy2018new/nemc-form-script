@@ -90,7 +90,8 @@ class JSON:
 
     def loads(self, string):  # type: (str) -> int
         """
-        loads 将字符串解析以 JSON 的格式解析为映射
+        loads 将字符串以 JSON 的格式解析。
+        所得结果可能是一个映射，或其他类型
 
         Args:
             string (str): 待解析的字符串
@@ -99,6 +100,32 @@ class JSON:
             int: 解析后所得映射的指针
         """
         return self._manager.ref(json.loads(string))
+
+    def fast_loads(self, string):  # type: (str) -> int | bool | float | str
+        """
+        fast_loads 将字符串以 JSON 的格式解析。
+        它与 loads 的区别在于，它的解析结果应只
+        可能是整数、布尔值、浮点数或字符串
+
+        Args:
+            string (str): 待解析的字符串
+
+        Raises:
+            Exception:
+                如果解析失败，
+                或解析结果不是整数、布尔值、浮点数或字符串，
+                则抛出相应的错误
+
+        Returns:
+            int | bool | float | str:
+                解析后所得的结果
+        """
+        result = json.loads(string)
+        if not isinstance(result, (int, bool, float, str)):
+            raise Exception(
+                "json.fast_loads: The loaded result must be int, bool, float or str"
+            )
+        return result
 
     def build_func(
         self,
@@ -115,7 +142,9 @@ class JSON:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["json.dumps"] = self.dumps
+        funcs["json.fast_dumps"] = lambda obj: self.dumps(obj, ensure_ascii=False)
         funcs["json.loads"] = self.loads
+        funcs["json.fast_loads"] = self.fast_loads
 
         for key, value in funcs.items():
             origin[key] = value

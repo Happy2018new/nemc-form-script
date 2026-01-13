@@ -305,7 +305,9 @@ random.setstate
 
 
 json.dumps
+json.fast_dumps
 json.loads
+json.fast_loads
 
 
 

@@ -72,10 +72,36 @@ class Strings:
             start (int): 子字符串的起始索引
             end (int): 子字符串的结束索引
 
+        Raises:
+            Exception:
+                如果给出的起始或结束索引超出字符串范围，
+                或结束索引小于起始索引，则抛出相应的错误
+
         Returns:
             int: 产生的子字符串
         """
-        return self._validate(string)[start:end]
+        _ = self._validate(string)
+
+        if start < 0 or start > len(string):
+            raise Exception(
+                "strings.sub: Start index out of range [{}] with length {}".format(
+                    start, len(string)
+                )
+            )
+        if end < 0 or end > len(string):
+            raise Exception(
+                "strings.sub: End index out of range [{}] with length {}".format(
+                    end, len(string)
+                )
+            )
+        if end < start:
+            raise Exception(
+                "strings.sub: The end index can't be less than the start index (start={}, end={})".format(
+                    start, end
+                )
+            )
+
+        return string[start:end]
 
     def join(self, string, slice_ptr):  # type: (str, int) -> str
         """
