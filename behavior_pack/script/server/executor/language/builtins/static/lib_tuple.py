@@ -60,7 +60,7 @@ class Tuple:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, tuple):
             raise Exception("tuple.length: Target object is not a tuple")
-        return self._manager.ref(len(obj))
+        return len(obj)
 
     def format(self, ptr):  # type: (int) -> str
         """format 将元组格式化为其字符串表示

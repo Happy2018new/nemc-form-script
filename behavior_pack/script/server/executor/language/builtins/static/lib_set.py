@@ -60,7 +60,7 @@ class Set:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
             raise Exception("set.length: Target object is not a set")
-        return self._manager.ref(len(obj))
+        return len(obj)
 
     def copy(self, ptr):  # type: (int) -> int
         """copy 返回集合的浅拷贝
