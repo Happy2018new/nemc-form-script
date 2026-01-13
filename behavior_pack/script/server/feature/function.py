@@ -186,7 +186,7 @@ class FunctionFeature:
             if len(args) == 0:
                 return self.executor.run_code(
                     func,
-                    "",
+                    "In function {}".format(json.dumps(func_name, ensure_ascii=False)),
                     context.get_executor(),
                     context.get_dimension(),
                     context.get_position(),
@@ -195,7 +195,7 @@ class FunctionFeature:
             else:
                 return self.executor.variable_run(
                     func,
-                    "",
+                    "In function {}".format(json.dumps(func_name, ensure_ascii=False)),
                     context.get_executor(),
                     context.get_dimension(),
                     context.get_position(),

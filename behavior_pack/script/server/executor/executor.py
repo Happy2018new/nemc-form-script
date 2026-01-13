@@ -10,15 +10,82 @@ if TYPE_CHECKING:
 import threading
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 from .cache import CompileCache
-from .language.package.opcode.runner import EMPTY_VARIABLES
-from .language.package.opcode.external import GameInteract, BuiltInFunction
 from .language.builtins.dynamic.lib_context import Context
+from .language.package.opcode.external import GameInteract, BuiltInFunction
+from .language.package.opcode.runner import (
+    EMPTY_VARIABLES,
+    InternalException as RunnerInternalException,
+)
 from .language.builtins import (
     new_base_manager,
     StaticBuiltInFunction,
     DynamicBuiltInFunction,
 )
 from ..storage.base import StringWithHash
+
+
+class ExecutorNormalException(Exception):
+    """
+    ExecutorNormalException 是代码执行器在执行代码时抛出的普通错误。
+    在递归调用的上下文中，该实例确保只会存储最内层调用的上下文信息
+    """
+
+    ctx = ""
+
+    def __init__(self, ctx, err):  # type: (str, Exception) -> None
+        """初始化并返回一个新的 ExecutorNormalException
+
+        Args:
+            ctx (str):
+                代码执行时的上下文信息
+            err (Exception):
+                代码执行时的原始错误
+        """
+        Exception.__init__(self, *err.args)
+        if isinstance(err, ExecutorNormalException):
+            self.ctx = err.ctx if len(err.ctx) > 0 else ctx
+        else:
+            self.ctx = ctx
+
+    def __str__(self):  # type: () -> str
+        """返回当前实例的字符串表示
+
+        Returns:
+            str: 当前实例的字符串表示
+        """
+        err = Exception.__str__(self)
+        if len(self.ctx) == 0:
+            return err
+        return err + "; context = {}".format(self.ctx)
+
+
+class ExecutorInternalException(ExecutorNormalException, RunnerInternalException):
+    """
+    ExecutorInternalException 是基于 ExecutorNormalException 实现的内部错误。
+    它保留了 RunnerInternalException 所具有的特性，以确保底层能正确格式化错误
+    """
+
+    def __init__(self, ctx, err):  # type: (str, RunnerInternalException) -> None
+        """初始化并返回一个新的 ExecutorInternalException
+
+        Args:
+            ctx (str):
+                代码执行时的上下文信息
+            err (RunnerInternalException):
+                代码执行时的原始错误
+        """
+        ExecutorNormalException.__init__(self, ctx, err)
+
+    def __str__(self):  # type: () -> str
+        """返回当前实例的字符串表示
+
+        Returns:
+            str: 当前实例的字符串表示
+        """
+        err = Exception.__str__(self)
+        if len(self.ctx) == 0:
+            return err
+        return err + "\n\n- Context -\n{}".format("  " + self.ctx)
 
 
 class GameCodeExecutor:
@@ -291,9 +358,9 @@ class GameCodeExecutor:
             )
         except Exception as e:
             # Handle exception
-            if len(ctx) == 0:
-                raise e
-            raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))
+            if isinstance(e, RunnerInternalException):
+                raise ExecutorInternalException(ctx, e)
+            raise ExecutorNormalException(ctx, e)
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)
@@ -373,9 +440,9 @@ class GameCodeExecutor:
             )
         except Exception as e:
             # Handle exception
-            if len(ctx) == 0:
-                raise e
-            raise Exception(str(e) + "\n\n- Context -\n{}".format("  " + ctx))
+            if isinstance(e, RunnerInternalException):
+                raise ExecutorInternalException(ctx, e)
+            raise ExecutorNormalException(ctx, e)
         finally:
             # Recover context
             self.static_builtin.manager.release_internal(frame)
