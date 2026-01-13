@@ -142,7 +142,7 @@ class JSON:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["json.dumps"] = self.dumps
-        funcs["json.fast_dumps"] = lambda obj: self.dumps(obj, ensure_ascii=False)
+        funcs["json.fast_dumps"] = lambda obj: json.dumps(obj, ensure_ascii=False)
         funcs["json.loads"] = self.loads
         funcs["json.fast_loads"] = self.fast_loads
 
