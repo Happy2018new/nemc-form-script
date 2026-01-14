@@ -304,87 +304,13 @@ class GameCodeExecutor:
         executor="",  # type: str
         dimension=0,  # type: int
         position=(0.0, 0.0, 0.0),  # type: tuple[float, float, float]
-        require_return=False,  # type: bool
-    ):  # type: (...) -> str | int | float | bool | None
-        """
-        run_code 在给定的命令执行上下文中执行代码
-
-        Args:
-            code (str):
-                已取得 MD5 摘要的代码
-            ctx (str):
-                在代码执行失败时，
-                所抛出的错误中要提供的上下文信息
-            executor (str, optional):
-                命令执行者的 ID。
-                默认值为空字符串
-            dimension (int, optional):
-                命令执行维度。
-                默认值为 0
-            position (tuple[float, float, float], optional):
-                命令执行点。
-                默认值为 (0.0, 0.0, 0.0)
-            require_return (bool, optional):
-                目标代码是否必须返回值。
-                如果该参数为真并且没有返回值，则将抛出错误
-
-        Returns:
-            str | int | float | bool | None:
-                代码执行的结果
-        """
-        assert self.static_builtin is not None
-        assert self.static_builtin.manager is not None
-        assert self.compile_cache is not None
-        assert self._game_interact is not None
-        assert self._built_in_func is not None
-
-        # Backup current context
-        frame = self.static_builtin.manager.current()
-        context = self.execute_context()
-        backup = context.current_context()
-
-        # Update context
-        context.set_executor(executor)
-        context.set_dimension(dimension)
-        context.set_position(*position)
-
-        try:
-            # Running the code
-            runner = self.compile_cache.get_runner(code)
-            result = runner.running(
-                require_return=require_return,
-                interact=self._game_interact,
-                builtins=self._built_in_func,
-            )
-        except Exception as e:
-            # Handle exception
-            if isinstance(e, RunnerInternalException):
-                raise ExecutorInternalException(ctx, e)
-            raise ExecutorNormalException(ctx, e)
-        finally:
-            # Recover context
-            self.static_builtin.manager.release_internal(frame)
-            context.recover_context(backup)
-
-        # Return result
-        return result
-
-    def variable_run(
-        self,
-        code,  # type: StringWithHash
-        ctx="",  # type: str
-        executor="",  # type: str
-        dimension=0,  # type: int
-        position=(0.0, 0.0, 0.0),  # type: tuple[float, float, float]
         variables=EMPTY_VARIABLES,  # type: dict[str, int | bool | float | str]
-        require_return=False,  # type: bool
+        require_return=True,  # type: bool
     ):  # type: (...) -> str | int | float | bool | None
         """
-        variable_run 在给定的命令执行上下文中执行代码。
-        它与 run_code 的区别在于它允许预先设置变量。
-
-        从实现上，它不会在运行代码后清除 variables 中的数据，
-        这意味着您可以在代码运行完成后获取所有变量的最终状态
+        run_code 在给定的命令执行上下文中执行源代码。
+        您可以通过指定 variables 参数来预先设置变量，
+        并在 run_code 返回值后查看这些变量的最终状态
 
         Args:
             code (str):
@@ -406,7 +332,8 @@ class GameCodeExecutor:
                 默认值为 EMPTY_VARIABLES
             require_return (bool, optional):
                 目标代码是否必须返回值。
-                如果该参数为真并且没有返回值，则将抛出错误
+                如果该参数为真并且没有返回值，则将抛出错误。
+                默认值为 True
 
         Returns:
             str | int | float | bool | None:
@@ -432,7 +359,7 @@ class GameCodeExecutor:
         try:
             # Running the code
             runner = self.compile_cache.get_runner(code)
-            result = runner.debug(
+            result = runner.running(
                 require_return=require_return,
                 variables=variables,
                 interact=self._game_interact,

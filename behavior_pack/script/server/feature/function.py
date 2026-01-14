@@ -190,17 +190,15 @@ class FunctionFeature:
                     context.get_executor(),
                     context.get_dimension(),
                     context.get_position(),
-                    True,
                 )  # type: ignore
             else:
-                return self.executor.variable_run(
+                return self.executor.run_code(
                     func,
                     "In function {}".format(json.dumps(func_name, ensure_ascii=False)),
                     context.get_executor(),
                     context.get_dimension(),
                     context.get_position(),
                     {"args": self.executor.static_builtin.manager.ref(args)},
-                    True,
                 )  # type: ignore
 
     def try_call(self, func_name, *args):  # type: (str, ...) -> int

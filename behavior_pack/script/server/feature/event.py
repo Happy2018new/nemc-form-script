@@ -60,14 +60,14 @@ class SingleEventProcesser:
             with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
                     try:
-                        _ = self.executor.variable_run(
+                        _ = self.executor.run_code(
                             code=func.get_func(),
                             variables={"args": manager.ref(args)},
                             require_return=False,
                         )
                     except Exception as e:
                         try:
-                            _ = self.executor.variable_run(
+                            _ = self.executor.run_code(
                                 code=func.get_on_error(),
                                 variables={
                                     "error": str(e),
