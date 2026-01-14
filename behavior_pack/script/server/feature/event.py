@@ -6,7 +6,6 @@ if TYPE_CHECKING:
     from mod.server.extraServerApi import ServerSystem
 
 import threading
-import copy
 import json
 from mod.server.extraServerApi import GetEngineNamespace, GetEngineSystemName
 from ..storage.base import StringWithHash
