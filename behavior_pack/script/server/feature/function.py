@@ -51,7 +51,9 @@ class FunctionFeature:
         manager = self.executor.static_builtin.manager
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        funcs["function.list"] = lambda: manager.ref(self.list_all())
+        funcs["function.list"] = lambda func_name="": manager.ref(
+            self.list_all(func_name)
+        )
         funcs["function.register"] = lambda func_name, func_code: self.register(
             func_name, func_code
         )
