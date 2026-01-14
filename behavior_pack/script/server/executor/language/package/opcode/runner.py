@@ -89,7 +89,7 @@ class CodeRunner:
     code_block = []  # type: list[OpcodeBase]
     _interact = EMPTY_GAME_INTERACT  # type: GameInteract
     _builtins = EMPTY_BUILTIN_FUNCTION  # type: BuiltInFunction
-    _variables = {}  # type: dict[str, int | bool | float | str]
+    _variables = EMPTY_VARIABLES  # type: dict[str, int | bool | float | str]
     _return = None  # type: int | bool | float | str | None
 
     def __init__(
@@ -106,7 +106,7 @@ class CodeRunner:
         self.code_block = code_block if len(code_block) > 0 else []
         self._interact = EMPTY_GAME_INTERACT
         self._builtins = EMPTY_BUILTIN_FUNCTION
-        self._variables = {}
+        self._variables = EMPTY_VARIABLES
         self._return = None
 
     def _fast_normal_panic(self, code_block, err):  # type: (OpcodeBase, str) -> None
@@ -659,52 +659,18 @@ class CodeRunner:
     def running(
         self,
         require_return=True,  # type: bool
-        interact=EMPTY_GAME_INTERACT,  # type: GameInteract
-        builtins=EMPTY_BUILTIN_FUNCTION,  # type: BuiltInFunction
-    ):  # type: (...) -> int | bool | float | str | None
-        """
-        running 以解释方式的运行所有代码，
-        并返回这些代码在运行时的返回值
-
-        Args:
-            require_return (bool, optional):
-                是否检查这些代码是否返回值。
-                如果为真且没有返回值，则抛出异常。
-                默认值为真
-            interact (GameInteract, optional):
-                用于与 Minecraft 进行交互的接口。
-                默认值为 EMPTY_GAME_INTERACT
-            builtins (BuiltInFunction, optional):
-                外部函数提供者为用户定义的内建函数。
-                默认值为 EMPTY_BUILTIN_FUNCTION
-
-        Returns:
-            int | bool | float | str | None:
-                运行代码时所得的返回值
-        """
-        self._interact = interact
-        self._builtins = builtins
-
-        try:
-            return self._running(require_return)
-        finally:
-            self._variables.clear()
-            self._return = None
-
-    def debug(
-        self,
-        require_return=True,  # type: bool
         variables=EMPTY_VARIABLES,  # type: dict[str, int | bool | float | str]
         interact=EMPTY_GAME_INTERACT,  # type: GameInteract
         builtins=EMPTY_BUILTIN_FUNCTION,  # type: BuiltInFunction
     ):  # type: (...) -> int | bool | float | str | None
         """
-        debug 以解释方式的运行所有代码，
+        running 以解释方式的运行所有代码，
         并返回这些代码在运行时的返回值。
 
-        debug 与 running 的区别在于，
-        它允许您通过 variables 来预先初始化变量，
-        并在 debug 返回值后查看这些变量的最终状态。
+        您可以选择预先指定 variables 参数，
+        这意味着您将可以预先初始化一些变量，
+        并在 running 返回值后查看这些变量
+        的最终状态
 
         Args:
             require_return (bool, optional):
@@ -728,10 +694,12 @@ class CodeRunner:
         """
         self._interact = interact
         self._builtins = builtins
+
+        frame = self._variables
         self._variables = variables if variables is not EMPTY_VARIABLES else {}
 
         try:
             return self._running(require_return)
         finally:
-            self._variables = {}
+            self._variables = frame
             self._return = None
