@@ -298,7 +298,7 @@ def _generate_modal_form(
                 )
             # append
             result.content.append(
-                ModalFormalFormElementInput(text, place_holder, default)
+                ModalFormalFormElementInput(text, default, place_holder)
             )
         elif isinstance(value, ModalStorageFormElementToggle):
             # text
