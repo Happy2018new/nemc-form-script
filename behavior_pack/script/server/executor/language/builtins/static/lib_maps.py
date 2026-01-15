@@ -165,7 +165,6 @@ class Maps:
             Exception:
                 如果目标对象不是映射，
                 或给定的键不存在，
-                或目标值不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
@@ -175,19 +174,7 @@ class Maps:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, dict):
             raise Exception("maps.get: Target object is not a map")
-
-        val = obj[raw_key]
-        if isinstance(val, (int, bool, float, str)):
-            return val
-        try:
-            if isinstance(val, unicode):  # type: ignore
-                return val
-        except Exception:
-            pass
-
-        raise Exception(
-            "maps.get: Can only get a value that data type is int, bool, float or str"
-        )
+        return obj[raw_key]
 
     def ptr_get(self, map_ptr, key_ptr):  # type: (int, int) -> int
         """
@@ -228,7 +215,6 @@ class Maps:
             Exception:
                 如果目标对象不是映射，
                 或给定的键不存在，
-                或目标值不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
@@ -238,19 +224,7 @@ class Maps:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, dict):
             raise Exception("maps.pop: Target object is not a map")
-
-        val = obj.pop(raw_key)
-        if isinstance(val, (int, bool, float, str)):
-            return val
-        try:
-            if isinstance(val, unicode):  # type: ignore
-                return val
-        except Exception:
-            pass
-
-        raise Exception(
-            "maps.pop: Can only pop a value that data type is int, bool, float or str"
-        )
+        return obj.pop(raw_key)
 
     def ptr_pop(self, map_ptr, key_ptr):  # type: (int, int) -> int
         """

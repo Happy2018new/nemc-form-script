@@ -300,7 +300,6 @@ class Set:
             Exception:
                 如果目标对象不是集合，
                 或目标集合没有任何元素，
-                或被移除的元素不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
@@ -310,19 +309,7 @@ class Set:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
             raise Exception("set.pop: Target object is not a set")
-
-        val = obj.pop()
-        if isinstance(val, (int, bool, float, str)):
-            return val
-        try:
-            if isinstance(val, unicode):  # type: ignore
-                return val
-        except Exception:
-            pass
-
-        raise Exception(
-            "set.pop: Can only pop data that data type is int, bool, float or str"
-        )
+        return obj.pop()
 
     def ptr_pop(self, ptr):  # type: (int) -> int
         """
@@ -374,7 +361,6 @@ class Set:
         Raises:
             Exception:
                 如果目标对象不是集合，
-                或最大值不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
@@ -384,17 +370,7 @@ class Set:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
             raise Exception("set.max: Target object is not a set")
-
-        result = max(obj)
-        if isinstance(result, (int, bool, float, str)):
-            return result
-        try:
-            if isinstance(result, unicode):  # type: ignore
-                return result
-        except Exception:
-            pass
-
-        raise Exception("set.max: Only support compare between int, bool, float or str")
+        return max(obj)
 
     def min(self, ptr):  # type: (int) -> int | bool | float | str
         """min 返回集合中最小的元素
@@ -405,7 +381,6 @@ class Set:
         Raises:
             Exception:
                 如果目标对象不是集合，
-                或最大值不是整数、布尔值、浮点数或字符串，
                 则抛出相应的错误
 
         Returns:
@@ -415,17 +390,7 @@ class Set:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
             raise Exception("set.min: Target object is not a set")
-
-        result = min(obj)
-        if isinstance(result, (int, bool, float, str)):
-            return result
-        try:
-            if isinstance(result, unicode):  # type: ignore
-                return result
-        except Exception:
-            pass
-
-        raise Exception("set.min: Only support compare between int, bool, float or str")
+        return min(obj)
 
     def sum(self, ptr):  # type: (int) -> int | float
         """sum 返回集合中所有元素的和

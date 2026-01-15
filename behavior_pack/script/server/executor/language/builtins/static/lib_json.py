@@ -101,39 +101,6 @@ class JSON:
         """
         return self._manager.ref(json.loads(string))
 
-    def fast_loads(self, string):  # type: (str) -> int | bool | float | str
-        """
-        fast_loads 将字符串以 JSON 的格式解析。
-        它与 loads 的区别在于，它的解析结果应只
-        可能是整数、布尔值、浮点数或字符串
-
-        Args:
-            string (str): 待解析的字符串
-
-        Raises:
-            Exception:
-                如果解析失败，
-                或解析结果不是整数、布尔值、浮点数或字符串，
-                则抛出相应的错误
-
-        Returns:
-            int | bool | float | str:
-                解析后所得的结果
-        """
-        result = json.loads(string)
-        if isinstance(result, (int, bool, float, str)):
-            return result
-
-        try:
-            if isinstance(result, unicode):  # type: ignore
-                return result
-        except Exception:
-            pass
-
-        raise Exception(
-            "json.fast_loads: The loaded result must be int, bool, float or str"
-        )
-
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -151,7 +118,7 @@ class JSON:
         funcs["json.dumps"] = self.dumps
         funcs["json.fast_dumps"] = lambda obj: json.dumps(obj, ensure_ascii=False)
         funcs["json.loads"] = self.loads
-        funcs["json.fast_loads"] = self.fast_loads
+        funcs["json.fast_loads"] = lambda string: json.loads(string)
 
         for key, value in funcs.items():
             origin[key] = value
