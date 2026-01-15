@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from mod.client.extraClientApi import ScreenNode
     from mod.client.ui.controls.baseUIControl import BaseUIControl
 
+from ..utils import format_number
 from ..form_type.other.long import LongForm
 from ..form_type.other.popup import PopupForm
 from ..form_type.modal.modal import ModalForm
@@ -156,10 +157,10 @@ def parse_json_to_modal_form(
             slider_contents = []  # type: list[str]
 
             while current_value <= i.max_val:
-                slider_contents.append(str(current_value))
+                slider_contents.append(format_number(current_value))
                 current_value += i.step
             if (i.max_val - i.min_val) % i.step > 0.00001:
-                slider_contents.append(str(i.max_val))
+                slider_contents.append(format_number(i.max_val))
             for index, value in enumerate(slider_contents):
                 if i.default >= float(value):
                     default_index = index

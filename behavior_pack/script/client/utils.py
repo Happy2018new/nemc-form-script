@@ -12,6 +12,26 @@ from mod.client.extraClientApi import (
 )
 
 
+def format_number(number):  # type: (int | float) -> str
+    """
+    format_number 将给定的数字格式化为它的字符串表示。
+    确保精度在小数点后 6 位。这意味着超出的部分将被截断
+
+    Args:
+        number (float | int): 欲被格式化的数字
+
+    Returns:
+        str: 给定数字的字符串表示
+    """
+    result = format(number, ".6f")
+    if "." not in result:
+        return result
+    result = result.rstrip("0")
+    if result.endswith("."):
+        return result + "0"
+    return result
+
+
 def point_is_in_rect(
     rect,  # type: tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]
     point,  # type: tuple[float, float]

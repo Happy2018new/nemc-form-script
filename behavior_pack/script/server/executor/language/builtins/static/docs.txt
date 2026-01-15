@@ -228,8 +228,12 @@ struct_time.tm_isdst
 
 
 
+math.format
 math.floordiv
 math.mod
+math.abs
+math.max
+math.min
 math.bit_and
 math.bit_or
 math.bit_xor

@@ -61,6 +61,34 @@ class Math:
             )
         return obj
 
+    def format(self, number, accuracy=6):  # type: (int | float, int) -> str
+        """
+        format 将给定的数字格式化为其字符串表示
+
+        Args:
+            number (float | int):
+                欲被格式化的数字
+            accuracy (int):
+                在格式化小数时所使用的精度。
+                那些超出精度的部分将会丢失。
+                默认值为 6
+
+        Returns:
+            str:
+                给定数字的字符串表示
+        """
+        _ = self._validate_number(number)
+        _ = self._validate_int(accuracy)
+
+        result = format(number, ".{}f".format(accuracy))
+        if "." not in result:
+            return result
+
+        result = result.rstrip("0")
+        if result.endswith("."):
+            return result + "0"
+        return result
+
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -75,8 +103,12 @@ class Math:
         """
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
+        funcs["math.format"] = self.format
         funcs["math.floordiv"] = lambda x, y: self._validate_int(x // y)
         funcs["math.mod"] = lambda a, b: self._validate_int(a % b)
+        funcs["math.abs"] = lambda x: self._validate_number(abs(x))
+        funcs["math.max"] = lambda a, b: self._validate_number(max(a, b))
+        funcs["math.min"] = lambda a, b: self._validate_number(min(a, b))
         funcs["math.bit_and"] = lambda a, b: self._validate_int(a & b)
         funcs["math.bit_or"] = lambda a, b: self._validate_int(a | b)
         funcs["math.bit_xor"] = lambda a, b: self._validate_int(a ^ b)
