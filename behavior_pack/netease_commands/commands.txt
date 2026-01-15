@@ -113,6 +113,7 @@ function.register
 function.unregister
 function.call
 function.try
+function.panic
 
 
 

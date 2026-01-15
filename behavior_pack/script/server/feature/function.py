@@ -60,6 +60,7 @@ class FunctionFeature:
         funcs["function.unregister"] = lambda func_name: self.unregister(func_name)
         funcs["function.call"] = lambda func_name, *args: self.call(func_name, *args)
         funcs["function.try"] = lambda func_name, *args: self.try_call(func_name, *args)
+        funcs["function.panic"] = self.panic
 
         with self.executor.get_locker():
             _ = self.executor.inject_func(funcs)
@@ -241,3 +242,24 @@ class FunctionFeature:
                 err = "Unknown empty error"
             with self.executor.get_locker():
                 return manager.ref((0, err))
+
+    def panic(self, error):  # type: (str) -> bool
+        """
+        panic 在当前位置处产生一个恐慌，
+        这将立即使 panic 的调用者被终止。
+
+        恐慌会在其发生后按调用栈不断向上传递，
+        直到该恐慌被某个 try_call 的调用捕获。
+
+        如果最终没有 try_call 捕获这个恐慌，
+        则相应的根命令（如果有）将视作执行失败
+
+        Args:
+            error (str):
+                欲抛出的错误信息
+
+        Raises:
+            Exception:
+                error 所指示的错误
+        """
+        raise Exception(error)
