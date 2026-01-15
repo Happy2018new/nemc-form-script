@@ -337,7 +337,6 @@ class FormFeature:
                 try:
                     _ = self.executor.run_code(
                         code=func_to_run,
-                        ctx="",
                         executor=player_id,
                         dimension=dimension,
                         position=position,
@@ -346,7 +345,6 @@ class FormFeature:
                 except Exception as e:
                     _ = self.executor.run_code(
                         code=when_meet_err,
-                        ctx="",
                         executor=player_id,
                         dimension=dimension,
                         position=position,
