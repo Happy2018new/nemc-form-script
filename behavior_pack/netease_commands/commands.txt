@@ -4,7 +4,7 @@
 /customform onsubmit <name: string> <code: string> [onCodeError: string]
 /customform remove <name: string>
 /customform save <name: string>
-/customform show <executor: target> <position:pos> <player: target> <name: string>
+/customform show <executor: target> <position: x y z> <player: target> <name: string>
 /customform close <player: target>
 
 
@@ -70,7 +70,7 @@
 
 
 /customfunction add <name: string> <code: string>
-/customfunction call <executor: target> <position: pos> <name: string>
+/customfunction call <executor: target> <position: x y z> <name: string>
 /customfunction list [name: string]
 /customfunction remove <name: string>
 
@@ -89,7 +89,7 @@
 
 
 
-/commandblockoutput <commandBlockPosition: pos>
+/commandblockoutput <commandBlockPosition: x y z>
 
 
 
