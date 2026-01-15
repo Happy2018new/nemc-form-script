@@ -343,14 +343,17 @@ class FormFeature:
                         require_return=False,
                     )
                 except Exception as e:
-                    _ = self.executor.run_code(
-                        code=when_meet_err,
-                        executor=player_id,
-                        dimension=dimension,
-                        position=position,
-                        variables={"error": str(e)},
-                        require_return=False,
-                    )
+                    try:
+                        _ = self.executor.run_code(
+                            code=when_meet_err,
+                            executor=player_id,
+                            dimension=dimension,
+                            position=position,
+                            variables={"error": str(e)},
+                            require_return=False,
+                        )
+                    except Exception:
+                        pass
                 finally:
                     self._ref.response = None
 
