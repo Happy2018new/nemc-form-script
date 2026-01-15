@@ -136,8 +136,8 @@ class StringReader:
                 raise Exception("parse_string: Unexpected EOF")
             if char == "\\":
                 sub = char + self.read(1)
-                sub = str(sub.encode().decode(encoding="unicode_escape"))
-                result += sub
+                sub = sub.encode(encoding="utf-8").decode(encoding="unicode_escape")
+                result += str(sub)
                 continue
             if char == "'":
                 break

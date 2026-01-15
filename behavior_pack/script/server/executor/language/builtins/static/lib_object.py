@@ -91,9 +91,9 @@ class BaseManager:
         self._mapping[ptr] = obj
         return ptr
 
-    def can_user_deref(self, ptr):  # type: (int) -> bool
+    def can_deref(self, ptr):  # type: (int) -> bool
         """
-        can_user_deref 检查 ptr 指向的对象是否可以被玩家解引用。
+        can_deref 检查 ptr 指向的对象是否可以被玩家解引用。
         只有整数、布尔值、浮点数和字符串才可以被玩家解引用
 
         Args:
@@ -107,7 +107,17 @@ class BaseManager:
         """
         if ptr not in self._mapping:
             raise Exception("can_deref: Invalid address or nil pointer dereference")
-        return isinstance(self._mapping[ptr], (int, bool, float, str))
+
+        obj = self._mapping[ptr]
+        if isinstance(obj, (int, bool, float, str)):
+            return True
+        try:
+            if isinstance(obj, unicode):  # type: ignore
+                return True
+        except Exception:
+            pass
+
+        return False
 
     def deref(self, ptr, internal=True):  # type: (int, bool) -> Any
         """deref 将 ptr 指向的对象解引用
@@ -134,10 +144,17 @@ class BaseManager:
         """
         if ptr not in self._mapping:
             raise Exception("deref: Invalid address or nil pointer dereference")
+
         obj = self._mapping[ptr]
-        if not internal and not isinstance(obj, (int, bool, float, str)):
-            raise Exception("deref: Target object cannot be dereferenced")
-        return obj
+        if internal or isinstance(obj, (int, bool, float, str)):
+            return obj
+        try:
+            if isinstance(obj, unicode):  # type: ignore
+                return obj
+        except Exception:
+            pass
+
+        raise Exception("deref: Target object cannot be dereferenced")
 
     def current(self):  # type: () -> set[int]
         """
@@ -359,6 +376,12 @@ class BaseManager:
         if isinstance(obj, set):
             return REF_TYPE_SET
 
+        try:
+            if isinstance(obj, unicode):  # type: ignore
+                return REF_TYPE_STR
+        except Exception:
+            pass
+
         return REF_TYPE_UNKNOWN
 
     def build_func(
@@ -376,7 +399,7 @@ class BaseManager:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["object.ref"] = self.ref
-        funcs["object.can_deref"] = self.can_user_deref
+        funcs["object.can_deref"] = self.can_deref
         funcs["object.deref"] = lambda ptr: self.deref(ptr, False)
         funcs["object.release"] = self.release
         funcs["object.pin"] = self.pin

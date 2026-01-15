@@ -100,20 +100,25 @@ class Tuple:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, tuple):
             raise Exception("tuple.get: Target object is not a tuple")
-
         if index < 0 or index >= len(obj):
             raise Exception(
                 "tuple.get: Index out of range [{}] with length {}".format(
                     index, len(obj)
                 )
             )
-        val = obj[index]
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "tuple.get: Can only get a value that data type is int, bool, float or str"
-            )
 
-        return val
+        val = obj[index]
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "tuple.get: Can only get a value that data type is int, bool, float or str"
+        )
 
     def ptr_get(self, ptr, index):  # type: (int, int) -> int
         """
@@ -208,12 +213,17 @@ class Tuple:
             raise Exception("tuple.max: Target object is not a tuple")
 
         result = max(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "tuple.max: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception(
+            "tuple.max: Only support compare between int, bool, float or str"
+        )
 
     def min(self, ptr):  # type: (int) -> int | bool | float | str
         """min 返回元组中最小的元素
@@ -236,12 +246,17 @@ class Tuple:
             raise Exception("tuple.min: Target object is not a tuple")
 
         result = min(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "tuple.min: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception(
+            "tuple.min: Only support compare between int, bool, float or str"
+        )
 
     def sum(self, ptr):  # type: (int) -> int | float
         """sum 返回元组中所有元素的和

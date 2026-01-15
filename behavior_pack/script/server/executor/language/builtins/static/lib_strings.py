@@ -62,7 +62,11 @@ class Strings:
         Returns:
             int: 字符串的长度
         """
-        return len(self._validate(string))
+        _ = self._validate(string)
+        try:
+            return len(string.decode(encoding="utf-8"))  # type: ignore
+        except Exception:
+            return len(string)
 
     def sub(self, string, start, end):  # type: (str, int, int) -> str
         """sub 返回字符串的子字符串
@@ -81,6 +85,10 @@ class Strings:
             int: 产生的子字符串
         """
         _ = self._validate(string)
+        try:
+            string = string.decode(encoding="utf-8")  # type: ignore
+        except Exception:
+            pass
 
         if start < 0 or start > len(string):
             raise Exception(

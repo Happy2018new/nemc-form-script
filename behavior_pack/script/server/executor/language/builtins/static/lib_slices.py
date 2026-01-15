@@ -176,20 +176,25 @@ class Slices:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, list):
             raise Exception("slices.get: Target object is not a slice")
-
         if index < 0 or index >= len(obj):
             raise Exception(
                 "slices.get: Index out of range [{}] with length {}".format(
                     index, len(obj)
                 )
             )
-        val = obj[index]
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "slices.get: Can only get a value that data type is int, bool, float or str"
-            )
 
-        return val
+        val = obj[index]
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "slices.get: Can only get a value that data type is int, bool, float or str"
+        )
 
     def ptr_get(self, ptr, index):  # type: (int, int) -> int
         """
@@ -304,12 +309,17 @@ class Slices:
             raise Exception("slices.max: Target object is not a slice")
 
         result = max(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "slices.max: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception(
+            "slices.max: Only support compare between int, bool, float or str"
+        )
 
     def min(self, ptr):  # type: (int) -> int | bool | float | str
         """min 返回切片中最小的元素
@@ -332,12 +342,17 @@ class Slices:
             raise Exception("slices.min: Target object is not a slice")
 
         result = min(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "slices.min: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception(
+            "slices.min: Only support compare between int, bool, float or str"
+        )
 
     def sum(self, ptr):  # type: (int) -> int | float
         """sum 返回切片中所有元素的和
@@ -493,12 +508,19 @@ class Slices:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, list):
             raise Exception("slices.pop: Target object is not a slice")
+
         val = obj.pop()
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "slices.pop: Can only pop a value that data type is int, bool, float or str"
-            )
-        return val
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "slices.pop: Can only pop a value that data type is int, bool, float or str"
+        )
 
     def ptr_pop(self, ptr):  # type: (int) -> int
         """

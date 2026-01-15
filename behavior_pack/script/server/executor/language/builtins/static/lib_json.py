@@ -121,11 +121,18 @@ class JSON:
                 解析后所得的结果
         """
         result = json.loads(string)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "json.fast_loads: The loaded result must be int, bool, float or str"
-            )
-        return result
+        if isinstance(result, (int, bool, float, str)):
+            return result
+
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
+
+        raise Exception(
+            "json.fast_loads: The loaded result must be int, bool, float or str"
+        )
 
     def build_func(
         self,

@@ -310,12 +310,19 @@ class Set:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, set):
             raise Exception("set.pop: Target object is not a set")
+
         val = obj.pop()
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "set.pop: Can only pop data that data type is int, bool, float or str"
-            )
-        return val
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "set.pop: Can only pop data that data type is int, bool, float or str"
+        )
 
     def ptr_pop(self, ptr):  # type: (int) -> int
         """
@@ -379,12 +386,15 @@ class Set:
             raise Exception("set.max: Target object is not a set")
 
         result = max(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "set.max: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception("set.max: Only support compare between int, bool, float or str")
 
     def min(self, ptr):  # type: (int) -> int | bool | float | str
         """min 返回集合中最小的元素
@@ -407,12 +417,15 @@ class Set:
             raise Exception("set.min: Target object is not a set")
 
         result = min(obj)
-        if not isinstance(result, (int, bool, float, str)):
-            raise Exception(
-                "set.min: Only support compare between int, bool, float or str"
-            )
+        if isinstance(result, (int, bool, float, str)):
+            return result
+        try:
+            if isinstance(result, unicode):  # type: ignore
+                return result
+        except Exception:
+            pass
 
-        return result
+        raise Exception("set.min: Only support compare between int, bool, float or str")
 
     def sum(self, ptr):  # type: (int) -> int | float
         """sum 返回集合中所有元素的和

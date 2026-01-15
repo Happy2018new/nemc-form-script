@@ -175,12 +175,19 @@ class Maps:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, dict):
             raise Exception("maps.get: Target object is not a map")
+
         val = obj[raw_key]
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "maps.get: Can only get a value that data type is int, bool, float or str"
-            )
-        return val
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "maps.get: Can only get a value that data type is int, bool, float or str"
+        )
 
     def ptr_get(self, map_ptr, key_ptr):  # type: (int, int) -> int
         """
@@ -231,12 +238,19 @@ class Maps:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, dict):
             raise Exception("maps.pop: Target object is not a map")
+
         val = obj.pop(raw_key)
-        if not isinstance(val, (int, bool, float, str)):
-            raise Exception(
-                "maps.pop: Can only pop a value that data type is int, bool, float or str"
-            )
-        return val
+        if isinstance(val, (int, bool, float, str)):
+            return val
+        try:
+            if isinstance(val, unicode):  # type: ignore
+                return val
+        except Exception:
+            pass
+
+        raise Exception(
+            "maps.pop: Can only pop a value that data type is int, bool, float or str"
+        )
 
     def ptr_pop(self, map_ptr, key_ptr):  # type: (int, int) -> int
         """
