@@ -180,7 +180,7 @@ class GameCodeExecutor:
                 result.append(name)
         return ", ".join(result)
 
-    def _score(self, target, objective):  # type: (str, str) -> int
+    def _score(self, target, scoreboard):  # type: (str, str) -> int
         """
         _score 取得玩家在给定记分板的分数。
         它只能以命令执行者的位置作为参考点选取目标。
@@ -210,7 +210,7 @@ class GameCodeExecutor:
         executor = self.execute_context().get_executor()
         if len(executor) == 0:
             raise Exception("_score: Must set executor before parse a score")
-        if len(objective) == 0:
+        if len(scoreboard) == 0:
             return 0
 
         if target.strip() == "*":
@@ -230,7 +230,7 @@ class GameCodeExecutor:
                 continue
             for scores in player_with_scores.get("scoreList", []):
                 assert isinstance(scores, dict)
-                if scores.get("name", "") == objective:
+                if scores.get("name", "") == scoreboard:
                     result += scores.get("value", 0)
         return result
 
