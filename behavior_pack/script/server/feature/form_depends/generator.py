@@ -276,6 +276,15 @@ def _generate_modal_form(
                         index, text
                     )
                 )
+            # default
+            ctx = "In default of input (index={})".format(index)
+            default = runner.run_code(value.default, ctx, executor, dimension, position)
+            if not isinstance(default, str):
+                raise Exception(
+                    "_generate_modal_form: The default of input must be str (index={}, default={})".format(
+                        index, default
+                    )
+                )
             # place holder
             ctx = "In place holder of input (index={})".format(index)
             place_holder = runner.run_code(
@@ -285,15 +294,6 @@ def _generate_modal_form(
                 raise Exception(
                     "_generate_modal_form: The place holder of input must be str (index={}, place_holder={})".format(
                         index, place_holder
-                    )
-                )
-            # default
-            ctx = "In default of input (index={})".format(index)
-            default = runner.run_code(value.default, ctx, executor, dimension, position)
-            if not isinstance(default, str):
-                raise Exception(
-                    "_generate_modal_form: The default of input must be str (index={}, default={})".format(
-                        index, default
                     )
                 )
             # append
