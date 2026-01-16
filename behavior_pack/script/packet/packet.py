@@ -344,22 +344,21 @@ class CustomFunctionCall(BasePacket):
     calling a custom function which already registered in server side.
     """
 
-    func_name = ""
-    func_args = ""
+    func_name = ""  # type: str
+    func_args = []  # type: list[Any]
 
-    def __init__(self, func_name="", func_args=""):  # type: (str, str) -> None
+    def __init__(self, func_name="", func_args=[]):  # type: (str, list[Any]) -> None
         """
         Returns a new CustomFunctionCall packet.
 
         Args:
             func_name (str):
                 The custom function to call.
-            func_args (str):
+            func_args (list[Any]):
                 The arguments passed to the custom function.
-                Must be JSON string that encode from a list.
         """
         self.func_name = func_name
-        self.func_args = func_args
+        self.func_args = func_args if len(func_args) > 0 else []
 
     def packet_name(self):  # type: () -> str
         """packet_name returns the name of current packet.
@@ -395,7 +394,7 @@ class CustomFunctionCall(BasePacket):
             CustomFunctionCall: The packet itself.
         """
         self.func_name = ""
-        self.func_args = ""
+        self.func_args = []
         if not isinstance(data, dict):
             return self
 
@@ -404,6 +403,6 @@ class CustomFunctionCall(BasePacket):
 
         if isinstance(func_name, str):
             self.func_name = func_name
-        if isinstance(func_args, str):
+        if isinstance(func_args, list):
             self.func_args = func_args
         return self

@@ -181,20 +181,13 @@ class FunctionFeature:
         if not abilities["op"]:
             return self
 
-        try:
-            args = json.loads(pk.func_args)
-        except Exception:
-            return self
-        if not isinstance(args, list):
-            return self
-
         with self.executor.get_locker():
             context = self.executor.execute_context()
             backup = context.current_context()
 
             final = []  # type: list[int | bool | float | str]
             manager = self.executor.static_builtin.manager
-            for i in args:
+            for i in pk.func_args:
                 if isinstance(i, (int, bool, float, str)):
                     final.append(i)
                     continue
