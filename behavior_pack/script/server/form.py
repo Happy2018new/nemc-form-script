@@ -18,8 +18,10 @@ from .feature.debug import DebugFeature
 from ..packet.packet import (
     PACKET_NAME_MODAL_FORM_RESPONSE,
     PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
+    PACKET_NAME_CUSTOM_FUNCTION_CALL,
     ModalFormResponse,
     ServerBoundCloseForm,
+    CustomFunctionCall,
 )
 from mod.server.extraServerApi import (
     GetServerSystemCls,
@@ -74,6 +76,9 @@ class FormSystem(ServerSystem):
         )
         self.listen_form_event(
             PACKET_NAME_SERVER_BOUND_CLOSE_FORM, self, self.on_server_bound_close_form
+        )
+        self.listen_form_event(
+            PACKET_NAME_CUSTOM_FUNCTION_CALL, self, self.on_custom_function_call
         )
 
         game_comp = GetEngineCompFactory().CreateGame(GetLevelId())
@@ -176,8 +181,8 @@ class FormSystem(ServerSystem):
 
     def on_server_bound_close_form(self, args):  # type: (dict[str, Any]) -> None
         """
-        on_server_bound_close_form 处理来自客户
-        端对 packet.ClientBoundCloseForm 的响应
+        on_server_bound_close_form 处理客户端发回的响应。
+        它是客户端对 packet.ClientBoundCloseForm 的响应
 
         Args:
             args (dict[str, Any]):
@@ -187,6 +192,21 @@ class FormSystem(ServerSystem):
         _ = self.form_feature.on_server_bound_close_form(
             args["__id__"],
             ServerBoundCloseForm().unmarshal(args),
+        )
+
+    def on_custom_function_call(self, args):  # type: (dict[str, Any]) -> None
+        """
+        on_custom_function_call 处理
+        来自客户端的自定义函数调用请求
+
+        Args:
+            args (dict[str, Any]):
+                数据包 CustomFunctionCall 的负载
+        """
+        assert self.func_feature is not None
+        _ = self.func_feature.on_custom_function_call(
+            args["__id__"],
+            CustomFunctionCall().unmarshal(args),
         )
 
     def listen_engine_event(

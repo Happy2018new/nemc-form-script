@@ -10,6 +10,7 @@ PACKET_NAME_MODAL_FORM_REQUEST = "packet.ModalFormRequest"
 PACKET_NAME_MODAL_FORM_RESPONSE = "packet.ModalFormResponse"
 PACKET_NAME_CLIENT_BOUND_CLOSE_FORM = "packet.ClientBoundCloseForm"
 PACKET_NAME_SERVER_BOUND_CLOSE_FORM = "packet.ServerBoundCloseForm"
+PACKET_NAME_CUSTOM_FUNCTION_CALL = "packet.CustomFunctionCall"
 
 MODAL_FORM_CANCEL_REASON_USER_CLOSED = 0
 MODAL_FORM_CANCEL_REASON_USER_BUSY = 1
@@ -334,4 +335,75 @@ class ServerBoundCloseForm(BasePacket):
             i for i in form_id if not isinstance(i, bool) and isinstance(i, int)
         ]
 
+        return self
+
+
+class CustomFunctionCall(BasePacket):
+    """
+    CustomFunctionCall is a custom packet that send by the client to
+    calling a custom function which already registered in server side.
+    """
+
+    func_name = ""
+    func_args = ""
+
+    def __init__(self, func_name="", func_args=""):  # type: (str, str) -> None
+        """
+        Returns a new CustomFunctionCall packet.
+
+        Args:
+            func_name (str):
+                The custom function to call.
+            func_args (str):
+                The arguments passed to the custom function.
+                Must be JSON string that encode from a list.
+        """
+        self.func_name = func_name
+        self.func_args = func_args
+
+    def packet_name(self):  # type: () -> str
+        """packet_name returns the name of current packet.
+
+        Returns:
+            str: The name of current packet.
+        """
+        return PACKET_NAME_CUSTOM_FUNCTION_CALL
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """
+        marshal encode current packet
+        to its JSON representation.
+
+        Returns:
+            dict[str, Any]: The JSON representation of current packet.
+        """
+        return {
+            "FuncName": self.func_name,
+            "FuncArgs": self.func_args,
+        }
+
+    def unmarshal(self, data):  # type: (Any) -> CustomFunctionCall
+        """
+        unmarshal decodes current packet
+        from its JSON representation.
+
+        Args:
+            data (Any): The given data to decode.
+                        Should be a dict.
+
+        Returns:
+            CustomFunctionCall: The packet itself.
+        """
+        self.func_name = ""
+        self.func_args = ""
+        if not isinstance(data, dict):
+            return self
+
+        func_name = data.get("FuncName", "")
+        func_args = data.get("FuncArgs", "")
+
+        if isinstance(func_name, str):
+            self.func_name = func_name
+        if isinstance(func_args, str):
+            self.func_args = func_args
         return self

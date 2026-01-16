@@ -6,8 +6,10 @@ if TYPE_CHECKING:
     from mod.server.extraServerApi import ServerSystem
 
 import json
+from mod.server.extraServerApi import GetEngineCompFactory
 from ..executor.executor import GameCodeExecutor
 from ..storage.function import CustomFunction, FunctionStorage
+from ...packet.packet import CustomFunctionCall
 
 
 class FunctionFeature:
@@ -150,6 +152,68 @@ class FunctionFeature:
             if len(func_name) == 0:
                 return self.storage.func_index()
             return self.storage.check_exist(func_name)
+
+    def on_custom_function_call(
+        self, player_id, pk
+    ):  # type: (str, CustomFunctionCall) -> FunctionFeature
+        """
+        on_custom_function_call 会在管理员请求
+        在服务端调用已被注册的自定义函数时被调用
+
+        Args:
+            player_id (str):
+                调用来源的玩家 ID
+            pk (CustomFunctionCall):
+                自定义函数的调用请求
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            FunctionFeature: 返回 FunctionFeature 本身
+        """
+        assert self.executor is not None
+        assert self.executor.static_builtin is not None
+        assert self.executor.static_builtin.manager is not None
+
+        abilities = GetEngineCompFactory().CreatePlayer(player_id).GetPlayerAbilities()
+        if not abilities["op"]:
+            return self
+
+        try:
+            args = json.loads(pk.func_args)
+        except Exception:
+            return self
+        if not isinstance(args, list):
+            return self
+
+        with self.executor.get_locker():
+            context = self.executor.execute_context()
+            backup = context.current_context()
+
+            final = []  # type: list[int | bool | float | str]
+            manager = self.executor.static_builtin.manager
+            for i in args:
+                if isinstance(i, (int, bool, float, str)):
+                    final.append(i)
+                    continue
+                try:
+                    if isinstance(i, unicode):  # type: ignore
+                        final.append(str(i))
+                        continue
+                except:
+                    pass
+                final.append(manager.ref(i))
+
+            try:
+                _ = context.fast_set(player_id, False)
+                _ = self.call(pk.func_name, *final)
+            except Exception:
+                pass
+
+            context.recover_context(backup)
+            return self
 
     def call(self, func_name, *args):  # type: (str, ...) -> int | bool | float | str
         """
