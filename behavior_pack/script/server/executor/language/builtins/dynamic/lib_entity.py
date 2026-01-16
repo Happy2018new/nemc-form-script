@@ -191,10 +191,14 @@ class Entity:
             GetEngineCompFactory().CreateExtraData(entity_id).SaveExtraData()
         )
         funcs["entity.SetExtraData"] = (
-            lambda entity_id, key, value, auto_save=True: self._manager.ref(
+            lambda entity_id, key, val_or_ptr, is_ptr=False, auto_save=True: self._manager.ref(
                 GetEngineCompFactory()
                 .CreateExtraData(entity_id)
-                .SetExtraData(key, value, auto_save)
+                .SetExtraData(
+                    key,
+                    val_or_ptr if not is_ptr else self._manager.deref(val_or_ptr),
+                    auto_save,
+                )
             )
         )
         funcs["entity.AddEntityTag"] = lambda entity_id, tag: self._manager.ref(
