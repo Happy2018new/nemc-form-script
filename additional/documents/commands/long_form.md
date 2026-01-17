@@ -23,9 +23,9 @@
     - [语法](#语法-4)
     - [备注](#备注-1)
     - [示例](#示例-4)
-- [截断按钮](#截断按钮)
-  - [语法](#语法-5)
-  - [备注](#备注-2)
+  - [截断按钮](#截断按钮)
+    - [语法](#语法-5)
+    - [备注](#备注-2)
     - [补充](#补充-1)
     - [示例](#示例-5)
   - [设置标题文本](#设置标题文本)
@@ -33,14 +33,16 @@
     - [示例](#示例-6)
 - [编辑长表单中的按钮](#编辑长表单中的按钮-1)
   - [设置图标](#设置图标)
-  - [备注](#备注-3)
-  - [补充](#补充-2)
-  - [示例](#示例-7)
-  - [效果（示例）](#效果示例-1)
+    - [语法](#语法-7)
+    - [备注](#备注-3)
+    - [补充](#补充-2)
+    - [示例](#示例-7)
+    - [效果（示例）](#效果示例-1)
   - [设置文字](#设置文字)
-  - [补充](#补充-3)
-  - [示例](#示例-8)
-  - [效果（示例）](#效果示例-2)
+    - [语法](#语法-8)
+    - [补充](#补充-3)
+    - [示例](#示例-8)
+    - [效果（示例）](#效果示例-2)
 
 
 
@@ -224,8 +226,8 @@ editlongform rta pop left
 
 
 
-# 截断按钮
-## 语法
+## 截断按钮
+### 语法
 只保留或只丢弃长表单中的一部分按钮。
 ```mcfunction
 editlongform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
@@ -241,7 +243,7 @@ editlongform <formName: string> sub keep|discard <startIndex: int> <endIndex: in
 
 
 
-## 备注
+### 备注
 枚举值 `keep|discard` 的含义如下。
 - keep: 只保留长表单中的一部分按钮
 - discard: 只丢弃长表单中的一部分按钮
@@ -320,6 +322,7 @@ editlongform bds title "return {selector, '@s'}"
 
 # 编辑长表单中的按钮
 ## 设置图标
+### 语法
 设置指定长表单中指定按钮的图标
 ```mcfunction
 editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
@@ -333,14 +336,14 @@ editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
 
 
 
-## 备注
+### 备注
 `[textureCode: string]` 所使用的代码应返回一个字符串。<br/>
 这个字符串指向了相应按钮所使用的图标在 MC 中的材质贴图路径。<br/>
 当然，您可以不填写这个字符串，从而将该按钮设置为没有图标。
 
 
 
-## 补充
+### 补充
 第 1 个按钮的索引值是 0。<br/>
 第 2 个按钮的索引值是 1。<br/>
 第 3 个按钮的索引值是 2。<br/>
@@ -349,7 +352,7 @@ editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
 
 
 
-## 示例
+### 示例
 ```
 # 将长表单 abc 中第二个按钮的贴图设置为一幅画作
 editbutton abc 1 icon "return 'textures/painting/baroque'"
@@ -357,7 +360,7 @@ editbutton abc 1 icon "return 'textures/painting/baroque'"
 
 
 
-## 效果（示例）
+### 效果（示例）
 <img width="449" height="399" alt="Image" src="../../images/edit_button_icon.png" />
 
 
@@ -365,6 +368,7 @@ editbutton abc 1 icon "return 'textures/painting/baroque'"
 
 
 ## 设置文字
+### 语法
 设置指定长表单中指定按钮的文字
 ```mcfunction
 editbutton <formName: string> <buttonIndex: int> text <textCode: string>
@@ -377,7 +381,7 @@ editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 
 
 
-## 补充
+### 补充
 第 1 个按钮的索引值是 0。<br/>
 第 2 个按钮的索引值是 1。<br/>
 第 3 个按钮的索引值是 2。<br/>
@@ -386,7 +390,7 @@ editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 
 
 
-## 示例 
+### 示例 
 ```
 # 将长表单 abc 中索引为 2 的按钮的文字设置为固定的 aabbcc
 editbutton abc 2 text "return 'aabbcc'"
@@ -394,5 +398,5 @@ editbutton abc 2 text "return 'aabbcc'"
 
 
 
-## 效果（示例）
+### 效果（示例）
 <img width="449" height="399" alt="Image" src="../../images/edit_button_text.png" />
