@@ -91,7 +91,7 @@ customform add 你好 modal
 ## 效果
 在添加长表单、信息表单和模态表单后，它们的默认形式从左到右依次如下图所示。
 
-<img width="450" height="400" alt="Image" src="../../images/default_long_form.png" /><img width="10" height="1" style="border:0;"><img width="486" height="400" alt="Image" src="../../images/default_popup_form.png" /><img width="10" height="1" style="border:0;"><img width="449" height="400" alt="Image" src="../../images/default_modal_form.png" />
+<img width="315" height="280" alt="Image" src="../../images/default_long_form.png" /><img width="10" height="1" style="border:0;"><img width="340" height="280" alt="Image" src="../../images/default_popup_form.png" /><img width="10" height="1" style="border:0;"><img width="314" height="280" alt="Image" src="../../images/default_modal_form.png" />
 
 
 
