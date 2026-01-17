@@ -12,6 +12,7 @@
   - [指令概览](#指令概览)
   - [操作自定义表单](#操作自定义表单)
   - [编辑长表单及其中的按钮](#编辑长表单及其中的按钮)
+  - [编辑信息表单](#编辑信息表单)
 
 
 
@@ -110,7 +111,7 @@
 
 
 ## 指令概览
-另见 [commands/catalog.md](./additional/documents/commands/catalog.md)
+另见 [commands/overview.md](./additional/documents/commands/overview.md)
 
 
 
@@ -121,3 +122,8 @@
 
 ## 编辑长表单及其中的按钮
 另见 [commands/long_form.md](./additional/documents/commands/long_form.md)
+
+
+
+## 编辑信息表单
+另见 [commands/popup_form.md](./additional/documents/commands/popup_form.md)
