@@ -328,6 +328,9 @@ customform show <executor: target> <position: x y z> <player: target> <name: str
 特别地，受制于目前的接口限制，无法继承除命令执行者、<br/>
 命令执行点和命令执行维度之外的其他命令执行上下文。
 
+需要注意的是，命令执行者至多设置一个。<br/>
+设置多个命令执行者将导致命令执行失败。
+
 
 
 ## 特别注意
