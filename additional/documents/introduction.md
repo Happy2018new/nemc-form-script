@@ -37,8 +37,6 @@
 当然，玩家亦可选择点击右上角的叉号来关掉**长表单**。
 
 <img width="449" height="400" alt="Image" src="../images/sample_long_form.png" />
-<br/>
-<img width="10" height="1" style="border:0;">
 
 
 
@@ -55,8 +53,6 @@
 与**长表单**的运作逻辑相同，在玩家点击任何一个按钮后（包括叉号），**信息表单**将被立即关闭。
 
 <img width="428" height="350" alt="Image" src="../images/sample_popup_form.png" />
-<br/>
-<img width="10" height="1" style="border:0;">
 
 
 

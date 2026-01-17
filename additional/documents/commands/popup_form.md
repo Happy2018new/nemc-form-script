@@ -142,8 +142,6 @@ return {func, strings.strip(ret)}
 
 ## 效果（示例）
 <img width="427" height="350" alt="Image" src="../../images/edit_popup_form_content.png" />
-<br/>
-<img width="10" height="1" style="border:0;">
 
 
 
