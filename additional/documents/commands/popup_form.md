@@ -164,7 +164,7 @@ editpopupform <formName: string> title <titleCode: string>
 ## 示例
 ```mcfunction
 # 将信息表单 flowers 的标题文本设置为 5 个 CB
-editpopupform flowers button1 "return 'CB'*5"
+editpopupform flowers title "return 'CB'*5"
 ```
 
 
