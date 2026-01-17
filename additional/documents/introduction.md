@@ -36,7 +36,7 @@
 在玩家点击任何一个按钮之后，该**长表单**将会被立即关闭。<br/>
 当然，玩家亦可选择点击右上角的叉号来关掉**长表单**。
 
-<img width="507" height="426" alt="Image" src="../images/long_form.png" />
+<img width="449" height="400" alt="Image" src="../images/sample_long_form.png" />
 <br/>
 <img width="10" height="1" style="border:0;">
 
@@ -54,7 +54,7 @@
 在玩家实际与**信息表单**交互时，玩家要么点击代表“确定”的按钮，要么点击代表“取消”的按钮。<br/>
 与**长表单**的运作逻辑相同，在玩家点击任何一个按钮后（包括叉号），**信息表单**将被立即关闭。
 
-<img width="461" height="372" alt="Image" src="../images/popup_form.png" />
+<img width="428" height="350" alt="Image" src="../images/sample_popup_form.png" />
 <br/>
 <img width="10" height="1" style="border:0;">
 
@@ -73,6 +73,4 @@
 
 在玩家点击“提交”或叉号后，**模态表单**将被立即关闭。
 
-<img width="468" height="409" alt="Image" src="../images/modal_form_1.png" />
-<img width="10" height="1" style="border:0;">
-<img width="472" height="409" alt="Image" src="../images/modal_form_2.png" />
+<img width="450" height="400" alt="Image" src="../images/sample_modal_form_1.png" /><img width="10" height="1" style="border:0;"><img width="450" height="400" alt="Image" src="../images/sample_modal_form_2.png" />

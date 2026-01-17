@@ -158,6 +158,7 @@ compilecache set [size: int]
 ```
 
 
+
 ## 查询命令方块输出
 ```mcfunction
 commandblockoutput <commandBlockPosition: x y z>
