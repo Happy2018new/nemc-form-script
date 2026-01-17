@@ -18,7 +18,7 @@
 
 
 # 效果图
-<img width="392" height="350" alt="Image" src="additional/images/sample_long_form.png" /><img width="10" height="1" style="border:0;"><img width="428" height="350" alt="Image" src="additional/images/sample_popup_form.png" /><img width="10" height="1" style="border:0;"><img width="392" height="350" alt="Image" src="additional/images/sample_modal_form_1.png" />
+<img width="313" height="280" alt="Image" src="additional/images/sample_long_form.png" /><img width="10" height="1" style="border:0;"><img width="342" height="280" alt="Image" src="additional/images/sample_popup_form.png" /><img width="10" height="1" style="border:0;"><img width="313" height="280" alt="Image" src="additional/images/sample_modal_form_1.png" />
 
 
 
