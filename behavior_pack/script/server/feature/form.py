@@ -133,36 +133,6 @@ class FormFeature:
             _ = self.executor.set_ref_func(self._ref.ref)
             _ = self.executor.inject_func(funcs)
 
-    def _clean_pending_form(
-        self, player_id, form_id
-    ):  # type: (str, int) -> FormFeature
-        """
-        _clean_pending_form 将 form_id 指示的表单从
-        服务端移除，这意味着服务器将可以释放一些内存。
-
-        该函数的调用通常发生在玩家提交（响应）了表单时，
-        或客户端响应了来自服务器的关闭表单的强制性请求
-
-        Args:
-            player_id (str):
-                目标表单所属的玩家 ID
-            form_id (int):
-                欲移除的表单的 ID
-
-        Returns:
-            FormFeature: 返回 FormFeature 本身
-        """
-        if player_id not in self._pending:
-            return self
-
-        forms = self._pending[player_id]
-        if form_id in forms:
-            del forms[form_id]
-        if len(forms) == 0:
-            del self._pending[player_id]
-
-        return self
-
     def send_modal_form_request(
         self,
         players,  # type: list[str]
@@ -292,6 +262,7 @@ class FormFeature:
         assert self._locker is not None
 
         with self._locker:
+            # Get formal with callback
             player_forms = self._pending.get(player_id, {})
             formal_with_cb = player_forms.get(pk.form_id, None)
             if formal_with_cb is None:
@@ -300,8 +271,13 @@ class FormFeature:
                         pk
                     )
                 )
-            _ = self._clean_pending_form(player_id, pk.form_id)
 
+            # Consume this form
+            del player_forms[pk.form_id]
+            if len(player_forms) == 0:
+                del self._pending[player_id]
+
+            # Handle cancel or submit
             cancel = pk.cancel_reason.value()
             if cancel is not None:
                 if cancel not in (
@@ -328,6 +304,7 @@ class FormFeature:
                 when_meet_err = formal_with_cb.onsuberr
                 self._ref.response = response
 
+            # Running corresponding codes
             position = GetEngineCompFactory().CreatePos(player_id).GetPos()
             dimension = (
                 GetEngineCompFactory().CreateDimension(player_id).GetEntityDimensionId()
@@ -356,6 +333,7 @@ class FormFeature:
                 finally:
                     self._ref.response = None
 
+            # Return
             return self
 
     def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
