@@ -24,43 +24,6 @@ class Math:
         """
         self._manager = manager
 
-    def _validate_int(self, obj):  # type: (Any) -> int
-        """_validate_int 检查给定的对象是否为整数
-
-        Args:
-            obj (Any): 待检查的对象
-
-        Raises:
-            Exception:
-                如果给定的对象不是整数，则抛出相应的错误
-
-        Returns:
-            int: 返回给定的对象，当且仅当它是整数时
-        """
-        if isinstance(obj, bool) or not isinstance(obj, int):
-            raise Exception("_validate_int: Result {} must be int".format(obj))
-        return obj
-
-    def _validate_number(self, obj):  # type: (Any) -> int | float
-        """_validate_number 检查给定的对象是否为实数
-
-        Args:
-            obj (Any): 待检查的对象
-
-        Raises:
-            Exception:
-                如果给定的对象不是实数，则抛出相应的错误
-
-        Returns:
-            int | float:
-                返回给定的对象，当且仅当它是实数时
-        """
-        if isinstance(obj, bool) or not isinstance(obj, (int, float)):
-            raise Exception(
-                "_validate_number: Result {} is not a real number".format(obj)
-            )
-        return obj
-
     def format(self, number, accuracy=6):  # type: (int | float, int) -> str
         """
         format 将给定的数字格式化为其字符串表示
@@ -77,8 +40,10 @@ class Math:
             str:
                 给定数字的字符串表示
         """
-        _ = self._validate_number(number)
-        _ = self._validate_int(accuracy)
+        if isinstance(number, bool) or not isinstance(number, (int, float)):
+            raise Exception("math.format: Target object is not a number")
+        if isinstance(accuracy, bool) or not isinstance(accuracy, int):
+            raise Exception("math.format: The given accuracy must be int")
 
         result = format(number, ".{}f".format(accuracy))
         if "." not in result:
@@ -88,25 +53,6 @@ class Math:
         if result.endswith("."):
             return result + "0"
         return result
-
-    def round(
-        self, number, ndigits=None
-    ):  # type: (int | float, int | None) -> int | float
-        """round 对给定的数字进行四舍五入
-
-        Args:
-            number (int | float):
-                欲被四舍五入的数字
-            ndigits (int, optional):
-                四舍五入时所使用的精度。
-                默认值为 None
-
-        Returns:
-            int | float: 四舍五入所得的结果
-        """
-        if ndigits is None:
-            return self._validate_number(round(number))
-        return self._validate_number(round(number, ndigits))
 
     def build_func(
         self,
@@ -123,18 +69,20 @@ class Math:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["math.format"] = self.format
-        funcs["math.round"] = self.round
-        funcs["math.floordiv"] = lambda x, y: self._validate_int(x // y)
-        funcs["math.mod"] = lambda a, b: self._validate_int(a % b)
-        funcs["math.abs"] = lambda x: self._validate_number(abs(x))
-        funcs["math.max"] = lambda a, b: self._validate_number(max(a, b))
-        funcs["math.min"] = lambda a, b: self._validate_number(min(a, b))
-        funcs["math.bit_and"] = lambda a, b: self._validate_int(a & b)
-        funcs["math.bit_or"] = lambda a, b: self._validate_int(a | b)
-        funcs["math.bit_xor"] = lambda a, b: self._validate_int(a ^ b)
-        funcs["math.bit_not"] = lambda a: self._validate_int(~a)
-        funcs["math.left_shift"] = lambda a, b: self._validate_int(a << b)
-        funcs["math.right_shift"] = lambda a, b: self._validate_int(a >> b)
+        funcs["math.round"] = lambda number, ndigits=None: (
+            round(number) if ndigits is None else round(number, ndigits)
+        )
+        funcs["math.floordiv"] = lambda x, y: x // y
+        funcs["math.mod"] = lambda a, b: a % b
+        funcs["math.abs"] = lambda x: abs(x)
+        funcs["math.max"] = lambda a, b: max(a, b)
+        funcs["math.min"] = lambda a, b: min(a, b)
+        funcs["math.bit_and"] = lambda a, b: a & b
+        funcs["math.bit_or"] = lambda a, b: a | b
+        funcs["math.bit_xor"] = lambda a, b: a ^ b
+        funcs["math.bit_not"] = lambda a: ~a
+        funcs["math.left_shift"] = lambda a, b: a << b
+        funcs["math.right_shift"] = lambda a, b: a >> b
         funcs["math.acos"] = lambda x: math.acos(x)
         funcs["math.acosh"] = lambda x: math.acosh(x)
         funcs["math.asin"] = lambda x: math.asin(x)
@@ -169,7 +117,7 @@ class Math:
         funcs["math.modf"] = lambda x: self._manager.ref(math.modf(x))
         funcs["math.pi"] = lambda: math.pi
         funcs["math.pow"] = lambda x, y: math.pow(x, y)
-        funcs["math.powmod"] = lambda x, y, mod: self._validate_number(pow(x, y, mod))
+        funcs["math.powmod"] = lambda x, y, mod: pow(x, y, mod)
         funcs["math.radians"] = lambda x: math.radians(x)
         funcs["math.sin"] = lambda x: math.sin(x)
         funcs["math.sinh"] = lambda x: math.sinh(x)

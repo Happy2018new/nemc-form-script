@@ -156,6 +156,8 @@ set.issuperset
 strings.cast
 strings.length
 strings.sub
+strings.ord
+strings.chr
 strings.capitalize
 strings.center
 strings.startswith

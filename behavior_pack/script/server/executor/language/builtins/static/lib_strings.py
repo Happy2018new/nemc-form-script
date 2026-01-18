@@ -6,6 +6,11 @@ if TYPE_CHECKING:
 
 from .lib_object import BaseManager
 
+try:
+    chr = unichr  # type: ignore
+except Exception:
+    pass
+
 
 class Strings:
     """
@@ -111,6 +116,25 @@ class Strings:
 
         return string[start:end]
 
+    def ord(self, string):  # type: (str) -> int
+        """
+        ord 返回字符串的 Unicode 代码点。
+        应确保给出的字符串的长度始终为一
+
+        Args:
+            string (str):
+                欲获取 Unicode 代码点的字符串
+
+        Returns:
+            int:
+                目标字符串的 Unicode 代码点
+        """
+        _ = self._validate(string)
+        try:
+            return ord(string.decode(encoding="utf-8"))  # type: ignore
+        except Exception:
+            return ord(string)
+
     def join(self, string, slice_ptr):  # type: (str, int) -> str
         """
         join 将切片中的元素以 string 作为分隔符连接形成一个新的字符串。
@@ -210,6 +234,8 @@ class Strings:
         funcs["strings.cast"] = self.cast
         funcs["strings.length"] = self.length
         funcs["strings.sub"] = self.sub
+        funcs["strings.ord"] = self.ord
+        funcs["strings.chr"] = lambda i: chr(i)
         funcs["strings.capitalize"] = lambda string: self._validate(string).capitalize()
         funcs["strings.center"] = lambda string, width, fillchar=" ": self._validate(
             string
