@@ -89,6 +89,25 @@ class Math:
             return result + "0"
         return result
 
+    def round(
+        self, number, ndigits=None
+    ):  # type: (int | float, int | None) -> int | float
+        """round 对给定的数字进行四舍五入
+
+        Args:
+            number (int | float):
+                欲被四舍五入的数字
+            ndigits (int, optional):
+                四舍五入时所使用的精度。
+                默认值为 None
+
+        Returns:
+            int | float: 四舍五入所得的结果
+        """
+        if ndigits is None:
+            return self._validate_number(round(number))
+        return self._validate_number(round(number, ndigits))
+
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -104,6 +123,7 @@ class Math:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["math.format"] = self.format
+        funcs["math.round"] = self.round
         funcs["math.floordiv"] = lambda x, y: self._validate_int(x // y)
         funcs["math.mod"] = lambda a, b: self._validate_int(a % b)
         funcs["math.abs"] = lambda x: self._validate_number(abs(x))

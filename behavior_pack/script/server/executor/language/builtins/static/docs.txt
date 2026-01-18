@@ -229,6 +229,7 @@ struct_time.tm_isdst
 
 
 math.format
+math.round
 math.floordiv
 math.mod
 math.abs
