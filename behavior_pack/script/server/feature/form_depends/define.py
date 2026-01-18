@@ -69,7 +69,7 @@ class FormalWithCallback:
         self, pk
     ):  # type: (ModalFormResponse) -> int | bool | list[int | bool | float | str | None] | None
         """
-        validate 验证玩家提及的表单（玩家对表单的响应）是否合法。
+        validate 验证玩家提交的表单（玩家对表单的响应）是否合法。
         如果合法，则同时返回解析后的响应数据
 
         Args:
