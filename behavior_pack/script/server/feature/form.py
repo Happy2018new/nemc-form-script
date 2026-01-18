@@ -241,14 +241,14 @@ class FormFeature:
         self, player_id, pk
     ):  # type: (str, ModalFormResponse) -> FormFeature
         """
-        on_modal_form_response 在玩家提交表单时被调用，
-        这通常意味着玩家以提交的方式响应了表单
+        on_modal_form_response 在玩家提交表单，
+        或响应服务器的强制性表单关闭请求时被调用
 
         Args:
             player_id (str):
-                提交者的 ID
+                数据包的发送来源
             pk (ModalFormResponse):
-                相应的负载
+                数据包的负载
 
         Raises:
             Exception:
