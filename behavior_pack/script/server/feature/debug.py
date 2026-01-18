@@ -79,7 +79,7 @@ class DebugFeature:
         funcs["debug.test_function_call_time"] = self.test_function_call_time
         funcs["debug.collect_compile_garbage"] = self.collect_compile_garbage
         funcs["debug.clean_compile_cache"] = self.clean_compile_cache
-        funcs["debug.compile_all_preparation"] = self.compile_all_preparation
+        funcs["debug.precompile_all_codes"] = self.precompile_all_codes
 
         with self.code_executor.get_locker():
             _ = self.code_executor.inject_func(funcs)
@@ -158,9 +158,9 @@ class DebugFeature:
 
         return True
 
-    def compile_all_preparation(self):  # type: () -> float
+    def precompile_all_codes(self):  # type: () -> float
         """
-        compile_all_preparation 编译已持久化到存档的所有源代码，
+        precompile_all_codes 编译已持久化到存档的所有源代码，
         并返回编译所有这些源代码所消耗的总时间
 
         Returns:

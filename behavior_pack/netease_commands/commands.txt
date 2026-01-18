@@ -134,4 +134,4 @@ debug.test_code_compile_time
 debug.test_function_call_time
 debug.collect_compile_garbage
 debug.clean_compile_cache
-debug.compile_all_preparation
+debug.precompile_all_codes
