@@ -56,12 +56,10 @@ class FunctionFeature:
         funcs["function.list"] = lambda func_name="": manager.ref(
             self.list_all(func_name)
         )
-        funcs["function.register"] = lambda func_name, func_code: self.register(
-            func_name, func_code
-        )
-        funcs["function.unregister"] = lambda func_name: self.unregister(func_name)
-        funcs["function.call"] = lambda func_name, *args: self.call(func_name, *args)
-        funcs["function.try"] = lambda func_name, *args: self.try_call(func_name, *args)
+        funcs["function.register"] = self.register
+        funcs["function.unregister"] = self.unregister
+        funcs["function.call"] = self.call
+        funcs["function.try"] = self.try_call
         funcs["function.panic"] = self.panic
 
         with self.executor.get_locker():

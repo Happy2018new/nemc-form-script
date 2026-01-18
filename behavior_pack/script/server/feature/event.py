@@ -128,12 +128,8 @@ class EventFeature:
         funcs["event.list"] = lambda event_name="": manager.ref(
             self.list_event(event_name)
         )
-        funcs["event.listen"] = (
-            lambda event_name, func_name, func_code, on_error: self.listen(
-                event_name, func_name, func_code, on_error
-            )
-        )
-        funcs["event.destroy"] = lambda func_name: self.destroy(func_name)
+        funcs["event.listen"] = self.listen
+        funcs["event.destroy"] = self.destroy
 
         with self.executor.get_locker():
             _ = self.executor.inject_func(funcs)

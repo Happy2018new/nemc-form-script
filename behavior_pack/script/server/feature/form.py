@@ -107,27 +107,13 @@ class FormFeature:
         funcs["form.list_modal_form_element_type"] = lambda form_name: manager.ref(
             self.list_modal_form_element_type(form_name)
         )
-        funcs["form.custom_form_type"] = lambda form_name: self.custom_form_type(
-            form_name
-        )
-        funcs["form.long_form_element_icon_type"] = (
-            lambda form_name, index: self.long_form_element_icon_type(form_name, index)
-        )
-        funcs["form.modal_form_element_type"] = (
-            lambda form_name, index: self.modal_form_element_type(form_name, index)
-        )
-        funcs["form.modal_form_length"] = lambda form_name: self.modal_form_length(
-            form_name
-        )
-        funcs["form.long_form_length"] = lambda form_name: self.long_form_length(
-            form_name
-        )
-        funcs["form.dropdown_length"] = lambda form_name, index: self.dropdown_length(
-            form_name, index
-        )
-        funcs["form.step_slider_length"] = (
-            lambda form_name, index: self.step_slider_length(form_name, index)
-        )
+        funcs["form.custom_form_type"] = self.custom_form_type
+        funcs["form.long_form_element_icon_type"] = self.long_form_element_icon_type
+        funcs["form.modal_form_element_type"] = self.modal_form_element_type
+        funcs["form.modal_form_length"] = self.modal_form_length
+        funcs["form.long_form_length"] = self.long_form_length
+        funcs["form.dropdown_length"] = self.dropdown_length
+        funcs["form.step_slider_length"] = self.step_slider_length
 
         with self.executor.get_locker():
             _ = self.executor.set_ref_func(self._ref.ref)

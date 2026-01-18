@@ -75,17 +75,11 @@ class DebugFeature:
         assert self.code_executor is not None
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        funcs["debug.test_code_compile_time"] = (
-            lambda code, repeats: self.test_code_compile_time(code, repeats)
-        )
-        funcs["debug.test_function_call_time"] = (
-            lambda repeats, func_name, *args: self.test_function_call_time(
-                repeats, func_name, *args
-            )
-        )
-        funcs["debug.collect_compile_garbage"] = lambda: self.collect_compile_garbage()
-        funcs["debug.clean_compile_cache"] = lambda: self.clean_compile_cache()
-        funcs["debug.compile_all_preparation"] = lambda: self.compile_all_preparation()
+        funcs["debug.test_code_compile_time"] = self.test_code_compile_time
+        funcs["debug.test_function_call_time"] = self.test_function_call_time
+        funcs["debug.collect_compile_garbage"] = self.collect_compile_garbage
+        funcs["debug.clean_compile_cache"] = self.clean_compile_cache
+        funcs["debug.compile_all_preparation"] = self.compile_all_preparation
 
         with self.code_executor.get_locker():
             _ = self.code_executor.inject_func(funcs)
