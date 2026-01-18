@@ -462,6 +462,25 @@ class Reflect:
         except Exception:
             return 0
 
+    def round(self, ptr, ndigits=None):  # type: (int, int | None) -> int
+        """
+        round 将 ptr 指向的对象进行舍入运算
+
+        Args:
+            ptr (int):
+                目标对象的指针
+            ndigits (int | None, optional):
+                舍入时所用的精度。
+                默认值为 None
+
+        Returns:
+            int: 指向舍入结果的指针
+        """
+        if ndigits is None:
+            return self._manager.ref(round(self._manager.deref(ptr)))
+        else:
+            return self._manager.ref(round(self._manager.deref(ptr), ndigits))
+
     def mod(self, ptr_a, ptr_b):  # type: (int, int) -> int
         """mod 计算 A%B 的值
 
@@ -835,6 +854,7 @@ class Reflect:
         funcs["reflect.floordiv"] = self.floordiv
         funcs["reflect.negative"] = self.negative
         funcs["reflect.abs"] = self.abs
+        funcs["reflect.round"] = self.round
         funcs["reflect.mod"] = self.mod
         funcs["reflect.pow"] = self.pow
         funcs["reflect.powmod"] = self.powmod

@@ -36,6 +36,7 @@ reflect.divide
 reflect.floordiv
 reflect.negative
 reflect.abs
+reflect.round
 reflect.mod
 reflect.pow
 reflect.powmod
