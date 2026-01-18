@@ -17,10 +17,8 @@ from .feature.event import EventFeature
 from .feature.debug import DebugFeature
 from ..packet.packet import (
     PACKET_NAME_MODAL_FORM_RESPONSE,
-    PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
     PACKET_NAME_CUSTOM_FUNCTION_CALL,
     ModalFormResponse,
-    ServerBoundCloseForm,
     CustomFunctionCall,
 )
 from mod.server.extraServerApi import (
@@ -73,9 +71,6 @@ class FormSystem(ServerSystem):
 
         self.listen_form_event(
             PACKET_NAME_MODAL_FORM_RESPONSE, self, self.on_modal_form_response
-        )
-        self.listen_form_event(
-            PACKET_NAME_SERVER_BOUND_CLOSE_FORM, self, self.on_server_bound_close_form
         )
         self.listen_form_event(
             PACKET_NAME_CUSTOM_FUNCTION_CALL, self, self.on_custom_function_call
@@ -177,21 +172,6 @@ class FormSystem(ServerSystem):
         _ = self.form_feature.on_modal_form_response(
             args["__id__"],
             ModalFormResponse().unmarshal(args),
-        )
-
-    def on_server_bound_close_form(self, args):  # type: (dict[str, Any]) -> None
-        """
-        on_server_bound_close_form 处理客户端发回的响应。
-        它是客户端对 packet.ClientBoundCloseForm 的响应
-
-        Args:
-            args (dict[str, Any]):
-                数据包 ServerBoundCloseForm 的负载
-        """
-        assert self.form_feature is not None
-        _ = self.form_feature.on_server_bound_close_form(
-            args["__id__"],
-            ServerBoundCloseForm().unmarshal(args),
         )
 
     def on_custom_function_call(self, args):  # type: (dict[str, Any]) -> None

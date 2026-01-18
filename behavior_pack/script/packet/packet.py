@@ -9,7 +9,6 @@ from .option import OptionString, OptionInt
 PACKET_NAME_MODAL_FORM_REQUEST = "packet.ModalFormRequest"
 PACKET_NAME_MODAL_FORM_RESPONSE = "packet.ModalFormResponse"
 PACKET_NAME_CLIENT_BOUND_CLOSE_FORM = "packet.ClientBoundCloseForm"
-PACKET_NAME_SERVER_BOUND_CLOSE_FORM = "packet.ServerBoundCloseForm"
 PACKET_NAME_CUSTOM_FUNCTION_CALL = "packet.CustomFunctionCall"
 
 MODAL_FORM_CANCEL_REASON_USER_CLOSED = 0
@@ -268,73 +267,6 @@ class ClientBoundCloseForm(BasePacket):
             ClientBoundCloseForm: The packet itself.
         """
         _ = data
-        return self
-
-
-class ServerBoundCloseForm(BasePacket):
-    """
-    ServerBoundCloseForm is a custom packet that send by the
-    client in response to the request of ClientBoundCloseForm.
-    It is used to notify the server which form has been closed.
-    """
-
-    form_id = []  # type: list[int]
-
-    def __init__(self, form_id=[]):  # type: (list[int]) -> None
-        """
-        Returns a new ServerBoundCloseForm packet.
-
-        Args:
-            form_id (list[int], optional):
-                form_id contains multiple form ID of the form
-                the client has responded to.
-                It is the same as the ID sent in the ModalFormRequest,
-                and used to identify what forms were closed.
-                Defaults to [].
-        """
-        self.form_id = form_id if len(form_id) > 0 else []
-
-    def packet_name(self):  # type: () -> str
-        """packet_name returns the name of current packet.
-
-        Returns:
-            str: The name of current packet.
-        """
-        return PACKET_NAME_SERVER_BOUND_CLOSE_FORM
-
-    def marshal(self):  # type: () -> dict[str, Any]
-        """
-        marshal encode current packet
-        to its JSON representation.
-
-        Returns:
-            dict[str, Any]: The JSON representation of current packet.
-        """
-        return {"FormID": self.form_id}
-
-    def unmarshal(self, data):  # type: (Any) -> ServerBoundCloseForm
-        """
-        unmarshal decodes current packet
-        from its JSON representation.
-
-        Args:
-            data (Any): The given data to decode.
-                        Should be a dict.
-
-        Returns:
-            ServerBoundCloseForm: The packet itself.
-        """
-        self.form_id = []
-        if not isinstance(data, dict):
-            return self
-
-        form_id = data.get("FormID", [])
-        if not isinstance(form_id, list):
-            return self
-        self.form_id = [
-            i for i in form_id if not isinstance(i, bool) and isinstance(i, int)
-        ]
-
         return self
 
 

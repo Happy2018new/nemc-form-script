@@ -36,7 +36,6 @@ from ...packet.packet import (
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
-    ServerBoundCloseForm,
 )
 
 
@@ -134,18 +133,21 @@ class FormFeature:
             _ = self.executor.set_ref_func(self._ref.ref)
             _ = self.executor.inject_func(funcs)
 
-    def _clean_pending_forms(
-        self, player_id, closed_forms
-    ):  # type: (str, list[int]) -> FormFeature
+    def _clean_pending_form(
+        self, player_id, form_id
+    ):  # type: (str, int) -> FormFeature
         """
-        _clean_pending_forms 将 close_forms 指示的所有表单从服务端处移除。
-        这通常发生在玩家提交（响应）了表单，或服务端强制关闭了所有已打开的表单
+        _clean_pending_form 将 form_id 指示的表单从
+        服务端移除，这意味着服务器将可以释放一些内存。
+
+        该函数的调用通常发生在玩家提交（响应）了表单时，
+        或客户端响应了来自服务器的关闭表单的强制性请求
 
         Args:
             player_id (str):
-                这些表单所属的玩家 ID
-            closed_forms (list[int]):
-                要移除的所有表单
+                目标表单所属的玩家 ID
+            form_id (int):
+                欲移除的表单的 ID
 
         Returns:
             FormFeature: 返回 FormFeature 本身
@@ -153,14 +155,11 @@ class FormFeature:
         if player_id not in self._pending:
             return self
 
-        player_forms = self._pending[player_id]
-        for i in set(closed_forms):
-            if i in player_forms:
-                del player_forms[i]
-        if len(player_forms) == 0:
+        forms = self._pending[player_id]
+        if form_id in forms:
+            del forms[form_id]
+        if len(forms) == 0:
             del self._pending[player_id]
-        else:
-            self._pending[player_id] = player_forms
 
         return self
 
@@ -301,7 +300,7 @@ class FormFeature:
                         pk
                     )
                 )
-            _ = self._clean_pending_forms(player_id, [pk.form_id])
+            _ = self._clean_pending_form(player_id, pk.form_id)
 
             cancel = pk.cancel_reason.value()
             if cancel is not None:
@@ -358,27 +357,6 @@ class FormFeature:
                     self._ref.response = None
 
             return self
-
-    def on_server_bound_close_form(
-        self, player_id, pk
-    ):  # type: (str, ServerBoundCloseForm) -> FormFeature
-        """
-        on_server_bound_close_form 在玩家发送数据包 ServerBoundCloseForm 时调用。
-        这在通常情况下意味着玩家响应了服务端先前发送的 ClientBoundCloseForm 数据包
-
-        Args:
-            player_id (str):
-                数据包的发送者 ID
-            pk (ServerBoundCloseForm):
-                数据包的负载
-
-        Returns:
-            FormFeature: 返回 FormFeature 本身
-        """
-        assert self._locker is not None
-
-        with self._locker:
-            return self._clean_pending_forms(player_id, pk.form_id)
 
     def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
         """on_player_leave 在有玩家离开服务器时被调用

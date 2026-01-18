@@ -22,9 +22,8 @@ from ...packet.packet import (
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
-    ServerBoundCloseForm,
     PACKET_NAME_MODAL_FORM_RESPONSE,
-    PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
+    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
 )
 from mod.client.extraClientApi import (
@@ -221,9 +220,10 @@ class ClientFormSystem:
         pk.unmarshal(args)
 
         with self.base.locker:
-            resp = ServerBoundCloseForm()
+            forms_id = []  # type: list[int]
+
             if self.base.pending_pk is not None:
-                resp.form_id.append(self.base.pending_pk.form_id)
+                forms_id.append(self.base.pending_pk.form_id)
                 self.base.pending_pk = None
 
             if (
@@ -231,15 +231,18 @@ class ClientFormSystem:
                 and self.base.states == STATES_SCREEN_IS_SHOWING
             ):
                 if self.base.server_pk is not None:
-                    resp.form_id.append(self.base.server_pk.form_id)
+                    forms_id.append(self.base.server_pk.form_id)
                     self.base.server_pk = None
                 self.base.states = STATES_SCREEN_FORCE_POPPING
                 PopScreen()
 
-            if len(resp.form_id) > 0:
+            for form_id in forms_id:
                 self.base.NotifyToServer(
-                    PACKET_NAME_SERVER_BOUND_CLOSE_FORM,
-                    resp.marshal(),
+                    PACKET_NAME_MODAL_FORM_RESPONSE,
+                    ModalFormResponse(
+                        form_id,
+                        cancel_reason=OptionInt(MODAL_FORM_CANCEL_REASON_USER_CLOSED),
+                    ).marshal(),
                 )
 
     def on_long_form_submit(self, _, index):  # type: (dict[str, Any], int) -> None
