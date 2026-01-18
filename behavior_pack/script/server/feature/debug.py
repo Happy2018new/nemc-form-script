@@ -152,7 +152,7 @@ class DebugFeature:
         """
         assert self.compile_cache is not None
 
-        size = self.compile_cache.get_current_cache_size()
+        size = self.compile_cache.get_max_cache_size()
         _ = self.compile_cache.set_max_cache_size(0)
         _ = self.compile_cache.set_max_cache_size(size)
 
