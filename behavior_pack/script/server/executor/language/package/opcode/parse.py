@@ -697,7 +697,7 @@ class CodeParser:
     def parse(self):  # type: () -> CodeParser
         """
         parse 解析底层流中的所有字符，
-        并将其编译抽象语法树表示。
+        并将其编译为抽象语法树表示。
 
         如果解析没有出现错误，则底层流最终应会被耗尽。
         并且，解析结果将被置于本实例的 code_block 中
