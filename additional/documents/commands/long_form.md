@@ -83,7 +83,7 @@ editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 ## 添加按钮
 ### 语法
 向长表单 `<formName: string>` 添加（追加）一个按钮。
-```
+```mcfunction
 editlongform <formName: string> append
 ```
 
@@ -103,7 +103,7 @@ editlongform Happy append
 ## 设置内容文本
 ### 语法
 设置长表单要显示的内容文本。
-```
+```mcfunction
 editlongform <formName: string> content <contentCode: string>
 ```
 
@@ -299,7 +299,7 @@ editlongform rtx sub discard 2 6
 ## 设置标题文本
 ### 语法
 设置长表单要显示的标题文本。
-```
+```mcfunction
 editlongform <formName: string> title <titleCode: string>
 ```
 
@@ -329,7 +329,7 @@ editlongform bds title "return {selector, '@s'}"
 # 编辑长表单中的按钮
 ## 设置图标
 ### 语法
-设置指定长表单中指定按钮的图标
+设置指定长表单中指定按钮的图标。
 ```mcfunction
 editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
 ```
@@ -361,7 +361,7 @@ editbutton <formName: string> <buttonIndex: int> icon [textureCode: string]
 
 
 ### 示例
-```
+```mcfunction
 # 将长表单 abc 中第二个按钮的贴图设置为一幅画作
 editbutton abc 1 icon "return 'textures/painting/baroque'"
 ```
@@ -377,7 +377,7 @@ editbutton abc 1 icon "return 'textures/painting/baroque'"
 
 ## 设置文字
 ### 语法
-设置指定长表单中指定按钮的文字
+设置指定长表单中指定按钮的文字。
 ```mcfunction
 editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 ```
@@ -399,7 +399,7 @@ editbutton <formName: string> <buttonIndex: int> text <textCode: string>
 
 
 ### 示例 
-```
+```mcfunction
 # 将长表单 abc 中索引为 2 的按钮的文字设置为固定的 aabbcc
 editbutton abc 2 text "return 'aabbcc'"
 ```
