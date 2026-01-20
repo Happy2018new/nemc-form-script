@@ -92,6 +92,8 @@ class FormalWithCallback:
         if isinstance(self.formal, LongFormalForm):
             if isinstance(resp, bool) or not isinstance(resp, int):
                 return None
+            if resp < 0 or resp >= len(self.formal.buttons):
+                return None
             return resp
         if isinstance(self.formal, PopupFormalForm):
             if not isinstance(resp, bool):
