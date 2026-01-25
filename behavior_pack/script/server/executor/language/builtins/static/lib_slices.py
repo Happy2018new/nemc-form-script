@@ -24,6 +24,15 @@ class Slices:
         """
         self._manager = manager
 
+    def new(self, *elements):  # type: (...) -> int
+        """
+        new 创建并返回一个新的切片
+
+        Returns:
+            int: 新创建的切片的指针
+        """
+        return self._manager.ref(list(elements))
+
     def make(self, length, value):  # type: (int, int | bool | float | str) -> int
         """
         make 创建一个长度为 length 且元素为 value 的切片
@@ -688,6 +697,7 @@ class Slices:
         """
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
+        funcs["slices.new"] = self.new
         funcs["slices.make"] = self.make
         funcs["slices.cast"] = self.cast
         funcs["slices.length"] = self.length

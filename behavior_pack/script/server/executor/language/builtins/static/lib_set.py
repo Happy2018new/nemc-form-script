@@ -23,14 +23,14 @@ class Set:
         """
         self._manager = manager
 
-    def new(self):  # type: () -> int
+    def new(self, *elements):  # type: (...) -> int
         """
         new 创建并返回一个新的集合
 
         Returns:
             int: 新创建的集合的指针
         """
-        return self._manager.ref(set())
+        return self._manager.ref(set(elements))
 
     def cast(self, ptr):  # type: (int) -> int
         """

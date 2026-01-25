@@ -23,14 +23,14 @@ class Tuple:
         """
         self._manager = manager
 
-    def new(self, *elements):  # type: (int) -> int
+    def new(self, *elements):  # type: (...) -> int
         """
         new 创建并返回一个新的元组
 
         Returns:
             int: 新创建的元组的指针
         """
-        return self._manager.ref(tuple(elements))
+        return self._manager.ref(elements)
 
     def cast(self, ptr):  # type: (int) -> int
         """

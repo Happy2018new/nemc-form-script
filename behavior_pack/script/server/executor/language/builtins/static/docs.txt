@@ -58,6 +58,7 @@ reflect.sum
 
 
 
+slices.new
 slices.make
 slices.cast
 slices.length
@@ -87,7 +88,7 @@ slices.ptr_in
 
 
 
-maps.make (Support ordered map)
+maps.new (Support ordered map)
 maps.cast
 maps.length
 maps.copy

@@ -24,8 +24,8 @@ class Maps:
         """
         self._manager = manager
 
-    def make(self, ordered=False):  # type: (bool) -> int
-        """make 初始化并返回一个新的映射
+    def new(self, ordered=False, *args):  # type: (bool, ...) -> int
+        """new 初始化并返回一个新的映射
 
         Args:
             ordered (bool, optional):
@@ -36,8 +36,20 @@ class Maps:
             int: 新创建的映射的指针
         """
         if ordered:
-            return self._manager.ref(OrderedDict())
-        return self._manager.ref({})
+            result = OrderedDict()
+        else:
+            result = {}
+
+        if len(args) % 2 != 0:
+            raise Exception(
+                "maps.new: The length of the given elements must be even number, but got {}".format(
+                    len(args)
+                )
+            )
+        for i in range(0, len(args), 2):
+            result[args[i]] = args[i + 1]
+
+        return self._manager.ref(result)
 
     def cast(self, ptr):  # type: (int) -> int
         """
@@ -465,7 +477,7 @@ class Maps:
         """
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        funcs["maps.make"] = self.make
+        funcs["maps.new"] = self.new
         funcs["maps.cast"] = self.cast
         funcs["maps.length"] = self.length
         funcs["maps.copy"] = self.copy
