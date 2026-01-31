@@ -291,7 +291,7 @@ class CompileCache:
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
     ):  # type: (...) -> None
         """
-        build_func 构建 json 模块的内置函数，
+        build_func 构建 compile 模块的内置函数，
         并将构建结果写入到传递的 origin 字典中
 
         Args:
