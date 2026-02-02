@@ -13,6 +13,7 @@
   - [操作自定义表单](#操作自定义表单)
   - [编辑长表单及其中的按钮](#编辑长表单及其中的按钮)
   - [编辑信息表单](#编辑信息表单)
+  - [编程语法](#编程语法)
 
 
 
@@ -105,6 +106,10 @@
 
 
 # 使用教程
+*此段落的内容因篇幅原因仍在继续进行中。*
+
+
+
 ## 世界观
 另见 [introduction.md](./additional/documents/introduction.md)
 
@@ -127,3 +132,8 @@
 
 ## 编辑信息表单
 另见 [commands/popup_form.md](./additional/documents/commands/popup_form.md)
+
+
+
+## 编程语法
+另见 [Happy2018new/form-python-ast](https://github.com/Happy2018new/form-python-ast/tree/main?tab=readme-ov-file#%E7%BC%96%E7%A8%8B%E8%AF%AD%E6%B3%95)
