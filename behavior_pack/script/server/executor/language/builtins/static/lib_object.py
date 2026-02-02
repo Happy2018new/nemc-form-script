@@ -21,16 +21,17 @@ REF_TYPE_INT = 0
 REF_TYPE_BOOL = 1
 REF_TYPE_FLOAT = 2
 REF_TYPE_STR = 3
-REF_TYPE_SLICE = 4
-REF_TYPE_MAP = 5
-REF_TYPE_TUPLE = 6
-REF_TYPE_SET = 7
-REF_TYPE_UUID = 8
-REF_TYPE_STRUCT_TIME = 9
-REF_TYPE_DATETIME_TIMEDELTA = 10
-REF_TYPE_DATETIME_TIME = 11
-REF_TYPE_DATETIME_DATE = 12
-REF_TYPE_DATETIME_DATETIME = 13
+REF_TYPE_NONE = 4
+REF_TYPE_SLICE = 5
+REF_TYPE_MAP = 6
+REF_TYPE_TUPLE = 7
+REF_TYPE_SET = 8
+REF_TYPE_UUID = 9
+REF_TYPE_STRUCT_TIME = 10
+REF_TYPE_DATETIME_TIMEDELTA = 11
+REF_TYPE_DATETIME_TIME = 12
+REF_TYPE_DATETIME_DATE = 13
+REF_TYPE_DATETIME_DATETIME = 14
 REF_TYPE_UNKNOWN = 0xFFFF
 
 
@@ -330,6 +331,7 @@ class BaseManager:
                     - REF_TYPE_BOOL: 布尔值
                     - REF_TYPE_FLOAT: 浮点数
                     - REF_TYPE_STR: 字符串
+                    - REF_TYPE_NONE: None
                     - REF_TYPE_SLICE: 切片
                     - REF_TYPE_MAP: 映射
                     - REF_TYPE_TUPLE: 元组
@@ -345,6 +347,8 @@ class BaseManager:
         if ptr not in self._mapping:
             raise Exception("ref_type: Invalid address or nil pointer dereference")
         obj = self._mapping[ptr]
+        if obj is None:
+            return REF_TYPE_NONE
 
         if isinstance(obj, uuid.UUID):
             return REF_TYPE_UUID
