@@ -1,0 +1,31 @@
+Original
+
+我需要一个 Minecraft 像素化图片，
+它不应该被看出是 AI 生成的。
+
+该图片以附魔魔咒为风格，
+并且周围有一些魔法符文，
+图片的中央是打开着的附魔台的书，
+书应该是浮空的，
+并且书应该是对称的。
+
+书的旁边有一个纤细的羽毛。
+魔法书需要被魔力光束照耀。
+图片应该尽可能简洁。
+
+
+
+Translate
+
+I need a pixelated image of Minecraft,
+which should not be recognizable as an AI-generated work.
+
+The image should have a style reminiscent of an enchantment spell,
+and there should be some magical runes around it.
+
+In the center of the image is an open book of enchantments,
+and the book should be floating and symmetrical.
+
+There should be a slender feather beside the book.
+The magic book needs to be illuminated by a magical beam of light.
+The image should be as simple as possible.
