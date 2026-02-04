@@ -215,6 +215,8 @@ customform onsubmit <name: string> <code: string> [onCodeError: string]
 - 模态表单
   - 提交意味着玩家点击了“提交”按钮
 
+另外，如果您不知道编写的代码的方法，请参见...
+
 
 
 ## 示例
