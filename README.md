@@ -13,6 +13,7 @@
   - [操作自定义表单](#操作自定义表单)
   - [编辑长表单及其中的按钮](#编辑长表单及其中的按钮)
   - [编辑信息表单](#编辑信息表单)
+  - [编辑模态表单、编辑模态表单中的元素](#编辑模态表单编辑模态表单中的元素)
   - [编程语法](#编程语法)
 
 
@@ -132,6 +133,11 @@
 
 ## 编辑信息表单
 另见 [commands/popup_form.md](./additional/documents/commands/popup_form.md)
+
+
+
+## 编辑模态表单、编辑模态表单中的元素
+另见 [commands/modal_form.md](./additional/documents/commands/modal_form.md)
 
 
 
