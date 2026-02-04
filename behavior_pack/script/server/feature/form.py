@@ -171,6 +171,14 @@ class FormFeature:
                         storage_form, self.executor, executor, dimension, position
                     )
 
+            raw_form = formal_with_cb.formal.marshal()
+            if isinstance(formal_with_cb.formal, LongFormalForm):
+                raw_form["type"] = "form"
+            elif isinstance(formal_with_cb.formal, PopupFormalForm):
+                raw_form["type"] = "modal"
+            elif isinstance(formal_with_cb.formal, ModalFormalForm):
+                raw_form["type"] = "custom_form"
+
             for player_id in players:
                 if player_id not in onlines:
                     continue
@@ -180,18 +188,10 @@ class FormFeature:
                 player_forms[self._sequence] = formal_with_cb
                 self._pending[player_id] = player_forms
 
-                raw = formal_with_cb.formal.marshal()
-                if isinstance(formal_with_cb.formal, LongFormalForm):
-                    raw["type"] = "form"
-                elif isinstance(formal_with_cb.formal, PopupFormalForm):
-                    raw["type"] = "modal"
-                elif isinstance(formal_with_cb.formal, ModalFormalForm):
-                    raw["type"] = "custom_form"
-
                 self.system.NotifyToClient(
                     player_id,
                     PACKET_NAME_MODAL_FORM_REQUEST,
-                    ModalFormRequest(self._sequence, raw).marshal(),
+                    ModalFormRequest(self._sequence, raw_form).marshal(),
                 )
 
             return self

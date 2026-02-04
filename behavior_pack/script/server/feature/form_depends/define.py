@@ -42,7 +42,8 @@ class FormalWithCallback:
         oncanerr,  # type: StringWithHash
     ):  # type: (...) -> None
         """
-        初始化并返回一个新的 FormalWithCallback
+        初始化并返回一个新的 FormalWithCallback。
+        有义务确保返回的对象不会在之后被进一步修改
 
         Args:
             formal (BaseFormalForm):
