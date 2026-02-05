@@ -391,7 +391,7 @@ editmodalform <formName: string> title <titleCode: string>
 | 参数                | 数据类型 | 备注 | 解释                   |
 | ------------------- | -------- | ---- | ---------------------- |
 | <formName: string>  | 字符串   | 必填 | 被编辑的模态表单的名字 |
-| <titleCode: string> | 坐标     | 必填 | 用于生成标题文本的代码 |
+| <titleCode: string> | 字符串   | 必填 | 用于生成标题文本的代码 |
 
 <img width="449" height="400" alt="Image" src="../../images/edit_modal_form_title.png" />
 
