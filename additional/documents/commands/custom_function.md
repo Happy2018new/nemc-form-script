@@ -124,8 +124,7 @@ customfunction add math_compute "arg1 = {func, tuple.get(args, 0)}
 arg2 = {func, tuple.get(args, 1)}
 arg4 = {func, tuple.get(args, 3)}
 len = {func, tuple.length(args)}
-return {command, 'say arg1=' + str(arg1) + ', arg2=' + str(arg2) + ', arg4=' + str(arg4) + ', len=' + str(len)}
-"
+return {command, 'say arg1=' + str(arg1) + ', arg2=' + str(arg2) + ', arg4=' + str(arg4) + ', len=' + str(len)}"
 
 # 添加自定义函数 main
 customfunction add main "result = {func, function.call('math_compute', 'a_a_a', 23, 'B-B-B', 'PLACEHOLDER')}
