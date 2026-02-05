@@ -15,6 +15,7 @@
   - [编辑信息表单](#编辑信息表单)
   - [编辑模态表单及其中的元素](#编辑模态表单及其中的元素)
   - [操作或执行自定义函数](#操作或执行自定义函数)
+  - [监听游戏事件](#监听游戏事件)
   - [编程语法](#编程语法)
 
 
@@ -144,6 +145,11 @@
 
 ## 操作或执行自定义函数
 另见 [commands/custom_function.md](./additional/documents/commands/custom_function.md)
+
+
+
+## 监听游戏事件
+另见 [commands/system_event.md](./additional/documents/commands/system_event.md)
 
 
 
