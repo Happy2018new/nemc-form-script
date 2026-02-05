@@ -650,8 +650,8 @@ editdropdown <formName: string> <index: int> pop left|right
 ```
 
 枚举值 `left|right` 的含义如下。
-- left: 弹出（移除）第一个按钮
-- right: 弹出（移除）最后一个按钮
+- left: 弹出（移除）第一个选项
+- right: 弹出（移除）最后一个选项
 
 ---
 

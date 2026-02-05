@@ -14,6 +14,7 @@
   - [编辑长表单及其中的按钮](#编辑长表单及其中的按钮)
   - [编辑信息表单](#编辑信息表单)
   - [编辑模态表单、编辑模态表单中的元素](#编辑模态表单编辑模态表单中的元素)
+  - [操作或执行自定义函数](#操作或执行自定义函数)
   - [编程语法](#编程语法)
 
 
@@ -138,6 +139,11 @@
 
 ## 编辑模态表单、编辑模态表单中的元素
 另见 [commands/modal_form.md](./additional/documents/commands/modal_form.md)
+
+
+
+## 操作或执行自定义函数
+另见 [commands/custom_function.md](./additional/documents/commands/custom_function.md)
 
 
 
