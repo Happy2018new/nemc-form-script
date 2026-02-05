@@ -99,7 +99,7 @@ class SystemEventHandler:
             if len(resp) == 0:
                 return "没有任何事件函数侦听了目标事件"
             else:
-                result = "共有 {} 个自定义函数侦听了目标事件: ".format(len(resp))
+                result = "共有 {} 个事件函数侦听了目标事件: ".format(len(resp))
                 for i in sorted(list(resp)):
                     result += "\n  - {}".format(i)
                 return result
