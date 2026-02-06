@@ -17,6 +17,7 @@
   - [操作或执行自定义函数](#操作或执行自定义函数)
   - [监听游戏事件](#监听游戏事件)
   - [管理编译缓冲区](#管理编译缓冲区)
+  - [查询命令方块的完整输出](#查询命令方块的完整输出)
   - [编程语法](#编程语法)
 
 
@@ -156,6 +157,11 @@
 
 ## 管理编译缓冲区
 另见 [commands/compile_cache.md](./additional/documents/commands/compile_cache.md)
+
+
+
+## 查询命令方块的完整输出
+另见 [commands/command_block_output.md](./additional/documents/commands/command_block_output.md)
 
 
 
