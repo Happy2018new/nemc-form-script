@@ -9,15 +9,7 @@
   - [拓展](#拓展)
 - [使用教程](#使用教程)
   - [世界观](#世界观)
-  - [指令概览](#指令概览)
-  - [操作自定义表单](#操作自定义表单)
-  - [编辑长表单及其中的按钮](#编辑长表单及其中的按钮)
-  - [编辑信息表单](#编辑信息表单)
-  - [编辑模态表单及其中的元素](#编辑模态表单及其中的元素)
-  - [操作或执行自定义函数](#操作或执行自定义函数)
-  - [监听游戏事件](#监听游戏事件)
-  - [管理编译缓冲区](#管理编译缓冲区)
-  - [查询命令方块的完整输出](#查询命令方块的完整输出)
+  - [指令部分](#指令部分)
   - [编程语法](#编程语法)
 
 
@@ -116,54 +108,22 @@
 
 
 ## 世界观
-另见 [introduction.md](./additional/documents/introduction.md)
+- [世界观](./additional/documents/introduction.md)
 
 
 
-## 指令概览
-另见 [commands/overview.md](./additional/documents/commands/overview.md)
-
-
-
-## 操作自定义表单
-另见 [commands/custom_form.md](./additional/documents/commands/custom_form.md)
-
-
-
-## 编辑长表单及其中的按钮
-另见 [commands/long_form.md](./additional/documents/commands/long_form.md)
-
-
-
-## 编辑信息表单
-另见 [commands/popup_form.md](./additional/documents/commands/popup_form.md)
-
-
-
-## 编辑模态表单及其中的元素
-另见 [commands/modal_form.md](./additional/documents/commands/modal_form.md)
-
-
-
-## 操作或执行自定义函数
-另见 [commands/custom_function.md](./additional/documents/commands/custom_function.md)
-
-
-
-## 监听游戏事件
-另见 [commands/system_event.md](./additional/documents/commands/system_event.md)
-
-
-
-## 管理编译缓冲区
-另见 [commands/compile_cache.md](./additional/documents/commands/compile_cache.md)
-
-
-
-## 查询命令方块的完整输出
-另见 [commands/command_block_output.md](./additional/documents/commands/command_block_output.md)
+## 指令部分
+- [指令概览](./additional/documents/commands/overview.md)
+- [操作自定义表单](./additional/documents/commands/custom_form.md)
+- [编辑长表单及其中的按钮](./additional/documents/commands/long_form.md)
+- [编辑信息表单](./additional/documents/commands/popup_form.md)
+- [编辑模态表单及其中的元素](./additional/documents/commands/modal_form.md)
+- [操作或执行自定义函数](./additional/documents/commands/custom_function.md)
+- [监听游戏事件](./additional/documents/commands/system_event.md)
+- [管理编译缓冲区](./additional/documents/commands/compile_cache.md)
+- [查询命令方块的完整输出](./additional/documents/commands/command_block_output.md)
 
 
 
 ## 编程语法
-另见 [Happy2018new/form-python-ast](https://github.com/Happy2018new/form-python-ast/tree/main?tab=readme-ov-file#%E7%BC%96%E7%A8%8B%E8%AF%AD%E6%B3%95)
+- [编程语法](https://github.com/Happy2018new/form-python-ast/tree/main?tab=readme-ov-file#%E7%BC%96%E7%A8%8B%E8%AF%AD%E6%B3%95)
