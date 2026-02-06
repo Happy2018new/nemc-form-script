@@ -52,7 +52,7 @@ systemevent listen <eventName: string> <funcName: string> <code: string> [onCode
 | <eventName: string>   | 字符串   | 必填 | 要侦听的游戏事件的名称                               |
 | <funcName: string>    | 字符串   | 必填 | 在侦听到目标事件时，所执行的事件函数（的名字）       |
 | <code: string>        | 字符串   | 必填 | 在侦听到目标事件时，所执行的事件函数（的代码）       |
-| [onCodeError: string] | 字符串   | 选题 | 当给出的代码执行出错时，要执行的代码（用于错误处理） |
+| [onCodeError: string] | 字符串   | 选填 | 当给出的代码执行出错时，要执行的代码（用于错误处理） |
 
 
 
