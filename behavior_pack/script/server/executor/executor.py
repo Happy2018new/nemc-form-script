@@ -21,6 +21,7 @@ from .language.builtins import (
     StaticBuiltInFunction,
     DynamicBuiltInFunction,
 )
+from ..utils import get_entity_name
 from ..storage.base import StringWithHash
 
 
@@ -170,14 +171,10 @@ class GameCodeExecutor:
             .CreateEntityComponent(executor)
             .GetEntitiesBySelector(target)
         )
-        if entities is None or len(entities) == 0:
+        if entities is None:
             return ""
 
-        result = []  # type: list[str]
-        for i in entities:
-            name = GetEngineCompFactory().CreateName(i).GetName()
-            if name is not None:
-                result.append(name)
+        result = [get_entity_name(i) for i in entities]
         return ", ".join(result)
 
     def _score(self, target, scoreboard):  # type: (str, str) -> int
