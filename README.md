@@ -16,6 +16,7 @@
   - [编辑模态表单及其中的元素](#编辑模态表单及其中的元素)
   - [操作或执行自定义函数](#操作或执行自定义函数)
   - [监听游戏事件](#监听游戏事件)
+  - [管理编译缓冲区](#管理编译缓冲区)
   - [编程语法](#编程语法)
 
 
@@ -150,6 +151,11 @@
 
 ## 监听游戏事件
 另见 [commands/system_event.md](./additional/documents/commands/system_event.md)
+
+
+
+## 管理编译缓冲区
+另见 [commands/compile_cache.md](./additional/documents/commands/compile_cache.md)
 
 
 
