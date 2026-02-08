@@ -181,7 +181,7 @@ class EventStorage:
 
     def load_all(self):  # type: () -> EventStorage
         """
-        load_all 从底层存储中加载所有已注册的事件到缓存中
+        load_all 从底层存储加载所有已注册的事件到缓存中
 
         Returns:
             EventStorage:

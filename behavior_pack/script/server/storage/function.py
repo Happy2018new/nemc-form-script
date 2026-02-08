@@ -112,7 +112,7 @@ class FunctionStorage:
 
     def load_all(self):  # type: () -> FunctionStorage
         """
-        load_all 从底层存储中加载所有自定义函数到缓存中
+        load_all 从底层存储加载所有自定义函数到缓存中
 
         Returns:
             FunctionStorage:

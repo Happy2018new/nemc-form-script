@@ -114,7 +114,7 @@ class FormStorage:
 
     def load_all(self):  # type: () -> FormStorage
         """
-        load_all 从底层存储中加载所有表单到缓存中。
+        load_all 从底层存储加载所有表单到缓存中。
         如果某个表单已命中缓存，则该表单会被跳过
 
         Returns:
@@ -190,8 +190,8 @@ class FormStorage:
                 self._form[form_name] = ModalForm().unmarshal(form_data)
 
             return self._form[form_name]
-        
-    def cache_form(self, form_name, real_form): # type: (str, BaseForm) -> FormStorage
+
+    def cache_form(self, form_name, real_form):  # type: (str, BaseForm) -> FormStorage
         """
         cache_form 将指定名称的表单缓存到内存中。
         它不会影响已持久化到底层存储的表单内容
