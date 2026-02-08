@@ -69,9 +69,9 @@ command.set_dimension(dim_id: int) -> bool
 command.fast_set(selector_or_entity_id: str, is_selector: bool = True) -> bool
 ```
 
-例如，将命令执行环境切换为 `@a[r=3,c=1]` 指示的玩家（您必须确保通过这种方式提供的目标选择器所指示的实体只有 1 个）。
+例如，将命令执行环境切换为 `@a[r=3,c=1]` 所指示的玩家（您必须确保提供的目标选择器所指示的实体只有 1 个）。
 ```python
-_ = {func, command.fast_set('@p[r=3,c=1]')}
+_ = {func, command.fast_set('@a[r=3,c=1]')}
 ```
 
 或者，将命令执行环境切换为实体唯一 ID 为 -2018 的实体。
@@ -93,7 +93,7 @@ _ = {func, command.set_dimension(4)}
 
 ## 备注二
 您应该注意到了内建函数 `command.set_dimension` 需要提供数字的维度 ID。<br/>
-下表则列出了原版所有已存在维度跟这些维度所对应 ID 的关系表。
+下方则是原版所有已存在维度与这些维度所对应 ID 的关系表。
 
 | 维度名称 | 维度英文 ID | 维度数字 ID |
 | -------- | ----------- | ----------- |
