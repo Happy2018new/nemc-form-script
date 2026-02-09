@@ -126,4 +126,12 @@
 
 
 ## 编程语法
-- [编程语法](https://github.com/Happy2018new/form-python-ast/tree/main?tab=readme-ov-file#%E7%BC%96%E7%A8%8B%E8%AF%AD%E6%B3%95)
+*下面的章节是层层递进的，因此如果您没有任何编程经验，那么请按顺序学习。*
+
+- [概述](./additional/documents/programming/overview.md)
+- [基本数据类型](./additional/documents/programming/data_type.md)
+- [运算](./additional/documents/programming/compute.md)
+- [与游戏进行交互、调用函数](./additional/documents/programming/external.md)
+- [表达式、括号和强制类型转换](./additional/documents/programming/expression.md)
+- [语句](./additional/documents/programming/statement.md)
+- [教程](./additional/documents/programming/tutorial.md)

@@ -53,7 +53,7 @@ editpopupform <formName: string> button1 <firstButtonCode: string>
 
 
 ## 备注
-另外，如果您不知道编写的代码的方法，请参见...
+如果您不知道编写的代码的方法，可以参看 [自述 § 编程语法](../../../README.md#编程语法) 。
 
 
 
@@ -84,7 +84,7 @@ editpopupform <formName: string> button2 <secondButtonCode: string>
 
 
 ## 备注
-另外，如果您不知道编写的代码的方法，请参见...
+如果您不知道编写的代码的方法，可以参看 [自述 § 编程语法](../../../README.md#编程语法) 。
 
 
 
@@ -113,7 +113,7 @@ editpopupform <formName: string> content <contentCode: string>
 
 
 ## 备注
-另外，如果您不知道编写的代码的方法，请参见...
+如果您不知道编写的代码的方法，可以参看 [自述 § 编程语法](../../../README.md#编程语法) 。
 
 
 
@@ -181,7 +181,7 @@ editpopupform <formName: string> title <titleCode: string>
 
 
 ## 备注
-另外，如果您不知道编写的代码的方法，请参见...
+如果您不知道编写的代码的方法，可以参看 [自述 § 编程语法](../../../README.md#编程语法) 。
 
 
 
