@@ -1,0 +1,70 @@
+scoreboard objectives add 称号 dummy
+scoreboard objectives add 金币 dummy
+
+
+
+customform remove vip_panel
+customform add vip_panel modal
+editmodalform vip_panel title "return 'VIP 档案'"
+
+
+
+editmodalform vip_panel append label
+editlabel vip_panel 0 label "return '这里是 VIP 档案面板，请修改您的 VIP 档案设置。'"
+
+editmodalform vip_panel append input
+editinput vip_panel 1 text "return '增加经验值'"
+editinput vip_panel 1 placeholder "return '请填写你要增加的经验值(整数)'"
+
+editmodalform vip_panel append dropdown
+editdropdown vip_panel 2 text "return '您的称号'"
+editdropdown vip_panel 2 append "return '§f[§aVIP§f]'"
+editdropdown vip_panel 2 append "return '§f[§bVIP§e+§f]'"
+editdropdown vip_panel 2 append "return '§f[§cMVP§f]'"
+editdropdown vip_panel 2 append "return '§f[§dMVP§e+§f]'"
+editdropdown vip_panel 2 default "index = {score, '@s', '称号'} | return index"
+
+
+
+editmodalform vip_panel append slider
+editslider vip_panel 3 text "return '金币数量'"
+editslider vip_panel 3 min "return 0"
+editslider vip_panel 3 max "return 999999"
+editslider vip_panel 3 step "return 100"
+editslider vip_panel 3 default "return {score, '@s', '金币'}"
+
+
+
+editmodalform vip_panel append toggle
+edittoggle vip_panel 4 text "return '启用商城折扣'"
+edittoggle vip_panel 4 default "entity_id = {func, command.get_executor()}
+ptr = {func, entity.EntityHasTag(entity_id, '商城折扣')}
+return {func, object.deref(ptr)}"
+
+
+
+customform onsubmit vip_panel "
+xp = {ref, str, 1}
+if {func, strings.length(xp)} > 0:
+  if {command, 'xp ' + {ref, str, 1}} == 0:
+    _ = {command, 'title @s title 经验值增加失败'}
+    _ = {command, 'title @s subtitle 请确保您输入的经验值是整数'}
+  fi
+fi
+
+index = {ref, int, 2}
+_ = {command, 'scoreboard players set @s 称号 ' + str(index)}
+
+coin = {ref, float, 3}
+_ = {command, 'scoreboard players set @s 金币 ' + str(int(coin))}
+
+if {ref, bool, 4}:
+  _ = {command, 'tag @s add 商城折扣'}
+else:
+  _ = {command, 'tag @s remove 商城折扣'}
+fi
+"
+
+
+
+customform save vip_panel

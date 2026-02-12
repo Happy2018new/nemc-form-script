@@ -1,0 +1,19 @@
+customfunction remove triangle
+
+customfunction add triangle "
+output = ''
+repeat = 6
+star = 1
+space = repeat-1
+
+for _, repeat:
+    color = '§' + str({func, random.randint(1, 9)})
+    line = ' '*space + color + '*'*star + '§r' + ' '*space
+    star = star + 2
+    space = space - 1
+    output = output + line + '\\n'
+rof
+
+_ = {command, 'title @s title §r'}
+_ = {command, 'title @s subtitle §r' + output}
+return True"

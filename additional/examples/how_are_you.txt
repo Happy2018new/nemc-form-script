@@ -1,0 +1,26 @@
+customform remove how_are_you
+customform add how_are_you popup
+
+
+
+editpopupform how_are_you title "return '温馨的问候'"
+editpopupform how_are_you content "return '你今天看起来如何？'"
+editpopupform how_are_you button1 "return '§2我认为我很好'"
+editpopupform how_are_you button2 "return '§c我的状态很差'"
+
+
+
+customform onsubmit how_are_you "resp = {ref, bool, -1}
+if resp:
+  _ = {command, 'title @s title §e那让我们开始愉快的生活吧！'}
+else:
+  _ = {command, 'give @s apple 16'}
+  _ = {command, 'title @s title §a给你 16 个苹果'}
+  _ = {command, 'title @s subtitle §b今天也要元气满满哟~'}
+fi"
+
+customform oncancel how_are_you "_ = {command, 'title @s title §d再见！'}"
+
+
+
+customform save how_are_you

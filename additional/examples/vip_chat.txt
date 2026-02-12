@@ -1,0 +1,20 @@
+systemevent destroy vip_chat
+
+systemevent listen ServerChatEvent vip_chat "
+user_name = {func, maps.get(args, 'username')}
+player_id = {func, maps.get(args, 'playerId')}
+_ = {func, command.fast_set(player_id, False)}
+
+index = {score, '*', '称号'}
+if index==0:
+  user_name = '§f[§aVIP§f] ' + user_name
+elif index==1:
+  user_name = '§f[§bVIP§e+§f] ' + user_name
+elif index==2:
+  user_name = '§f[§cMVP§f] ' + user_name
+elif index==3:
+  user_name = '§f[§dMVP§e+§f] ' + user_name
+fi
+
+return {func, maps.set(args, 'username', user_name)}
+"

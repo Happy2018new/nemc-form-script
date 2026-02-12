@@ -1,0 +1,50 @@
+customform remove art_gallery
+customform add art_gallery long
+
+
+
+editlongform art_gallery title "return '画廊'"
+editlongform art_gallery content "return '欢迎来到画廊！您要观看哪副画呢？'"
+
+editlongform art_gallery append
+editbutton art_gallery 0 icon "return 'textures/painting/baroque'"
+editbutton art_gallery 0 text "return 'Baroque'"
+
+editlongform art_gallery append
+editbutton art_gallery 1 icon "return 'textures/painting/bouquet'"
+editbutton art_gallery 1 text "return 'Bouquet'"
+
+editlongform art_gallery append
+editbutton art_gallery 2 icon "return 'textures/painting/cavebird'"
+editbutton art_gallery 2 text "return 'Cavebird'"
+
+editlongform art_gallery append
+editbutton art_gallery 3 icon "return 'textures/painting/cotan'"
+editbutton art_gallery 3 text "return 'Cotan'"
+
+editlongform art_gallery append
+editbutton art_gallery 4 icon "return 'textures/painting/endboss'"
+editbutton art_gallery 4 text "return 'Endboss'"
+
+editlongform art_gallery append
+editbutton art_gallery 5 icon "return 'textures/painting/fern'"
+editbutton art_gallery 5 text "return 'Fern'"
+
+editlongform art_gallery append
+editbutton art_gallery 6 icon "return 'textures/painting/humble'"
+editbutton art_gallery 6 text "return 'Humble'"
+
+
+
+customform onsubmit art_gallery "ptr = {func, slices.new('Baroque', 'Bouquet', 'Cavebird', 'Cotan', 'Endboss', 'Fern', 'Humble')}
+index = {ref, int, -1}
+name = {func, slices.get(ptr, index)}
+_ = {command, 'title @s title 我观看了名为 ' + name + ' 的画！'}
+"
+
+customform oncancel art_gallery "_ = {command, 'title @s title @s 再见！'}
+_ = {command, 'title @s subtitle 欢迎下次来到画廊！'}"
+
+
+
+customform save art_gallery
