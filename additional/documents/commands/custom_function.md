@@ -104,7 +104,8 @@ customfunction call <executor: target> <position: x y z> <name: string>
 因此，你需要通过 `<executor: target>` 和 `<position: x y z>` 来显式定义命令执行者和命令执行点。
 
 这意味着自定义函数中任何需要执行指令（或与执行指令相关的功能）的代码都将使用提供的命令执行上下文来完成。<br/>
-应注意的是，命令执行维度将会自动继承，这意味着命令执行维度将是该 `customfunction` 执行时所使用的维度。
+应注意的是，命令执行维度将会自动继承，这意味着命令执行维度将是该 `customfunction` 执行时所使用的维度。<br/>
+这也基本意味着自定义函数的命令执行维度与 `<executor: target>` 所在的维度没有任何显式的关系。
 
 另外还有一些事项值得您关注。
 - 上文未列举的，其他的所有命令执行上下文都将丢失，例如命令执行朝向等
@@ -115,10 +116,12 @@ customfunction call <executor: target> <position: x y z> <name: string>
 
 ## 示例
 ```mcfunction
-# 以 @e[tag=abc,c=1] 作为命令执行者，以 ~ ~ ~ 指示的位置作为命令执行点，执行 main 函数
+# 以 @e[tag=abc,c=1] 作为命令执行者，以 ~ ~ ~ 指示的位置作为命令执行点，执行 main 函数。
+# 需要特别注意的是，main 函数的命令执行维度是该执行该 customfunction 时所使用的维度。
 customfunction call @e[tag=abc,c=1] ~ ~ ~ main
 
-# 以 @e[tag=abc,c=1] 的各项参数作为命令执行上下文，执行 main 函数
+# 以 @e[tag=abc,c=1] 的各项参数作为命令执行上下文，执行 main 函数。
+# 由于此处使用了 execute 命令，因此 main 函数的命令执行维度就是 @e[tag=abc,c=1] 所处的维度。
 execute as @e[tag=abc,c=1] at @s run customfunction call @s ~ ~ ~ main
 ```
 
