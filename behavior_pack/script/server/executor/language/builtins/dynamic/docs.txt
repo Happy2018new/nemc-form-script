@@ -12,228 +12,228 @@
 
 通用
     事件
-        BroadcastEvent
-        BroadcastToAllClient
-        GetEngineNamespace
-        GetEngineSystemName
-        NotifyToClient
-        NotifyToMultiClients
+        general.BroadcastEvent
+        general.BroadcastToAllClient
+        general.GetEngineNamespace
+        general.GetEngineSystemName
+        general.NotifyToClient
+        general.NotifyToMultiClients
     本地设备
-        GetMinecraftVersion
-        GetPlatform
+        general.GetMinecraftVersion
+        general.GetPlatform
     工具
-        GetHostPlayerId
-        GetServerTickTime
+        general.GetHostPlayerId
+        general.GetServerTickTime
 
 
 
 世界
     地图
-        CanSee
-        CheckBlockToPos
-        CheckChunkState
-        GetAllAreaKeys
-        GetBiomeInfo
-        GetBiomeName
-        GetBlockLightLevel
-        GetChunkEntites
-        GetChunkMobNum
-        GetEntitiesAround
-        GetEntitiesAroundByType
-        GetEntitiesInSquareArea
-        GetLevelId
-        GetSpawnPosition
-        GetStructureSize
-        IsChunkGenerated
-        IsSlimeChunk
-        LocateStructureFeature
-        MayPlace
-        MayPlaceOn
-        PlaceFeature
-        SetMergeSpawnItemRadius
+        world.CanSee
+        world.CheckBlockToPos
+        world.CheckChunkState
+        world.GetAllAreaKeys
+        world.GetBiomeInfo
+        world.GetBiomeName
+        world.GetBlockLightLevel
+        world.GetChunkEntites
+        world.GetChunkMobNum
+        world.GetEntitiesAround
+        world.GetEntitiesAroundByType
+        world.GetEntitiesInSquareArea
+        world.GetLevelId
+        world.GetSpawnPosition
+        world.GetStructureSize
+        world.IsChunkGenerated
+        world.IsSlimeChunk
+        world.LocateStructureFeature
+        world.MayPlace
+        world.MayPlaceOn
+        world.PlaceFeature
+        world.SetMergeSpawnItemRadius
     实体管理
-        CreateExperienceOrb
-        CreateProjectileEntity
-        DestroyEntity
-        GetDroppedItem
-        GetPlayerList
-        IsEntityAlive
-        KillEntity
+        world.CreateExperienceOrb
+        world.CreateProjectileEntity
+        world.DestroyEntity
+        world.GetDroppedItem
+        world.GetPlayerList
+        world.IsEntityAlive
+        world.KillEntity
     方块管理
-        GetBlockClip
-        GetBlockCollision
-        GetBlockNew
-        GetLiquidBlock
-        GetTopBlockHeight
+        world.GetBlockClip
+        world.GetBlockCollision
+        world.GetBlockNew
+        world.GetLiquidBlock
+        world.GetTopBlockHeight
     生物生成
-        GetEntityLimit
-        SetEntityLimit
+        world.GetEntityLimit
+        world.SetEntityLimit
     天气
-        IsRaining
-        IsThunder
+        world.IsRaining
+        world.IsThunder
     游戏规则
-        GetLevelGravity
-        GetPistonMaxInteractionCount
-        SetHurtCD
-        SetLevelGravity
-        SetPistonMaxInteractionCount
+        world.GetLevelGravity
+        world.GetPistonMaxInteractionCount
+        world.SetHurtCD
+        world.SetLevelGravity
+        world.SetPistonMaxInteractionCount
     指令
-        SetCommand
+        world.SetCommand
 
 
 
 实体
     实体类型
-        GetEngineType
-        GetEngineTypeStr
+        entity.GetEngineType
+        entity.GetEngineTypeStr
     附加值
-        GetAuxValue
+        entity.GetAuxValue
     属性
-        ChangeEntityDimension
-        GetAttrMaxValue
-        GetAttrValue
-        GetEntitiesBySelector
-        GetEntityDimensionId
-        GetEntityOwner
-        GetGravity
-        GetName
-        GetPos
-        GetRot
-        GetTypeFamily
-        SetAttrValue
-        SetEntityOwner
-        SetGravity
-        SetName
-        SetPos
-        SetRot
+        entity.ChangeEntityDimension
+        entity.GetAttrMaxValue
+        entity.GetAttrValue
+        entity.GetEntitiesBySelector
+        entity.GetEntityDimensionId
+        entity.GetEntityOwner
+        entity.GetGravity
+        entity.GetName
+        entity.GetPos
+        entity.GetRot
+        entity.GetTypeFamily
+        entity.SetAttrValue
+        entity.SetEntityOwner
+        entity.SetGravity
+        entity.SetName
+        entity.SetPos
+        entity.SetRot
     行为
-        GetAttackTarget
-        GetMotion
-        GetOwnerId
-        ResetAttackTarget
-        ResetMotion
-        SetAttackTarget
-        SetMotion
+        entity.GetAttackTarget
+        entity.GetMotion
+        entity.GetOwnerId
+        entity.ResetAttackTarget
+        entity.ResetMotion
+        entity.SetAttackTarget
+        entity.SetMotion
     状态效果
-        AddEffectToEntity
-        GetAllEffects
-        HasEffect
-        RemoveEffectFromEntity
+        entity.AddEffectToEntity
+        entity.GetAllEffects
+        entity.HasEffect
+        entity.RemoveEffectFromEntity
     背包
-        GetEntityItem
-        GetEquItemEnchant
-        GetEquItemModEnchant
+        entity.GetEntityItem
+        entity.GetEquItemEnchant
+        entity.GetEquItemModEnchant
     自定义数据
-        CleanExtraData
-        GetExtraData
-        GetWholeExtraData
-        SaveExtraData
-        SetExtraData
+        entity.CleanExtraData
+        entity.GetExtraData
+        entity.GetWholeExtraData
+        entity.SaveExtraData
+        entity.SetExtraData
     标签
-        AddEntityTag
-        EntityHasTag
-        GetEntityTags
-        RemoveEntityTag
+        entity.AddEntityTag
+        entity.EntityHasTag
+        entity.GetEntityTags
+        entity.RemoveEntityTag
     抛射物
-        GetSourceEntityId
+        entity.GetSourceEntityId
     经验球
-        GetOrbExperience
-        SetOrbExperience
+        entity.GetOrbExperience
+        entity.SetOrbExperience
 
 
 
 玩家
     属性
-        GetPlayerExp
-        GetPlayerHunger
-        GetPlayerTotalExp
-        SetPlayerHunger
-        SetPlayerPrefixAndSuffixName
-        SetPlayerTotalExp
+        player.GetPlayerExp
+        player.GetPlayerHunger
+        player.GetPlayerTotalExp
+        player.SetPlayerHunger
+        player.SetPlayerPrefixAndSuffixName
+        player.SetPlayerTotalExp
     行为
-        ChangePlayerDimension
-        ChangePlayerFlyState
-        GetPlayerRespawnPos
-        IsPlayerCanFly
-        IsPlayerFlying
-        SetBanPlayerFishing
-        SetPickUpArea
-        SetPlayerAttackSpeedAmplifier
-        SetPlayerMotion
-        SetPlayerRespawnPos
-        isSneaking
-        isSwimming
+        player.ChangePlayerDimension
+        player.ChangePlayerFlyState
+        player.GetPlayerRespawnPos
+        player.IsPlayerCanFly
+        player.IsPlayerFlying
+        player.SetBanPlayerFishing
+        player.SetPickUpArea
+        player.SetPlayerAttackSpeedAmplifier
+        player.SetPlayerMotion
+        player.SetPlayerRespawnPos
+        player.isSneaking
+        player.isSwimming
     背包
-        AddEnchantToInvItem
-        AddModEnchantToInvItem
-        ChangePlayerItemTipsAndExtraId
-        ChangeSelectSlot
-        GetInvItemEnchantData
-        GetInvItemModEnchantData
-        GetPlayerItem
-        GetSelectSlotId
-        RemoveEnchantToInvItem
-        RemoveModEnchantToInvItem
-        SetInvItemExchange
+        player.AddEnchantToInvItem
+        player.AddModEnchantToInvItem
+        player.ChangePlayerItemTipsAndExtraId
+        player.ChangeSelectSlot
+        player.GetInvItemEnchantData
+        player.GetInvItemModEnchantData
+        player.GetPlayerItem
+        player.GetSelectSlotId
+        player.RemoveEnchantToInvItem
+        player.RemoveModEnchantToInvItem
+        player.SetInvItemExchange
     游戏模式
-        GetPlayerGameType
-        SetPlayerGameType
+        player.GetPlayerGameType
+        player.SetPlayerGameType
     权限
-        GetPlayerAbilities
-        GetPlayerOperation
-        SetAttackMobsAbility
-        SetAttackPlayersAbility
-        SetBuildAbility
-        SetMineAbility
-        SetOpenContainersAbility
-        SetOperateDoorsAndSwitchesAbility
-        SetOperatorCommandAbility
-        SetPermissionLevel
-        SetPlayerMute
-        SetTeleportAbility
+        player.GetPlayerAbilities
+        player.GetPlayerOperation
+        player.SetAttackMobsAbility
+        player.SetAttackPlayersAbility
+        player.SetBuildAbility
+        player.SetMineAbility
+        player.SetOpenContainersAbility
+        player.SetOperateDoorsAndSwitchesAbility
+        player.SetOperatorCommandAbility
+        player.SetPermissionLevel
+        player.SetPlayerMute
+        player.SetTeleportAbility
 
 
 
 方块
     方块状态与附加值
-        GetBlockStates
+        block.GetBlockStates
     方块实体
-        ExecuteCommandBlock
-        GetBlockEntityData
-        GetBlockTileEntityCustomData
-        GetBlockTileEntityWholeCustomData
-        GetCommandBlock
-        GetFrameItem
-        GetFrameRotation
-        SetCommandBlock
-        SetFrameRotation
+        block.ExecuteCommandBlock
+        block.GetBlockEntityData
+        block.GetBlockTileEntityCustomData
+        block.GetBlockTileEntityWholeCustomData
+        block.GetCommandBlock
+        block.GetFrameItem
+        block.GetFrameRotation
+        block.SetCommandBlock
+        block.SetFrameRotation
     容器
-        GetBrewingStandSlotItem
-        GetChestBoxSize
-        GetChestPairedPosition
-        GetContainerItem
-        GetContainerSize
-        GetEnderChestItem
-        GetInputSlotItem
-        GetOutputSlotItem
-        SetChestBoxItemExchange
+        block.GetBrewingStandSlotItem
+        block.GetChestBoxSize
+        block.GetChestPairedPosition
+        block.GetContainerItem
+        block.GetContainerSize
+        block.GetEnderChestItem
+        block.GetInputSlotItem
+        block.GetOutputSlotItem
+        block.SetChestBoxItemExchange
     红石
-        GetBlockPoweredState
-        GetStrength
+        block.GetBlockPoweredState
+        block.GetStrength
     告示牌
-        GetSignBlockText
-        GetSignTextStyle
-        SetSignBlockText
-        SetSignTextStyle
+        block.GetSignBlockText
+        block.GetSignTextStyle
+        block.SetSignBlockText
+        block.SetSignTextStyle
     床
-        GetBedColor
-        SetBedColor
+        block.GetBedColor
+        block.SetBedColor
 
 
 
 物品
-    GetAllEnchantsInfo
-    GetItemDurability
-    GetItemInfoByBlockName
-    GetItemMaxDurability
-    SetItemDurability
+    item.GetAllEnchantsInfo
+    item.GetItemDurability
+    item.GetItemInfoByBlockName
+    item.GetItemMaxDurability
+    item.SetItemDurability
