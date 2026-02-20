@@ -89,7 +89,7 @@ class LongFormIconPathImage(LongFormIcon):
         Returns:
             LongFormIconPathImage: 返回 LongFormIconPathImage 本身
         """
-        self.text = StringWithHash().unmarshal(data["data"])
+        self.image_path = StringWithHash().unmarshal(data["data"])
         return self
 
 
