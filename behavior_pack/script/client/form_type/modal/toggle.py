@@ -46,11 +46,17 @@ class Toggle(BaseComponent):
         """
         if self.control is None:
             return None
+
         child = self.control.GetChildByPath(
-            "/option_generic_core/one_line_layout/option_label"
+            "/option_generic_core/two_line_layout/option_label_panel/option_label"
         )
         if child is None:
+            child = self.control.GetChildByPath(
+                "/option_generic_core/one_line_layout/option_label"
+            )
+        if child is None:
             return None
+
         return child.asLabel()
 
     def _get_toggle_control(self):  # type: () -> SwitchToggleUIControl | None
@@ -63,12 +69,19 @@ class Toggle(BaseComponent):
         """
         if self.control is None:
             return None
+
         child = self.control.GetChildByPath(
             "/option_generic_core/one_line_layout"
             + "/settings_common.option_toggle_control"
         )
         if child is None:
+            child = self.control.GetChildByPath(
+                "/option_generic_core/two_line_layout"
+                + "/settings_common.option_toggle_control"
+            )
+        if child is None:
             return None
+
         return child.asSwitchToggle()
 
     def on_update_screen(self):  # type: () -> bool
