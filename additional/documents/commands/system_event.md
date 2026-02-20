@@ -86,12 +86,12 @@ _ = {func, command.fast_set('@a[r=3,c=1]')}
 
 或者，将命令执行环境切换为实体唯一 ID 为 -2018 的实体。
 ```python
-_ = {func, command.fast_set(-2018, False)}
+_ = {func, command.fast_set('-2018', False)}
 ```
 
 或者，指定命令执行者为实体 ID 为 -666 的实体，且命令执行点是 (2333, 0, 201.8)，同时命令执行维度为 dm4 维度。
 ```python
-_ = {func, command.set_executor(-666)}
+_ = {func, command.set_executor('-666')}
 _ = {func, command.set_position(2333, 0, 201.8)}
 _ = {func, command.set_dimension(4)}
 ```
