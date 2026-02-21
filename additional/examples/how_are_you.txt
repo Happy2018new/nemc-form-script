@@ -19,7 +19,10 @@ else:
   _ = {command, 'title @s subtitle §b今天也要元气满满哟~'}
 fi"
 
-customform oncancel how_are_you "_ = {command, 'title @s title §d再见！'}"
+customform oncancel how_are_you "
+if {ref, int, -1} == 0:
+  _ = {command, 'title @s title §d再见！'}
+fi"
 
 
 

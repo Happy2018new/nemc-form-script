@@ -42,8 +42,11 @@ name = {func, slices.get(ptr, index)}
 _ = {command, 'title @s title 我观看了名为 ' + name + ' 的画！'}
 "
 
-customform oncancel art_gallery "_ = {command, 'title @s title @s 再见！'}
-_ = {command, 'title @s subtitle 欢迎下次来到画廊！'}"
+customform oncancel art_gallery "
+if {ref, int, -1} == 0:
+  _ = {command, 'title @s title @s 再见！'}
+  _ = {command, 'title @s subtitle 欢迎下次来到画廊！'}
+fi"
 
 
 
