@@ -31,11 +31,15 @@ class StringWithHash(Marshaler):
                 默认值为 EMPTY_STRING
         """
         self._data = data
-        self._md5 = (
-            compute_md5(data.encode(encoding="utf-8"))
-            if data is not EMPTY_STRING
-            else b""
-        )
+
+        if data is EMPTY_STRING:
+            self._md5 = b""
+            return
+
+        try:
+            self._md5 = compute_md5(data)  # type: ignore
+        except:
+            self._md5 = compute_md5(data.encode(encoding="utf-8"))
 
     def string(self):  # type: () -> str
         """
