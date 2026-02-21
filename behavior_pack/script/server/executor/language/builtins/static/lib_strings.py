@@ -28,23 +28,31 @@ class Strings:
         """
         self._manager = manager
 
-    def _validate(self, string):  # type: (Any) -> str
-        """_validate 验证给定的对象是否为字符串
+    def _force_cast(self, string):  # type: (Any) -> str
+        """
+        _force_cast 验证给定的对象是否为字符串，
+        并将该字符串强制转换为 Unicode 表示形式
 
         Args:
-            string (Any): 待验证的对象
+            string (Any):
+                欲验证并需要强制转换的字符串
 
         Raises:
             Exception:
-                如果给定的对象不是字符串，则抛出相应的错误
+                如果给定的对象不是字符串，
+                则抛出相应的错误
 
         Returns:
-            str:
-                返回给定的对象，当且仅当它是字符串时
+            str: 返回给定字符串的 Unicode 表示
         """
         if not isinstance(string, str):
-            raise Exception("strings: Target object is not a string")
-        return string
+            raise Exception(
+                "_force_cast: Exist an argument that should be a string but is not a string"
+            )
+        try:
+            return string.decode(encoding="utf-8")  # type: ignore
+        except Exception:
+            return string
 
     def cast(self, ptr):  # type: (int) -> str
         """
@@ -67,11 +75,7 @@ class Strings:
         Returns:
             int: 字符串的长度
         """
-        _ = self._validate(string)
-        try:
-            return len(string.decode(encoding="utf-8"))  # type: ignore
-        except Exception:
-            return len(string)
+        return len(self._force_cast(string))
 
     def sub(self, string, start, end):  # type: (str, int, int) -> str
         """sub 返回字符串的子字符串
@@ -89,11 +93,7 @@ class Strings:
         Returns:
             int: 产生的子字符串
         """
-        _ = self._validate(string)
-        try:
-            string = string.decode(encoding="utf-8")  # type: ignore
-        except Exception:
-            pass
+        string = self._force_cast(string)
 
         if start < 0 or start > len(string):
             raise Exception(
@@ -116,25 +116,6 @@ class Strings:
 
         return string[start:end]
 
-    def ord(self, string):  # type: (str) -> int
-        """
-        ord 返回字符串的 Unicode 代码点。
-        应确保给出的字符串的长度始终为一
-
-        Args:
-            string (str):
-                欲获取 Unicode 代码点的字符串
-
-        Returns:
-            int:
-                目标字符串的 Unicode 代码点
-        """
-        _ = self._validate(string)
-        try:
-            return ord(string.decode(encoding="utf-8"))  # type: ignore
-        except Exception:
-            return ord(string)
-
     def join(self, string, slice_ptr):  # type: (str, int) -> str
         """
         join 将切片中的元素以 string 作为分隔符连接形成一个新的字符串。
@@ -156,7 +137,7 @@ class Strings:
         obj = self._manager.deref(slice_ptr)
         if not isinstance(obj, list):
             raise Exception("strings.join: Given ptr of slice is not a slice")
-        return self._validate(string).join(obj)
+        return self._force_cast(string).join(obj)
 
     def split(
         self, string, sep=None, maxsplit=-1
@@ -178,7 +159,12 @@ class Strings:
         Returns:
             int: 所产生的切片的指针
         """
-        return self._manager.ref(self._validate(string).split(sep, maxsplit))
+        return self._manager.ref(
+            self._force_cast(string).split(
+                self._force_cast(sep) if sep is not None else None,
+                maxsplit,
+            )
+        )
 
     def rsplit(
         self, string, sep=None, maxsplit=-1
@@ -202,7 +188,12 @@ class Strings:
         Returns:
             int: 所产生的切片的指针
         """
-        return self._manager.ref(self._validate(string).rsplit(sep, maxsplit))
+        return self._manager.ref(
+            self._force_cast(string).rsplit(
+                self._force_cast(sep) if sep is not None else None,
+                maxsplit,
+            )
+        )
 
     def equalfold(self, string_a, string_b):  # type: (str, str) -> bool
         """
@@ -215,7 +206,7 @@ class Strings:
         Returns:
             bool: 两个字符串在忽略大小写的情况下是否相等
         """
-        return self._validate(string_a).lower() == self._validate(string_b).lower()
+        return self._force_cast(string_a).lower() == self._force_cast(string_b).lower()
 
     def build_func(
         self,
@@ -234,75 +225,77 @@ class Strings:
         funcs["strings.cast"] = self.cast
         funcs["strings.length"] = self.length
         funcs["strings.sub"] = self.sub
-        funcs["strings.ord"] = self.ord
+        funcs["strings.ord"] = lambda string: ord(self._force_cast(string))
         funcs["strings.chr"] = lambda i: chr(i)
-        funcs["strings.capitalize"] = lambda string: self._validate(string).capitalize()
-        funcs["strings.center"] = lambda string, width, fillchar=" ": self._validate(
+        funcs["strings.capitalize"] = lambda string: self._force_cast(
             string
-        ).center(width, fillchar)
+        ).capitalize()
+        funcs["strings.center"] = lambda string, width, fillchar=" ": self._force_cast(
+            string
+        ).center(width, self._force_cast(fillchar))
         funcs["strings.startswith"] = (
-            lambda string, prefix, start=None, end=None: self._validate(
+            lambda string, prefix, start=None, end=None: self._force_cast(
                 string
-            ).startswith(prefix, start, end)
+            ).startswith(self._force_cast(prefix), start, end)
         )
         funcs["strings.endswith"] = (
-            lambda string, prefix, start=None, end=None: self._validate(
+            lambda string, prefix, start=None, end=None: self._force_cast(
                 string
-            ).endswith(prefix, start, end)
+            ).endswith(self._force_cast(prefix), start, end)
         )
         funcs["strings.find"] = (
-            lambda string, prefix, start=None, end=None: self._validate(string).find(
-                prefix, start, end
+            lambda string, prefix, start=None, end=None: self._force_cast(string).find(
+                self._force_cast(prefix), start, end
             )
         )
         funcs["strings.rfind"] = (
-            lambda string, prefix, start=None, end=None: self._validate(string).rfind(
-                prefix, start, end
+            lambda string, prefix, start=None, end=None: self._force_cast(string).rfind(
+                self._force_cast(prefix), start, end
             )
         )
         funcs["strings.index"] = (
-            lambda string, prefix, start=None, end=None: self._validate(string).index(
-                prefix, start, end
+            lambda string, prefix, start=None, end=None: self._force_cast(string).index(
+                self._force_cast(prefix), start, end
             )
         )
         funcs["strings.rindex"] = (
-            lambda string, prefix, start=None, end=None: self._validate(string).rindex(
-                prefix, start, end
-            )
+            lambda string, prefix, start=None, end=None: self._force_cast(
+                string
+            ).rindex(self._force_cast(prefix), start, end)
         )
-        funcs["strings.isalnum"] = lambda string: self._validate(string).isalnum()
-        funcs["strings.isalpha"] = lambda string: self._validate(string).isalpha()
-        funcs["strings.isdigit"] = lambda string: self._validate(string).isdigit()
-        funcs["strings.islower"] = lambda string: self._validate(string).islower()
-        funcs["strings.isspace"] = lambda string: self._validate(string).isspace()
-        funcs["strings.istitle"] = lambda string: self._validate(string).istitle()
-        funcs["strings.isupper"] = lambda string: self._validate(string).isupper()
+        funcs["strings.isalnum"] = lambda string: self._force_cast(string).isalnum()
+        funcs["strings.isalpha"] = lambda string: self._force_cast(string).isalpha()
+        funcs["strings.isdigit"] = lambda string: self._force_cast(string).isdigit()
+        funcs["strings.islower"] = lambda string: self._force_cast(string).islower()
+        funcs["strings.isspace"] = lambda string: self._force_cast(string).isspace()
+        funcs["strings.istitle"] = lambda string: self._force_cast(string).istitle()
+        funcs["strings.isupper"] = lambda string: self._force_cast(string).isupper()
         funcs["strings.join"] = self.join
-        funcs["strings.ljust"] = lambda string, width, fillchar=" ": self._validate(
+        funcs["strings.ljust"] = lambda string, width, fillchar=" ": self._force_cast(
             string
-        ).ljust(width, fillchar)
-        funcs["strings.rjust"] = lambda string, width, fillchar=" ": self._validate(
+        ).ljust(width, self._force_cast(fillchar))
+        funcs["strings.rjust"] = lambda string, width, fillchar=" ": self._force_cast(
             string
-        ).rjust(width, fillchar)
-        funcs["strings.lower"] = lambda string: self._validate(string).lower()
-        funcs["strings.upper"] = lambda string: self._validate(string).upper()
-        funcs["strings.lstrip"] = lambda string, chars=None: self._validate(
+        ).rjust(width, self._force_cast(fillchar))
+        funcs["strings.lower"] = lambda string: self._force_cast(string).lower()
+        funcs["strings.upper"] = lambda string: self._force_cast(string).upper()
+        funcs["strings.lstrip"] = lambda string, chars=None: self._force_cast(
             string
-        ).lstrip(chars)
-        funcs["strings.rstrip"] = lambda string, chars=None: self._validate(
+        ).lstrip(self._force_cast(chars) if chars is not None else None)
+        funcs["strings.rstrip"] = lambda string, chars=None: self._force_cast(
             string
-        ).rstrip(chars)
-        funcs["strings.strip"] = lambda string, chars=None: self._validate(
+        ).rstrip(self._force_cast(chars) if chars is not None else None)
+        funcs["strings.strip"] = lambda string, chars=None: self._force_cast(
             string
-        ).strip(chars)
-        funcs["strings.replace"] = lambda string, old, new, count=-1: self._validate(
+        ).strip(self._force_cast(chars) if chars is not None else None)
+        funcs["strings.replace"] = lambda string, old, new, count=-1: self._force_cast(
             string
-        ).replace(old, new, count)
+        ).replace(self._force_cast(old), self._force_cast(new), count)
         funcs["strings.split"] = self.split
         funcs["strings.rsplit"] = self.rsplit
-        funcs["strings.swapcase"] = lambda string: self._validate(string).swapcase()
-        funcs["strings.title"] = lambda string: self._validate(string).title()
-        funcs["strings.zfill"] = lambda string, width: self._validate(string).zfill(
+        funcs["strings.swapcase"] = lambda string: self._force_cast(string).swapcase()
+        funcs["strings.title"] = lambda string: self._force_cast(string).title()
+        funcs["strings.zfill"] = lambda string, width: self._force_cast(string).zfill(
             width
         )
         funcs["strings.equalfold"] = self.equalfold
