@@ -200,17 +200,14 @@ class FormFeature:
                     )
                     continue
 
-                try:
-                    _ = self.on_modal_form_response(
-                        player_id,
-                        ModalFormResponse(
-                            self._sequence,
-                            OptionString(),
-                            OptionInt(MODAL_FORM_CANCEL_REASON_USER_BUSY),
-                        ),
-                    )
-                except Exception:
-                    pass
+                _ = self.on_modal_form_response(
+                    player_id,
+                    ModalFormResponse(
+                        self._sequence,
+                        OptionString(),
+                        OptionInt(MODAL_FORM_CANCEL_REASON_USER_BUSY),
+                    ),
+                )
 
             return self
 
@@ -253,10 +250,6 @@ class FormFeature:
                 数据包的发送来源
             pk (ModalFormResponse):
                 数据包的负载
-
-        Raises:
-            Exception:
-                如果出现错误，则将抛出
 
         Returns:
             FormFeature: 返回 FormFeature 本身
