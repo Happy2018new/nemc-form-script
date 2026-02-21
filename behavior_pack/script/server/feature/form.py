@@ -10,6 +10,8 @@ import threading
 from mod.server.extraServerApi import GetEngineCompFactory, GetPlayerList
 from .form_depends.define import FormalWithCallback, FormRefProcesser
 from .form_depends.generator import generate_any_form
+from ..utils import disconnect_player
+from ..executor.executor import GameCodeExecutor
 from ..storage.form import FORM_TYPE_LONG, FORM_TYPE_MODAL, FormStorage
 from ..storage.form_struct.long import (
     LongForm as LongStorageForm,
@@ -24,10 +26,10 @@ from ..storage.form_struct.modal import (
     ModalFormElementSlider as ModalStorageFormElementSlider,
     ModalFormElementStepSlider as ModalStorageFormElementStepSlider,
 )
-from ..executor.executor import GameCodeExecutor
 from ...formal.long import LongForm as LongFormalForm
 from ...formal.popup import PopupForm as PopupFormalForm
 from ...formal.modal import ModalForm as ModalFormalForm
+from ...packet.option import OptionString, OptionInt
 from ...packet.packet import (
     PACKET_NAME_MODAL_FORM_REQUEST,
     PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
@@ -38,6 +40,8 @@ from ...packet.packet import (
     ClientBoundCloseForm,
 )
 
+
+MAX_PENDING_FORM_COUNT = 8
 
 LONG_FORM_ICON_TYPE_NONE = 0
 LONG_FORM_ICON_TYPE_PATH_IMAGE = 1
@@ -188,11 +192,25 @@ class FormFeature:
                 player_forms[self._sequence] = formal_with_cb
                 self._pending[player_id] = player_forms
 
-                self.system.NotifyToClient(
-                    player_id,
-                    PACKET_NAME_MODAL_FORM_REQUEST,
-                    ModalFormRequest(self._sequence, raw_form).marshal(),
-                )
+                if len(self._pending[player_id]) <= MAX_PENDING_FORM_COUNT:
+                    self.system.NotifyToClient(
+                        player_id,
+                        PACKET_NAME_MODAL_FORM_REQUEST,
+                        ModalFormRequest(self._sequence, raw_form).marshal(),
+                    )
+                    continue
+
+                try:
+                    _ = self.on_modal_form_response(
+                        player_id,
+                        ModalFormResponse(
+                            self._sequence,
+                            OptionString(),
+                            OptionInt(MODAL_FORM_CANCEL_REASON_USER_BUSY),
+                        ),
+                    )
+                except Exception:
+                    pass
 
             return self
 
@@ -252,11 +270,8 @@ class FormFeature:
             player_forms = self._pending.get(player_id, {})
             formal_with_cb = player_forms.get(pk.form_id, None)
             if formal_with_cb is None:
-                raise Exception(
-                    "on_modal_form_response: Bad packet (mark 0); packet = {}".format(
-                        pk
-                    )
-                )
+                disconnect_player(player_id, "破损的数据包 (标记 0)")
+                return self
 
             # Consume this form
             del player_forms[pk.form_id]
@@ -270,22 +285,16 @@ class FormFeature:
                     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
                     MODAL_FORM_CANCEL_REASON_USER_BUSY,
                 ):
-                    raise Exception(
-                        "on_modal_form_response: Bad packet (mark 1); packet = {}".format(
-                            pk
-                        )
-                    )
+                    disconnect_player(player_id, "破损的数据包 (标记 1)")
+                    return self
                 func_to_run = formal_with_cb.oncancel
                 when_meet_err = formal_with_cb.oncanerr
                 self._ref.response = cancel
             else:
                 response = formal_with_cb.validate(pk)
                 if response is None:
-                    raise Exception(
-                        "on_modal_form_response: Bad packet (mark 2); packet = {}".format(
-                            pk
-                        )
-                    )
+                    disconnect_player(player_id, "破损的数据包 (标记 2)")
+                    return self
                 func_to_run = formal_with_cb.onsubmit
                 when_meet_err = formal_with_cb.onsuberr
                 self._ref.response = response
