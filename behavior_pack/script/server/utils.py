@@ -7,6 +7,7 @@ except Exception:
 
     md5 = _md5.new  # type: ignore
 
+import json
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 
 ENTITY_ENGINE_TYPE_STR_TO_RAW_NAME = {
@@ -149,6 +150,30 @@ def compute_md5(data):  # type: (bytes) -> bytes
     """
     result = md5(data).digest()
     return result
+
+
+def disconnect_player(player_id, reason):  # type: (str, str) -> None
+    """
+    disconnect_player 断开玩家与服务器的连接
+
+    Args:
+        player_id (str): 目标玩家的 ID
+        reason (str): 断开连接的原因
+    """
+    engine_comp = GetEngineCompFactory()
+
+    player_name = engine_comp.CreateName(player_id).GetName()
+    if player_name is None:
+        return
+
+    _ = engine_comp.CreateCommand(GetLevelId()).SetCommand(
+        "kick {} {}".format(
+            json.dumps(player_name, ensure_ascii=False),
+            reason,
+        ),
+        player_id,
+        False,
+    )
 
 
 def get_entity_name(entity_id):  # type: (str) -> str
