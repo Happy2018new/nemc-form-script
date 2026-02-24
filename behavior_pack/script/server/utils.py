@@ -176,9 +176,9 @@ def disconnect_player(player_id, reason):  # type: (str, str) -> None
     )
 
 
-def filter_user_word(sentence):  # type: (str) -> str
+def filter_sentence(sentence):  # type: (str) -> str
     """
-    filter_user_word 过滤 sentence 中的敏感词。
+    filter_sentence 过滤 sentence 中的敏感词。
     当 sentence 中存在敏感词时，将直接返回 `***`
 
     Args:

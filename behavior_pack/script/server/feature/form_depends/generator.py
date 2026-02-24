@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .define import FormalWithCallback
-from ...utils import filter_user_word
+from ...utils import filter_sentence
 from ...executor.executor import GameCodeExecutor
 from ...storage.form_struct.base import BaseForm as BaseStorageForm
 from ...storage.form_struct.long import (
@@ -79,7 +79,7 @@ def _generate_long_form(
                 title
             )
         )
-    result.title = filter_user_word(title)
+    result.title = filter_sentence(title)
 
     content = runner.run_code(
         form.content, "Error occurred in content", executor, dimension, position
@@ -90,7 +90,7 @@ def _generate_long_form(
                 content
             )
         )
-    result.content = filter_user_word(content)
+    result.content = filter_sentence(content)
 
     for index, value in enumerate(form.buttons):
         # prepare
@@ -104,7 +104,7 @@ def _generate_long_form(
                     index, text
                 )
             )
-        element.text = filter_user_word(text)
+        element.text = filter_sentence(text)
         # icon
         if isinstance(value.icon, LongStorageFormIconPathImage):
             ctx = "In image path of button which indexed in {}".format(index)
@@ -170,7 +170,7 @@ def _generate_popup_form(
                 title
             )
         )
-    result.title = filter_user_word(title)
+    result.title = filter_sentence(title)
 
     content = runner.run_code(
         form.content, "Error occurred in content", executor, dimension, position
@@ -181,7 +181,7 @@ def _generate_popup_form(
                 content
             )
         )
-    result.content = filter_user_word(content)
+    result.content = filter_sentence(content)
 
     button1 = runner.run_code(
         form.button1, "Error occurred in button1", executor, dimension, position
@@ -192,7 +192,7 @@ def _generate_popup_form(
                 button1
             )
         )
-    result.button1 = filter_user_word(button1)
+    result.button1 = filter_sentence(button1)
 
     button2 = runner.run_code(
         form.button2, "Error occurred in button2", executor, dimension, position
@@ -203,7 +203,7 @@ def _generate_popup_form(
                 button2
             )
         )
-    result.button2 = filter_user_word(button2)
+    result.button2 = filter_sentence(button2)
 
     return FormalWithCallback(
         result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
@@ -254,7 +254,7 @@ def _generate_modal_form(
                 title
             )
         )
-    result.title = filter_user_word(title)
+    result.title = filter_sentence(title)
 
     for index, value in enumerate(form.content):
         if isinstance(value, ModalStorageFormElementLabel):
@@ -266,7 +266,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            result.content.append(ModalFormalFormElementLabel(filter_user_word(text)))
+            result.content.append(ModalFormalFormElementLabel(filter_sentence(text)))
         elif isinstance(value, ModalStorageFormElementInput):
             # text
             ctx = "In text of input (index={})".format(index)
@@ -300,9 +300,9 @@ def _generate_modal_form(
             # append
             result.content.append(
                 ModalFormalFormElementInput(
-                    filter_user_word(text),
-                    filter_user_word(default),
-                    filter_user_word(place_holder),
+                    filter_sentence(text),
+                    filter_sentence(default),
+                    filter_sentence(place_holder),
                 )
             )
         elif isinstance(value, ModalStorageFormElementToggle):
@@ -326,7 +326,7 @@ def _generate_modal_form(
                 )
             # append
             result.content.append(
-                ModalFormalFormElementToggle(filter_user_word(text), default)
+                ModalFormalFormElementToggle(filter_sentence(text), default)
             )
         elif isinstance(value, ModalStorageFormElementDropdown):
             # prepare
@@ -340,7 +340,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            element.text = filter_user_word(text)
+            element.text = filter_sentence(text)
             # default
             ctx = "In default of dropdown (index={})".format(index)
             default = runner.run_code(value.default, ctx, executor, dimension, position)
@@ -373,7 +373,7 @@ def _generate_modal_form(
                             index, ind, option
                         )
                     )
-                element.options.append(filter_user_word(option))
+                element.options.append(filter_sentence(option))
             # append
             result.content.append(element)
         elif isinstance(value, ModalStorageFormElementSlider):
@@ -443,7 +443,7 @@ def _generate_modal_form(
             # append
             result.content.append(
                 ModalFormalFormElementSlider(
-                    filter_user_word(text),
+                    filter_sentence(text),
                     float(min_val),
                     float(max_val),
                     float(step),
@@ -462,7 +462,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            element.text = filter_user_word(text)
+            element.text = filter_sentence(text)
             # default
             ctx = "In default of step slider (index={})".format(index)
             default = runner.run_code(value.default, ctx, executor, dimension, position)
@@ -495,7 +495,7 @@ def _generate_modal_form(
                             index, ind, step
                         )
                     )
-                element.steps.append(filter_user_word(step))
+                element.steps.append(filter_sentence(step))
             # append
             result.content.append(element)
 
