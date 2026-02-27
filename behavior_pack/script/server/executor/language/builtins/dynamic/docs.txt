@@ -86,34 +86,110 @@
     实体类型
         entity.GetEngineType
         entity.GetEngineTypeStr
+        entity.GetEntityDefinitions
+        entity.GetEntityNBTTags
     附加值
         entity.GetAuxValue
     属性
         entity.ChangeEntityDimension
+        entity.GetAllComponentsName
         entity.GetAttrMaxValue
         entity.GetAttrValue
+        entity.GetCurrentAirSupply
+        entity.GetDeathTime
         entity.GetEntitiesBySelector
+        entity.GetEntityDamage
         entity.GetEntityDimensionId
+        entity.GetEntityFallDistance
+        entity.GetEntityLinksTag
         entity.GetEntityOwner
         entity.GetGravity
+        entity.GetMarkVariant
+        entity.GetMaxAirSupply
+        entity.GetMobColor
+        entity.GetMobStrength
+        entity.GetMobStrengthMax
         entity.GetName
         entity.GetPos
         entity.GetRot
+        entity.GetSize
+        entity.GetTradeLevel
         entity.GetTypeFamily
+        entity.GetUnitBubbleAirSupply
+        entity.GetVariant
+        entity.HasChest
+        entity.HasComponent
+        entity.HasSaddle
+        entity.IsAngry
+        entity.IsBaby
+        entity.IsConsumingAirSupply
+        entity.IsIllagerCaptain
+        entity.IsNaturallySpawned
+        entity.IsOutOfControl
+        entity.IsPregnant
+        entity.IsSheared
+        entity.IsSitting
+        entity.IsTamed
+        entity.PromoteToIllagerCaptain
+        entity.ResetToDefaultValue
+        entity.ResetToMaxValue
+        entity.SetAngry
+        entity.SetAsAdult
+        entity.SetAttrMaxValue
         entity.SetAttrValue
+        entity.SetChest
+        entity.SetCurrentAirSupply
+        entity.SetEntityLookAtPos
         entity.SetEntityOwner
         entity.SetGravity
+        entity.SetMarkVariant
+        entity.SetMaxAirSupply
+        entity.SetMobColor
+        entity.SetMobStrength
+        entity.SetMobStrengthMax
         entity.SetName
+        entity.SetOutOfControl
+        entity.SetPersistent
         entity.SetPos
+        entity.SetRecoverTotalAirSupplyTime
         entity.SetRot
+        entity.SetSheared
+        entity.SetSitting
+        entity.SetSize
+        entity.SetTradeLevel
+        entity.SetVariant
     行为
         entity.GetAttackTarget
+        entity.GetBlockControlAi
+        entity.GetComponents
+        entity.GetJumpPower
+        entity.GetLeashHolder
         entity.GetMotion
         entity.GetOwnerId
+        entity.GetStepHeight
+        entity.ImmuneDamage
+        entity.IsEating
+        entity.IsEntityOnFire
+        entity.IsLootDropped
+        entity.IsPersistent
+        entity.IsRoaring
+        entity.IsStunned
         entity.ResetAttackTarget
         entity.ResetMotion
+        entity.ResetStepHeight
+        entity.SetActorCollidable
+        entity.SetActorPushable
         entity.SetAttackTarget
+        entity.SetBlockControlAi
+        entity.SetEntityOnFire
+        entity.SetEntityTamed
+        entity.SetJumpPower
+        entity.SetLeashHolder
+        entity.SetLootDropped
+        entity.SetMobKnockback
         entity.SetMotion
+        entity.SetPersistence
+        entity.SetStepHeight
     状态效果
         entity.AddEffectToEntity
         entity.GetAllEffects
