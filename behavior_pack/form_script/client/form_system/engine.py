@@ -145,7 +145,7 @@ class EngineFormSystem:
             RegisterUI(
                 "FormScript",
                 "form",
-                "script.client.node.FormScreenNode",
+                "form_script.client.node.FormScreenNode",
                 "form.form_main_screen",
             )
 
