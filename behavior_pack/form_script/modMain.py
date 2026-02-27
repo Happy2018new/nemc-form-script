@@ -37,7 +37,7 @@ class FormScript(object):
         FormScriptServerInit 注册本模组在服务端侧的系统
         """
         RegisterServerSystem(
-            "FormScript", "FormServerSystem", "script.server.form.FormSystem"
+            "FormScript", "FormServerSystem", "form_script.server.form.FormSystem"
         )
 
     @Mod.DestroyServer()  # type: ignore
@@ -53,7 +53,7 @@ class FormScript(object):
         FormScriptClientInit 注册本模组在客户端侧的系统
         """
         RegisterClientSystem(
-            "FormScript", "FormClientSystem", "script.client.form.FormSystem"
+            "FormScript", "FormClientSystem", "form_script.client.form.FormSystem"
         )
 
     @Mod.DestroyClient()  # type: ignore
