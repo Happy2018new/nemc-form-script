@@ -46,14 +46,14 @@ class Reflect:
             return 0
 
     def length(self, ptr):  # type: (int) -> int
-        """length 返回对象的长度
+        """length 返回给定对象的长度
 
         Args:
             ptr (int): 目标对象的指针
 
         Returns:
             int:
-                如果成功，则返回目标对象的长度；
+                如果成功，则返回指向长度的指针；
                 否则失败，那么返回 0
         """
         try:
