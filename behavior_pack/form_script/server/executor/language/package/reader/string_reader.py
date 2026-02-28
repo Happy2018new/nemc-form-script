@@ -95,7 +95,7 @@ class StringReader:
     def jump_space(self):  # type: () -> None
         """
         jump_space 不断地从底层流阅读，
-        直到遇到非制表符或非制表符的字符为止。
+        直到读到一个非空白字符时停止。
 
         如果流已被耗尽，则它将停止阅读。
         确保在这种情况下不会抛出错误。
