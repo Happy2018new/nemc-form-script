@@ -554,8 +554,11 @@ class CodeRunner:
                         if self._process_element(i.condition):
                             cond = True
                     except Exception as e:
-                        self._fast_condition_panic(i, -1, str(e))
-                        raise Exception("unreachable")
+                        if isinstance(e, InternalException):
+                            raise e
+                        else:
+                            self._fast_condition_panic(i, -1, str(e))
+                            raise Exception("unreachable")
 
                 if cond:
                     for ind, val in enumerate(i.code_block):
@@ -580,8 +583,11 @@ class CodeRunner:
             try:
                 repeat_times = self._process_element(for_loop.repeat_times)
             except Exception as e:
-                self._fast_for_loop_panic(for_loop, -1, str(e))
-                raise Exception("unreachable")
+                if isinstance(e, InternalException):
+                    raise e
+                else:
+                    self._fast_for_loop_panic(for_loop, -1, str(e))
+                    raise Exception("unreachable")
             if isinstance(repeat_times, bool) or not isinstance(repeat_times, int):
                 self._fast_for_loop_panic(
                     for_loop, -1, "The repeat times of for loop must be int"
