@@ -317,4 +317,4 @@ class FunctionFeature:
             Exception:
                 error 所指示的错误
         """
-        raise Exception(error)
+        raise Exception("panic: {}".format(error))
