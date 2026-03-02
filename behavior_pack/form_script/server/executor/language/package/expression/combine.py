@@ -39,7 +39,7 @@ from .define import (
     ELEMENT_ID_IN,
     ELEMENT_ID_INVERSE,
 )
-from .baisc import (
+from .basic import (
     ExpressionNormal,
     ExpressionLiteral,
     ExpressionReference,
