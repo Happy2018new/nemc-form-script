@@ -24,16 +24,12 @@ editdropdown vip_panel 2 append "return '§f[§cMVP§f]'"
 editdropdown vip_panel 2 append "return '§f[§dMVP§e+§f]'"
 editdropdown vip_panel 2 default "index = {score, '@s', '称号'} | return index"
 
-
-
 editmodalform vip_panel append slider
 editslider vip_panel 3 text "return '金币数量'"
 editslider vip_panel 3 min "return 0"
 editslider vip_panel 3 max "return 999999"
 editslider vip_panel 3 step "return 100"
 editslider vip_panel 3 default "return {score, '@s', '金币'}"
-
-
 
 editmodalform vip_panel append toggle
 edittoggle vip_panel 4 text "return '启用商城折扣'"
