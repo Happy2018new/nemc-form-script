@@ -47,7 +47,7 @@ from ..expression.define import (
     ELEMENT_ID_IN,
     ELEMENT_ID_INVERSE,
 )
-from ..expression.baisc import (
+from ..expression.basic import (
     ExpressionLiteral,
     ExpressionReference,
     ExpressionSelector,
