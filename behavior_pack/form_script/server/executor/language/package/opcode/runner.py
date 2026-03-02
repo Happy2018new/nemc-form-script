@@ -166,7 +166,7 @@ class CodeRunner:
         _fast_for_loop_panic 抛出发生在循环代码块中的运行时错误
 
         Args:
-            condition (ForLoopCodeBlock):
+            for_loop (ForLoopCodeBlock):
                 错误所在的循环代码块
             index (int, optional):
                 如果错误发生在循环次数解析，则应提供 -1。
