@@ -26,10 +26,18 @@ from mod.server.extraServerApi import (
     GetEngineNamespace,
     GetEngineSystemName,
     GetEngineCompFactory,
+    GetHostPlayerId,
     GetLevelId,
 )
 
 ServerSystem = GetServerSystemCls()
+
+DEFAULT_WAIT_SECONDS = 7
+DEFAULT_HELP_MESSAGE = (
+    "§r§f[§e自定义菜单 & 服主开发者工具§f] \n"
+    + "  §a• 小提示: 不会使用菜单？ 在聊天栏发送 §b生成自定义菜单示例 §a以生成示例命令方块！\n"
+    + "  §a• 注意: 生成的命令方块较多，所以请在空地发送以防破坏您的建筑物！"
+)
 
 
 class FormSystem(ServerSystem):
@@ -62,8 +70,12 @@ class FormSystem(ServerSystem):
         self._start_init()
         self._finalise_init()
 
+        self.listen_engine_event("ServerChatEvent", self, self.on_server_chat_event)
         self.listen_engine_event(
             "CustomCommandTriggerServerEvent", self, self.on_custom_command_trigger
+        )
+        self.listen_engine_event(
+            "ClientLoadAddonsFinishServerEvent", self, self.on_addon_finish_load
         )
         self.listen_engine_event(
             "PlayerIntendLeaveServerEvent", self, self.on_player_leave
@@ -139,6 +151,33 @@ class FormSystem(ServerSystem):
         with self.executor.get_locker():
             _ = self.executor.static_builtin.manager.release_internal(set())
 
+    def on_server_chat_event(self, args):  # type: (dict[str, Any]) -> None
+        """on_server_chat_event 在玩家发送聊天消息时被调用
+
+        Args:
+            args (dict[str, Any]):
+                ServerChatEvent 传入的字典参数
+        """
+        player_id = args["playerId"]  # type: str
+        message = args["message"]  # type: str
+
+        game_comp, level_id = GetEngineCompFactory(), GetLevelId()
+        abilities = game_comp.CreatePlayer(player_id).GetPlayerAbilities()
+        if not abilities["op"] and GetHostPlayerId() != player_id:
+            return
+        if message != "生成自定义菜单示例":
+            return
+
+        _ = game_comp.CreateCommand(level_id).SetCommand(
+            "structure load custom_form_samples ~ ~ ~", player_id, False
+        )
+        _ = game_comp.CreateCommand(level_id).SetCommand(
+            "playsound random.toast @s ~ ~ ~ 1.00 1.00 1.00", player_id, False
+        )
+        game_comp.CreateMsg(player_id).NotifyOneMessage(
+            player_id, "§r§a已尝试生成自定义菜单示例"
+        )
+
     def on_custom_command_trigger(self, args):  # type: (dict[str, Any]) -> None
         """
         on_custom_command_trigger 在自定义命令被触发时调用
@@ -149,6 +188,27 @@ class FormSystem(ServerSystem):
         """
         assert self.cmd_handlers is not None
         self.cmd_handlers.on_custom_command_trigger(args)
+
+    def on_addon_finish_load(self, args):  # type: (dict[str, Any]) -> None
+        """on_addon_finish_load 在玩家的客户端完成初始化时被调用
+
+        Args:
+            args (dict[str, Any]):
+                ClientLoadAddonsFinishServerEvent 传入的字典参数
+        """
+        player_id = args["playerId"]  # type: str
+        game_comp = GetEngineCompFactory()
+
+        abilities = game_comp.CreatePlayer(player_id).GetPlayerAbilities()
+        if not abilities["op"] and GetHostPlayerId() != player_id:
+            return
+
+        _ = game_comp.CreateGame(GetLevelId()).AddTimer(
+            DEFAULT_WAIT_SECONDS,
+            lambda: game_comp.CreateMsg(player_id).NotifyOneMessage(
+                player_id, DEFAULT_HELP_MESSAGE
+            ),  # type: ignore
+        )
 
     def on_player_leave(self, args):  # type: (dict[str, Any]) -> None
         """on_player_leave 在有玩家离开服务器时被调用
