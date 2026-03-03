@@ -10,12 +10,12 @@ if TYPE_CHECKING:
 import threading
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 from .cache import CompileCache
-from .language.builtins.dynamic.lib_context import Context
-from .language.package.opcode.external import GameInteract, BuiltInFunction
+from .language.package import GameInteract, BuiltInFunction
 from .language.package.opcode.runner import (
     EMPTY_VARIABLES,
     InternalException as RunnerInternalException,
 )
+from .language.builtins.dynamic import Context
 from .language.builtins import (
     new_base_manager,
     StaticBuiltInFunction,
