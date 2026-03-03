@@ -33,9 +33,12 @@ from mod.server.extraServerApi import (
 ServerSystem = GetServerSystemCls()
 
 DEFAULT_WAIT_SECONDS = 7
+DEFAULT_TRIGGER_MESSAGE = "生成自定义菜单示例"
 DEFAULT_HELP_MESSAGE = (
     "§r§f[§e自定义菜单 & 服主开发者工具§f] \n"
-    + "  §a• 小提示: 不会使用菜单？ 在聊天栏发送 §b生成自定义菜单示例 §a以生成示例命令方块！\n"
+    + "  §a• 小提示: 不会使用菜单？ 在聊天栏发送 §b"
+    + DEFAULT_TRIGGER_MESSAGE
+    + " §a以生成示例命令方块！\n"
     + "  §a• 注意: 生成的命令方块较多，所以请在空地发送以防破坏您的建筑物！"
 )
 
@@ -165,7 +168,7 @@ class FormSystem(ServerSystem):
         abilities = game_comp.CreatePlayer(player_id).GetPlayerAbilities()
         if not abilities["op"] and GetHostPlayerId() != player_id:
             return
-        if message != "生成自定义菜单示例":
+        if message != DEFAULT_TRIGGER_MESSAGE:
             return
 
         _ = game_comp.CreateCommand(level_id).SetCommand(
