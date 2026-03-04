@@ -73,6 +73,11 @@ class CommandBlockOutputHandler:
             return "({}, {}, {}) 处的命令方块没有输出".format(*block_pos)
 
         last_output = "\n".join(["  " + i for i in last_output.split("\n")])
+        try:
+            last_output = last_output.decode(encoding="utf-8", errors="ignore")  # type: ignore
+            last_output = str(last_output)
+        except Exception:
+            pass
         return "({}, {}, {}) 处的命令方块的输出为: \n{}".format(
             block_pos[0], block_pos[1], block_pos[2], last_output
         )
