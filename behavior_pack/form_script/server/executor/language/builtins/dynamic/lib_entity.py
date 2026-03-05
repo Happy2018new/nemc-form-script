@@ -158,6 +158,9 @@ class Entity:
         funcs["entity.GetEntityOwner"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateActorOwner(entity_id).GetEntityOwner()
         )
+        funcs["entity.GetFootPos"] = lambda entity_id: self._manager.ref(
+            GetEngineCompFactory().CreatePos(entity_id).GetFootPos()
+        )
         funcs["entity.GetGravity"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateGravity(entity_id).GetGravity()
         )

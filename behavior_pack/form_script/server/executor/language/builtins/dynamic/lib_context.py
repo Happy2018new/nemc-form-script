@@ -194,7 +194,7 @@ class Context:
             entity_id = entities[0]
 
         self.set_executor(entity_id)
-        self.set_position(*GetEngineCompFactory().CreatePos(entity_id).GetPos())
+        self.set_position(*GetEngineCompFactory().CreatePos(entity_id).GetFootPos())
         self.set_dimension(
             GetEngineCompFactory().CreateDimension(entity_id).GetEntityDimensionId()
         )

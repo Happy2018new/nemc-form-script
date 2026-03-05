@@ -293,7 +293,7 @@ class FormFeature:
                 self._ref.response = response
 
             # Running corresponding codes
-            position = GetEngineCompFactory().CreatePos(player_id).GetPos()
+            position = GetEngineCompFactory().CreatePos(player_id).GetFootPos()
             dimension = (
                 GetEngineCompFactory().CreateDimension(player_id).GetEntityDimensionId()
             )
