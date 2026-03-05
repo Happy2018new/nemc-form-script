@@ -103,6 +103,7 @@
         entity.GetEntityFallDistance
         entity.GetEntityLinksTag
         entity.GetEntityOwner
+        entity.GetFootPos
         entity.GetGravity
         entity.GetMarkVariant
         entity.GetMaxAirSupply
