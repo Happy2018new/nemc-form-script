@@ -104,7 +104,7 @@ class FormFeature:
         manager = self.executor.static_builtin.manager
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
-        funcs["form.list_all_form"] = lambda: manager.ref(self.list_form)
+        funcs["form.list_all_form"] = lambda: manager.ref(self.list_form())
         funcs["form.list_long_form_icon_type"] = lambda form_name: manager.ref(
             self.list_long_form_icon_type(form_name)
         )
