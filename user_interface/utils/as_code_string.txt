@@ -1,0 +1,13 @@
+// utils/as_code_string(code: str) -> str
+
+
+
+code = {func, tuple.get(args, 0)}
+
+code = {func, json.fast_dumps(code)}
+code = {func, strings.sub(code, 1, {func, strings.length(code)-1})}
+
+code = {func, json.fast_dumps(code)}
+code = {func, strings.sub(code, 1, {func, strings.length(code)-1})}
+
+return '\'' + {func, strings.replace(code, '\'', '\\\\\'')} + '\''

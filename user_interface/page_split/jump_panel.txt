@@ -1,0 +1,53 @@
+/*
+page_split/jump_panel(
+  form: str,
+  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  callback: str,
+)
+
+callback(
+  is_submit: bool,
+  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]], 
+  selected: int,
+)
+*/
+
+
+
+form = {func, tuple.get(args, 0)}
+options = {func, tuple.ptr_get(args, 1)}
+options = {func, reflect.deepcopy(options)}
+callback = {func, tuple.get(args, 2)}
+
+
+
+length = {func, slices.length(options)}
+all_pages = {func, math.ceil(length/5)}
+all_pages = {func, math.max(1, all_pages)}
+
+_ = {command, 'customform remove page_split_jump'}
+_ = {command, 'customform add page_split_jump modal'}
+_ = {command, 'editmodalform page_split_jump title "return \'跳转面板\'"'}
+_ = {command, 'editmodalform page_split_jump append label'}
+_ = {command, 'editmodalform page_split_jump append input'}
+
+_ = {command, 'editlabel page_split_jump 0 label "return \'总共 ' + str(all_pages) + ' 页, 您希望跳转到哪一页?\'"'}
+_ = {command, 'editinput page_split_jump 1 text "return \'跳转到\'"}
+_ = {command, 'editinput page_split_jump 1 placeholder "return \'请输入要跳转到的页数(数字)\'"'}
+
+
+
+format = {func, json.fast_dumps(form)}
+_ = {func, object.pin(options)}
+
+temp = {func, slices.new(form, True, options, callback)}
+code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
+_ = {command, {func, strings.format('customform onsubmit {} "{}"', format, code)}}
+
+temp = {func, slices.new(form, False, options, callback)}
+code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
+_ = {command, {func, strings.format('customform oncancel {} "{}"', format, code)}}
+
+
+
+return True
