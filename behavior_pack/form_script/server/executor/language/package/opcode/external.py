@@ -216,6 +216,7 @@ class GameInteract:
         另外，请确保：
             - 表单被玩家手动叉掉时 S4 为 0
             - 表单因玩家正忙而无法打开时 S4 为 1
+            - 提交表单前若玩家退出游戏则 S4 为 2
 
         Returns:
             Callable[[int], int | bool | float | str]:

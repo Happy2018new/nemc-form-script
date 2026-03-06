@@ -52,7 +52,7 @@ class FormalWithCallback:
             onsubmit (StringWithHash):
                 当表单被用户提交时调用的代码
             oncancel (StringWithHash):
-                当用户正忙或取消表单时调用的代码
+                当表单被关闭时应调用的代码
             onsuberr (StringWithHash):
                 当执行 onsubmit 所指示的代码出错时，
                 应执行的错误处理
@@ -185,6 +185,7 @@ class FormRefProcesser:
         另外，请确保：
             - 表单被玩家手动叉掉时 S4 为 0
             - 表单因玩家正忙而无法打开时 S4 为 1
+            - 提交表单前若玩家退出游戏则 S4 为 2
 
         Raises:
             Exception:

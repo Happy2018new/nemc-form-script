@@ -192,7 +192,7 @@ class LongForm(BaseForm):
                 当表单被用户提交时调用的代码。
                 默认值为 EMPTY_STRING_WITH_HASH
             oncancel (StringWithHash, optional):
-                当用户正忙或取消表单时调用的代码。
+                当表单被关闭时应调用的代码。
                 默认值为 EMPTY_STRING_WITH_HASH
             onsuberr (StringWithHash, optional):
                 当执行 onsubmit 所指示的代码出错时，
