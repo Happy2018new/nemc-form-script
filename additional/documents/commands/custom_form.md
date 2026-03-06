@@ -150,6 +150,7 @@ customform oncancel <name: string> <code: string> [onCodeError: string]
 | [onCodeError: string] | 字符串   | 选填 | 上面的代码执行出错时，要执行的代码（用于错误处理） |
 
 
+
 ## 备注一
 表单被关闭只可能因为下面的原因。
 - 玩家手动点击了表单右上角的叉号
@@ -215,6 +216,7 @@ customform onsubmit <name: string> <code: string> [onCodeError: string]
 | <name: string>        | 字符串   | 必填 | 目标表单的名字                                     |
 | <code: string>        | 字符串   | 必填 | 表单被提交时，要执行的代码                         |
 | [onCodeError: string] | 字符串   | 选填 | 上面的代码执行出错时，要执行的代码（用于错误处理） |
+
 
 
 ## 备注
