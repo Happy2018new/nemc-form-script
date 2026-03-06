@@ -70,18 +70,29 @@ class Strings:
         """length 返回字符串的长度
 
         Args:
-            ptr (int): 给定的字符串
+            string (str): 给定的字符串
 
         Returns:
             int: 字符串的长度
         """
         return len(self._force_cast(string))
 
+    def format(self, string, *args):  # type: (str, ...) -> str
+        """format 格式化给定的字符串
+
+        Args:
+            string (str): 欲格式化的字符串
+
+        Returns:
+            str: 目标字符串的格式化结果
+        """
+        return self._force_cast(string).format(*args)
+
     def sub(self, string, start, end):  # type: (str, int, int) -> str
         """sub 返回字符串的子字符串
 
         Args:
-            ptr (str): 给定的字符串
+            string (str): 给定的字符串
             start (int): 子字符串的起始索引
             end (int): 子字符串的结束索引
 
@@ -91,7 +102,7 @@ class Strings:
                 或结束索引小于起始索引，则抛出相应的错误
 
         Returns:
-            int: 产生的子字符串
+            str: 产生的子字符串
         """
         string = self._force_cast(string)
 
@@ -224,6 +235,7 @@ class Strings:
 
         funcs["strings.cast"] = self.cast
         funcs["strings.length"] = self.length
+        funcs["strings.format"] = self.format
         funcs["strings.sub"] = self.sub
         funcs["strings.ord"] = lambda string: ord(self._force_cast(string))
         funcs["strings.chr"] = lambda i: chr(i)

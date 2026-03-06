@@ -157,6 +157,7 @@ set.issuperset
 
 strings.cast
 strings.length
+strings.format
 strings.sub
 strings.ord
 strings.chr
