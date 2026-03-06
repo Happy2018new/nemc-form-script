@@ -37,13 +37,14 @@ class SingleEventProcesser:
         self.executor = executor
         self.event_name = event_name
 
-    def callback(self, args):  # type: (dict[str, Any]) -> None
+    def callback(self, args=None):  # type: (dict[str, Any] | None) -> None
         """
         callback 是相应事件被触发时调用的回调函数
 
         Args:
-            args (dict[str, Any]):
-                MC 引擎传入的字典参数
+            args (dict[str, Any] | None):
+                MC 引擎传入的字典参数。
+                默认值为 None
         """
         assert self.storage is not None
         assert self.executor is not None
@@ -52,9 +53,12 @@ class SingleEventProcesser:
 
         with self.storage.get_locker():
             manager = self.executor.static_builtin.manager
+
             funcs = self.storage.get_funcs(self.event_name)
             if funcs is None:
                 return
+            if args is None:
+                args = {}
 
             with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
