@@ -35,7 +35,7 @@ from ...packet.packet import (
     PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
-    MODAL_FORM_CANCEL_REASON_USER_EXIT,
+    MODAL_FORM_CANCEL_REASON_EXIT_GAME,
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
@@ -279,13 +279,13 @@ class FormFeature:
             # Handle cancel or submit
             cancel = pk.cancel_reason.value()
             if cancel is not None:
-                if not internal and cancel == MODAL_FORM_CANCEL_REASON_USER_EXIT:
+                if not internal and cancel == MODAL_FORM_CANCEL_REASON_EXIT_GAME:
                     disconnect_player(player_id, "破损的数据包 (标记 1)")
                     return self
                 if cancel not in (
                     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
                     MODAL_FORM_CANCEL_REASON_USER_BUSY,
-                    MODAL_FORM_CANCEL_REASON_USER_EXIT,
+                    MODAL_FORM_CANCEL_REASON_EXIT_GAME,
                 ):
                     disconnect_player(player_id, "破损的数据包 (标记 2)")
                     return self
@@ -353,7 +353,7 @@ class FormFeature:
                     ModalFormResponse(
                         form_id,
                         OptionString(),
-                        OptionInt(MODAL_FORM_CANCEL_REASON_USER_EXIT),
+                        OptionInt(MODAL_FORM_CANCEL_REASON_EXIT_GAME),
                     ),
                     True,
                 )
