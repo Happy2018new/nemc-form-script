@@ -83,7 +83,7 @@ class SingleEventProcesser:
 class EventFeature:
     """
     EventFeature 实现了事件侦听系统的主要特性。
-    确保 FormFeature 的实现是线程安全的，
+    确保 EventFeature 的实现是线程安全的，
     并且仅会对不同线程之间的调用产生互斥作用
     """
 
