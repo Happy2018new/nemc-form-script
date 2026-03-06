@@ -35,6 +35,7 @@ from ...packet.packet import (
     PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
+    MODAL_FORM_CANCEL_REASON_USER_EXIT,
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
@@ -207,6 +208,7 @@ class FormFeature:
                         OptionString(),
                         OptionInt(MODAL_FORM_CANCEL_REASON_USER_BUSY),
                     ),
+                    True,
                 )
 
             return self
@@ -239,8 +241,8 @@ class FormFeature:
             return self
 
     def on_modal_form_response(
-        self, player_id, pk
-    ):  # type: (str, ModalFormResponse) -> FormFeature
+        self, player_id, pk, internal=False
+    ):  # type: (str, ModalFormResponse, bool) -> FormFeature
         """
         on_modal_form_response 在玩家提交表单，
         或响应服务器的强制性表单关闭请求时被调用
@@ -250,6 +252,9 @@ class FormFeature:
                 数据包的发送来源
             pk (ModalFormResponse):
                 数据包的负载
+            internal (bool, optional):
+                该函数的调用者是否是内部来源。
+                默认值为 False
 
         Returns:
             FormFeature: 返回 FormFeature 本身
@@ -274,11 +279,15 @@ class FormFeature:
             # Handle cancel or submit
             cancel = pk.cancel_reason.value()
             if cancel is not None:
+                if not internal and cancel == MODAL_FORM_CANCEL_REASON_USER_EXIT:
+                    disconnect_player(player_id, "破损的数据包 (标记 1)")
+                    return self
                 if cancel not in (
                     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
                     MODAL_FORM_CANCEL_REASON_USER_BUSY,
+                    MODAL_FORM_CANCEL_REASON_USER_EXIT,
                 ):
-                    disconnect_player(player_id, "破损的数据包 (标记 1)")
+                    disconnect_player(player_id, "破损的数据包 (标记 2)")
                     return self
                 func_to_run = formal_with_cb.oncancel
                 when_meet_err = formal_with_cb.oncanerr
@@ -286,7 +295,7 @@ class FormFeature:
             else:
                 response = formal_with_cb.validate(pk)
                 if response is None:
-                    disconnect_player(player_id, "破损的数据包 (标记 2)")
+                    disconnect_player(player_id, "破损的数据包 (标记 3)")
                     return self
                 func_to_run = formal_with_cb.onsubmit
                 when_meet_err = formal_with_cb.onsuberr
@@ -335,6 +344,20 @@ class FormFeature:
 
         with self._locker:
             player_id = args["playerId"]  # type: str
+
+            if player_id not in self._pending:
+                return
+            for form_id in list(self._pending[player_id]):
+                _ = self.on_modal_form_response(
+                    player_id,
+                    ModalFormResponse(
+                        form_id,
+                        OptionString(),
+                        OptionInt(MODAL_FORM_CANCEL_REASON_USER_EXIT),
+                    ),
+                    True,
+                )
+
             if player_id in self._pending:
                 del self._pending[player_id]
 
