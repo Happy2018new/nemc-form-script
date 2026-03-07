@@ -11,21 +11,26 @@ page_split/handle_select(
 )
 
 callback(
-  is_submit: bool,
+  submit_type: int,
   options: ptr@slice[str | tuple[button_name: str, identifier: str]],
   selected: int,
 )
+
+SUBMIT_TYPE_SUBMIT = 1
+SUBMIT_TYPE_BACK = 2
+SUBMIT_TYPE_CANCEL = 3
 
 PAGE_MARK_UNDEFINED = 0
 PAGE_MARK_ONLY_NAXT_PAGE = 1
 PAGE_MARK_ONLY_LAST_PAGE = 2
 PAGE_MARK_BOTH_HAVE = 3
 
-ACTION_DO_SOMETHING = 1
+ACTION_SUBMIT = 1
 ACTION_NEXT_PAGE = 2
 ACTION_LAST_PAGE = 3
 ACTION_JUMP_TO = 4
-ACTION_EXIT_FORM = 5
+ACTION_BACK = 5
+ACTION_CANCEL = 6
 */
 
 
@@ -59,14 +64,14 @@ if is_submit:
     action = 1
   fi
 else:
-  action = 5
+  action = 6
 fi
 
 
 
 if action == 1:
   ind = 5*(page-1) + {ref, int, -1}
-  _ = {func, function.try(callback, True, options, ind)}
+  _ = {func, function.try(callback, 1, options, ind)}
 elif action == 2:
   _ = {func, function.call('page_split/select_panel', title, content, options, page+1, callback)}
 elif action == 3:
@@ -74,7 +79,9 @@ elif action == 3:
 elif action == 4:
   _ = {func, function.call('page_split/jump_panel', title, content, options, page, callback)}
 elif action == 5:
-  _ = {func, function.try(callback, False, options, -1)}
+  _ = {func, function.try(callback, 2, options, -1)}
+elif action == 6:
+  _ = {func, function.try(callback, 3, options, -1)}
 fi
 
 
