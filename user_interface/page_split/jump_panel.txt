@@ -8,10 +8,14 @@ page_split/jump_panel(
 )
 
 callback(
-  is_submit: bool,
+  submit_type: int,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]], 
   selected: int,
 )
+
+SUBMIT_TYPE_SUBMIT = 0
+SUBMIT_TYPE_CANCEL = 1
+SUBMIT_TYPE_BACK = 2
 */
 
 
