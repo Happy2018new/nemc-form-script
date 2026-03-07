@@ -6,17 +6,17 @@ page_split/handle_jump(
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
   last_page: int,
   callback: str,
-)
+) -> bool
 
 callback(
   submit_type: int,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]], 
   selected: int,
-)
+) -> int | bool | float | str
 
-SUBMIT_TYPE_SUBMIT = 0
-SUBMIT_TYPE_CANCEL = 1
+SUBMIT_TYPE_SUBMIT = 1
 SUBMIT_TYPE_BACK = 2
+SUBMIT_TYPE_CANCEL = 3
 
 ENUM_TO_INT = 0
 ENUM_TO_BOOL = 1
@@ -50,7 +50,11 @@ if is_submit:
 
   _ = {func, function.call('page_split/select_panel', title, content, options, dst, callback)}
 else:
-  _ = {func, function.call('page_split/select_panel', title, content, options, last_page, callback)}
+  if {ref, int, -1} != 2:
+    _ = {func, function.call('page_split/select_panel', title, content, options, last_page, callback)}
+  else:
+    _ = {func, function.try(callback, 3, options, -1)}
+  fi
 fi
 
 

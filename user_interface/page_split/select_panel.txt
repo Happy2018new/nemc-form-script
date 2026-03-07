@@ -5,17 +5,17 @@ page_split/select_panel(
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
   page: int,
   callback: str,
-)
+) -> bool
 
 callback(
   submit_type: int,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]], 
   selected: int,
-)
+) -> int | bool | float | str
 
-SUBMIT_TYPE_SUBMIT = 0
-SUBMIT_TYPE_CANCEL = 1
+SUBMIT_TYPE_SUBMIT = 1
 SUBMIT_TYPE_BACK = 2
+SUBMIT_TYPE_CANCEL = 3
 
 PAGE_MARK_UNDEFINED = 0
 PAGE_MARK_ONLY_NAXT_PAGE = 1
