@@ -60,7 +60,7 @@ class ModalFormElementLabel(ModalFormElement):
 
 class ModalFormElementInput(ModalFormElement):
     """
-    ModalFormElementLabel 指示模态表单中的输入框
+    ModalFormElementInput 指示模态表单中的输入框
     """
 
     text = EMPTY_STRING_WITH_HASH
