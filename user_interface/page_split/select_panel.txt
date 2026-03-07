@@ -35,11 +35,13 @@ callback = {func, tuple.get(args, 4)}
 
 
 length = {func, slices.length(options)}
+all_pages = int({func, math.ceil(length/5)})
+page = {func, math.min(page, all_pages)}
+page = {func, math.max(1, page)}
 start = 5*(page-1)
 end = {func, math.min(5*page-1, length-1)}
 buttons = 0
 page_mark = 0
-all_pages = int({func, math.ceil(length/5)})
 
 
 
