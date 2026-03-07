@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 
 from .form_system.base import BaseFormSystem
 from .form_system.client import ClientFormSystem
