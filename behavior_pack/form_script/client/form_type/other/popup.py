@@ -77,7 +77,18 @@ class PopupForm(BaseForm):
         if button is None:
             return
 
-        def _on_button_trigger(args):
+        def _on_button_trigger(args):  # type: (dict[str, Any]) -> None
+            """
+            _on_button_trigger 是底层的回调函数。
+            该函数会在代表“确定”或“取消”的按钮被点击后调用。
+
+            is_left_button 是所引用的闭包变量之一，
+            外围调用者有义务确保给出的这一参数是正确的
+
+            Args:
+                args (dict[str, Any]):
+                    SetButtonTouchUpCallback 传入的字典参数
+            """
             if self._callback is not None:
                 try:
                     self._callback(args, is_left_button)
