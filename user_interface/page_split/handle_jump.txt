@@ -1,8 +1,10 @@
 /*
 page_split/handle_jump(
-  form: str,
   is_submit: bool,
+  title: str,
+  content: str,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  last_page: int,
   callback: str,
 )
 
@@ -20,15 +22,17 @@ ENUM_TO_STR = 3
 
 
 
-form = {func, tuple.get(args, 0)}
-is_submit = {func, tuple.get(args, 1)}
-options = {func, tuple.ptr_get(args, 2)}
-callback = {func, tuple.get(args, 3)}
+is_submit = {func, tuple.get(args, 0)}
+title = {func, tuple.get(args, 1)}
+content = {func, tuple.get(args, 2)}
+options = {func, tuple.get(args, 3)}
+last_page = {func, tuple.get(args, 4)}
+callback = {func, tuple.get(args, 5)}
 
 
 
 length = {func, slices.length(options)}
-all_pages = {func, math.ceil(length/5)}
+all_pages = int({func, math.ceil(length/5)})
 all_pages = {func, math.max(1, all_pages)}
 
 
@@ -40,9 +44,9 @@ if is_submit:
   dst = {func, math.min(dst, all_pages)}
   dst = {func, math.max(1, dst)}
 
-  _ = {func, function.call('utils/select_panel', form, options, dst, callback)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, dst, callback)}
 else:
-  _ = {func, function.try_call(callback, False, options, -1)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, last_page, callback)}
 fi
 
 
