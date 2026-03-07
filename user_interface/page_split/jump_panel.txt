@@ -1,7 +1,9 @@
 /*
 page_split/jump_panel(
-  form: str,
+  title: str,
+  content: str,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  last_page: int,
   callback: str,
 )
 
@@ -14,15 +16,17 @@ callback(
 
 
 
-form = {func, tuple.get(args, 0)}
-options = {func, tuple.ptr_get(args, 1)}
+title = {func, tuple.get(args, 0)}
+content = {func, tuple.get(args, 1)}
+options = {func, tuple.get(args, 2)}
 options = {func, reflect.deepcopy(options)}
-callback = {func, tuple.get(args, 2)}
+last_page = {func, tuple.get(args, 3)}
+callback = {func, tuple.get(args, 4)}
 
 
 
 length = {func, slices.length(options)}
-all_pages = {func, math.ceil(length/5)}
+all_pages = int({func, math.ceil(length/5)})
 all_pages = {func, math.max(1, all_pages)}
 
 _ = {command, 'customform remove page_split_jump'}
@@ -32,22 +36,22 @@ _ = {command, 'editmodalform page_split_jump append label'}
 _ = {command, 'editmodalform page_split_jump append input'}
 
 _ = {command, 'editlabel page_split_jump 0 label "return \'总共 ' + str(all_pages) + ' 页, 您希望跳转到哪一页?\'"'}
-_ = {command, 'editinput page_split_jump 1 text "return \'跳转到\'"}
+_ = {command, 'editinput page_split_jump 1 text "return \'跳转到\'"'}
 _ = {command, 'editinput page_split_jump 1 placeholder "return \'请输入要跳转到的页数(数字)\'"'}
 
 
 
-format = {func, json.fast_dumps(form)}
 _ = {func, object.pin(options)}
 
-temp = {func, slices.new(form, True, options, callback)}
+temp = {func, slices.new(True, title, content, options, last_page, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
-_ = {command, {func, strings.format('customform onsubmit {} "{}"', format, code)}}
+_ = {command, {func, strings.format('customform onsubmit page_split_jump "{}"', code)}}
 
-temp = {func, slices.new(form, False, options, callback)}
+temp = {func, slices.new(False, title, content, options, last_page, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
-_ = {command, {func, strings.format('customform oncancel {} "{}"', format, code)}}
+_ = {command, {func, strings.format('customform oncancel page_split_jump "{}"', code)}}
 
 
 
+_ = {command, 'customform show @s ~ ~ ~ @s page_split_jump'}
 return True

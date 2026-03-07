@@ -8,7 +8,7 @@ utils/as_func_string(
 
 
 func_name = {func, tuple.get(args, 0)}
-func_args = {func, tuple.ptr_get(args, 1)}
+func_args = {func, tuple.get(args, 1)}
 
 
 
@@ -26,7 +26,7 @@ for index, {func, slices.length(func_args)}:
     value = {func, function.call('utils/as_code_string', value)}
     result = result + ', ' + str(value)
   else:
-    err = 'utils/as_func_string: Unsupported data type ' + str(type)
+    err = 'utils/as_func_string: Unsupported data type; type = ' + str(type)
     _ = {func, function.panic(err)}
   fi
 rof

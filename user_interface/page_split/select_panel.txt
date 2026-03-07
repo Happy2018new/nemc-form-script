@@ -1,6 +1,7 @@
 /*
 page_split/select_panel(
-  form: str,
+  title: str,
+  content: str,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
   page: int,
   callback: str,
@@ -20,25 +21,40 @@ PAGE_MARK_BOTH_HAVE = 3
 
 
 
-form = {func, tuple.get(args, 0)}
-options = {func, tuple.ptr_get(args, 1)}
+title = {func, tuple.get(args, 0)}
+content = {func, tuple.get(args, 1)}
+options = {func, tuple.get(args, 2)}
 options = {func, reflect.deepcopy(options)}
-page = {func, tuple.get(args, 2)}
-callback = {func, tuple.get(args, 3)}
+page = {func, tuple.get(args, 3)}
+callback = {func, tuple.get(args, 4)}
 
 
 
-format = {func, json.fast_dumps(form)}
 length = {func, slices.length(options)}
 start = 5*(page-1)
 end = {func, math.min(5*page-1, length-1)}
+buttons = 0
+page_mark = 0
+all_pages = int({func, math.ceil(length/5)})
 
-buttons = {func, form.long_form_length(form)}
-cmd = {func, strings.format('editlongform {} sub discard 0 {}', format, buttons)}
+
+
+_ = {command, 'customform remove page_split_select'}
+_ = {command, 'customform add page_split_select long'}
+
+code = {func, function.call('utils/as_code_string', title)}
+cmd = {func, strings.format('editlongform page_split_select title "{}"', code)}
+_ = {command, cmd}
+
+temp = {func, math.max(1, all_pages)}
+temp = {func, strings.format('当前第 {} 页, 总共 {} 页。', page, temp)}
+code = {func, function.call('utils/as_code_string', content + '\n' + temp)}
+cmd = {func, strings.format('editlongform page_split_select content "{}"', code)}
 _ = {command, cmd}
 
 for offset, end-start+1:
   ptr = {func, slices.ptr_get(options, start+offset)}
+  buttons = buttons + 1
 
   if {func, object.ref_type(ptr)} == 3:
     text = {func, object.deref(ptr)}
@@ -47,51 +63,47 @@ for offset, end-start+1:
   fi
 
   text = {func, function.call('utils/as_code_string', text)}
-  _ = {command, {func, strings.format('editlongform {} append', format)}}
-  _ = {command, {func, strings.format('editbutton {} {} text "return {}"', format, offset, text)}}
+  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, {func, strings.format('editbutton page_split_select {} text "return {}"', offset, text)}}
 rof
 
 
 
-page_mark = 0
-all_pages = {func, math.ceil(length/5)}
-
 if page == 1 and all_pages > 1:
-  page_mark = 1 | buttons = {func, form.long_form_length(form)}
-  _ = {command, {func, strings.format('editlongform {} append', format)}}
-  _ = {command, {func, strings.format('editbutton {} {} text "return \'下一页\'"', format, buttons)}}
+  page_mark = 1 | buttons = buttons + 1
+  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'下一页\'"', buttons-1)}}
 elif all_pages > 1 and page == all_pages:
-  page_mark = 2 | buttons = {func, form.long_form_length(form)}
-  _ = {command, {func, strings.format('editlongform {} append', format)}}
-  _ = {command, {func, strings.format('editbutton {} {} text "return \'上一页\'"', format, buttons)}}
-elif all_pages > page:
-  page_mark = 3 | buttons = {func, form.long_form_length(form)}
-  _ = {command, {func, strings.format('editlongform {} append', format)}}
-  _ = {command, {func, strings.format('editlongform {} append', format)}}
-  _ = {command, {func, strings.format('editbutton {} {} text "return \'上一页\'"', format, buttons)}}
-  _ = {command, {func, strings.format('editbutton {} {} text "return \'下一页\'"', format, buttons+1)}}
+  page_mark = 2 | buttons = buttons + 1
+  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'上一页\'"', buttons-1)}}
+elif 1 < page and page < all_pages:
+  page_mark = 3 | buttons = buttons + 2
+  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'上一页\'"', buttons-2)}}
+  _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'下一页\'"', buttons-1)}}
 fi
 
-buttons = {func, form.long_form_length(form)}
-_ = {command, {func, strings.format('editlongform {} append', format)}}
-_ = {command, {func, strings.format('editlongform {} append', format)}}
-_ = {command, {func, strings.format('editbutton {} {} text "return \'跳转到\'"', format, buttons)}}
-_ = {command, {func, strings.format('editbutton {} {} text "return \'返回上一级\'"', format, buttons+1)}}
+buttons = buttons + 2
+_ = {command, 'editlongform page_split_select append'}
+_ = {command, 'editlongform page_split_select append'}
+_ = {command, {func, strings.format('editbutton page_split_select {} text "return \'跳转到\'"', buttons-2)}}
+_ = {command, {func, strings.format('editbutton page_split_select {} text "return \'返回上一级\'"', buttons-1)}}
 
 
 
-buttons = {func, form.long_form_length(form)}
 _ = {func, object.pin(options)}
 
-temp = {func, slices.new(form, True, options, page, page_mark, buttons, callback)}
+temp = {func, slices.new(True, title, content, options, page, page_mark, buttons, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_select', temp)}
-_ = {command, {func, strings.format('editform onsubmit {} "{}"', format, code)}}
+_ = {command, {func, strings.format('customform onsubmit page_split_select "{}"', code)}}
 
-temp = {func, slices.new(form, False, options, page, page_mark, buttons, callback)}
+temp = {func, slices.new(False, title, content, options, page, page_mark, buttons, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_select', temp)}
-_ = {command, {func, strings.format('editform oncancel {} "{}"', format, code)}}
+_ = {command, {func, strings.format('customform oncancel page_split_select "{}"', code)}}
 
 
 
-_ = {command, 'customform show @s ~ ~ ~ @s ' + format}
+_ = {command, 'customform show @s ~ ~ ~ @s page_split_select'}
 return True

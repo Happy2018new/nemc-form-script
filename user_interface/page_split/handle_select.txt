@@ -1,7 +1,8 @@
 /*
 page_split/handle_select(
-  form: str,
   is_submit: bool,
+  title: str,
+  content: str,
   options: ptr@slice[str | tuple[button_name: str, identifier: str]],
   page: int,
   page_mark: int,
@@ -29,13 +30,14 @@ ACTION_EXIT_FORM = 5
 
 
 
-form = {func, tuple.get(args, 0)}
-is_submit = {func, tuple.get(args, 1)}
-options = {func, tuple.ptr_get(args, 2)}
-page = {func, tuple.get(args, 3)}
-page_mark = {func, tuple.get(args, 4)}
-page_buttons = {func, tuple.get(args, 5)}
-callback = {func, tuple.get(args, 6)}
+is_submit = {func, tuple.get(args, 0)}
+title = {func, tuple.get(args, 1)}
+content = {func, tuple.get(args, 2)}
+options = {func, tuple.get(args, 3)}
+page = {func, tuple.get(args, 4)}
+page_mark = {func, tuple.get(args, 5)}
+page_buttons = {func, tuple.get(args, 6)}
+callback = {func, tuple.get(args, 7)}
 
 
 
@@ -64,15 +66,15 @@ fi
 
 if action == 1:
   ind = 5*(page-1) + {ref, int, -1}
-  _ = {func, function.try_call(callback, True, options, ind)}
+  _ = {func, function.try(callback, True, options, ind)}
 elif action == 2:
-  _ = {func, function.call('page_split/select_panel', form, options, page+1, callback)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, page+1, callback)}
 elif action == 3:
-  _ = {func, function.call('page_split/select_panel', form, options, page-1, callback)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, page-1, callback)}
 elif action == 4:
-  _ = {func, function.call('page_split/jump_panel', form, options, callback)}
+  _ = {func, function.call('page_split/jump_panel', title, content, options, page, callback)}
 elif action == 5:
-  _ = {func, function.try_call(callback, False, options, -1)}
+  _ = {func, function.try(callback, False, options, -1)}
 fi
 
 
