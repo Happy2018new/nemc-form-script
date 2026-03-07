@@ -35,19 +35,9 @@ callback = {func, tuple.get(args, 5)}
 
 
 
-length = {func, slices.length(options)}
-all_pages = int({func, math.ceil(length/5)})
-all_pages = {func, math.max(1, all_pages)}
-
-
-
 if is_submit:
   dst = {ref, str, 1}
   dst = {func, function.call('utils/safe_cast', dst, 0)}
-
-  dst = {func, math.min(dst, all_pages)}
-  dst = {func, math.max(1, dst)}
-
   _ = {func, function.call('page_split/select_panel', title, content, options, dst, callback)}
 else:
   if {ref, int, -1} != 2:
