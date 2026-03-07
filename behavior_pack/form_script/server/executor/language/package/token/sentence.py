@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 
 from ..reader.any_reader import AnyReader
 from ..reader.string_reader import StringReader
