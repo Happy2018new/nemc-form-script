@@ -175,6 +175,7 @@
         ],
         "anchor_from": "top_right",
         "anchor_to": "top_right",
+        "visible": "$tooltip_visible",
         "$tooltip_visible|default": false,
         "$tooltip_name|default": "tooltip_control",
         "$tooltip_button_binding_type|default": "",
@@ -230,8 +231,7 @@
                     "controls": [
                         {
                             "option_generic_tooltip_image@future.option_generic_tooltip_image": {
-                                "texture": "$tooltip_icon",
-                                "visible": "$tooltip_visible"
+                                "texture": "$tooltip_icon"
                             }
                         }
                     ]
