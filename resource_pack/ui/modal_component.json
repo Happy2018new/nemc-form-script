@@ -1,14 +1,4 @@
 {
-    "custom_label@future.option_group_label": {
-        "$text": "#custom_text",
-        "$text_bindings": [
-            {
-                "binding_collection_name": "custom_form",
-                "binding_name": "#custom_text",
-                "binding_type": "collection"
-            }
-        ]
-    },
     "custom_header@future.option_group_header": {
         "$text": "#custom_text",
         "$text_bindings": [
@@ -39,16 +29,49 @@
         "$text_edit_box_placeholder_content_binding_name": "$option_place_holder_text",
         "$text_edit_box_placeholder_content_binding_type": "collection"
     },
-    "custom_tooltip_input@modal_component.custom_input": {
-        "$tooltip_visible|default": true,
-        "$two_line_layout_label_size|default": [
-            "100% - 30px",
-            "default"
-        ],
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
-            "default"
+    "custom_label@future.option_group_label": {
+        "$text": "#custom_text",
+        "$text_bindings": [
+            {
+                "binding_collection_name": "custom_form",
+                "binding_name": "#custom_text",
+                "binding_type": "collection"
+            }
         ]
+    },
+    "custom_slider@future.option_slider": {
+        "$label_bindings": [
+            {
+                "binding_collection_name": "custom_form",
+                "binding_name": "#custom_slider_text",
+                "binding_type": "collection"
+            }
+        ],
+        "$option_label": "#custom_slider_text",
+        "$slider_binding_type": "collection",
+        "$slider_collection_name": "custom_form",
+        "$slider_enabled_binding_name": "#custom_slider_enabled",
+        "$slider_enabled_binding_type": "collection",
+        "$slider_name": "custom_slider",
+        "$slider_timeout_binding_name": "#custom_slider_timeout",
+        "$slider_timeout_binding_type": "collection",
+        "$slider_tts_text_value": "#custom_slider_text_value",
+        "$slider_value_binding_name": "#custom_slider_value"
+    },
+    "custom_step_slider@modal_component.custom_slider": {
+        "$label_bindings": [
+            {
+                "binding_collection_name": "custom_form",
+                "binding_name": "#custom_slider_step_text",
+                "binding_type": "collection"
+            }
+        ],
+        "$option_label": "#custom_slider_step_text",
+        "$slider_name": "custom_slider_step",
+        "$slider_steps_binding_name": "#custom_slider_steps",
+        "$slider_steps_binding_type": "collection",
+        "$slider_tts_text_value": "#custom_slider_step_text_value",
+        "$slider_value_binding_name": "#custom_slider_step_value"
     },
     "custom_toggle@future.option_toggle": {
         "$label_bindings": [
@@ -67,59 +90,36 @@
         "$toggle_name": "custom_toggle",
         "$toggle_state_binding_name": "#custom_toggle_state"
     },
-    "custom_tooltip_toggle@modal_component.custom_toggle": {
+    "custom_tooltip_input@modal_component.custom_input": {
+        "$one_line_layout_label_size|default": [
+            "100% - 60px",
+            "default"
+        ],
         "$tooltip_visible|default": true,
         "$two_line_layout_label_size|default": [
             "100% - 30px",
-            "default"
-        ],
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
             "default"
         ]
     },
-    "custom_slider@future.option_slider": {
-        "$label_bindings": [
-            {
-                "binding_collection_name": "custom_form",
-                "binding_name": "#custom_slider_text",
-                "binding_type": "collection"
-            }
-        ],
-        "$option_label": "#custom_slider_text",
-        "$slider_binding_type": "collection",
-        "$slider_collection_name": "custom_form",
-        "$slider_enabled_binding_name": "#custom_slider_enabled",
-        "$slider_enabled_binding_type": "collection",
-        "$slider_name": "custom_slider",
-        "$slider_tts_text_value": "#custom_slider_text_value",
-        "$slider_value_binding_name": "#custom_slider_value",
-        "$slider_timeout_binding_type": "collection",
-        "$slider_timeout_binding_name": "#custom_slider_timeout"
-    },
-    "custom_step_slider@modal_component.custom_slider": {
-        "$label_bindings": [
-            {
-                "binding_collection_name": "custom_form",
-                "binding_name": "#custom_slider_step_text",
-                "binding_type": "collection"
-            }
-        ],
-        "$option_label": "#custom_slider_step_text",
-        "$slider_name": "custom_slider_step",
-        "$slider_steps_binding_name": "#custom_slider_steps",
-        "$slider_steps_binding_type": "collection",
-        "$slider_tts_text_value": "#custom_slider_step_text_value",
-        "$slider_value_binding_name": "#custom_slider_step_value"
-    },
     "custom_tooltip_step_slider@modal_component.custom_step_slider": {
+        "$one_line_layout_label_size|default": [
+            "100% - 60px",
+            "default"
+        ],
         "$tooltip_visible|default": true,
         "$two_line_layout_label_size|default": [
             "100% - 30px",
             "default"
-        ],
+        ]
+    },
+    "custom_tooltip_toggle@modal_component.custom_toggle": {
         "$one_line_layout_label_size|default": [
             "100% - 60px",
+            "default"
+        ],
+        "$tooltip_visible|default": true,
+        "$two_line_layout_label_size|default": [
+            "100% - 30px",
             "default"
         ]
     },
