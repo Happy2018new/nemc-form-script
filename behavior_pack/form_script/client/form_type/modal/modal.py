@@ -358,7 +358,7 @@ class ModalForm(BaseForm):
                 False 如果开关需要关闭；
                 默认值为 False
             tooltip (str, optional):
-                开关的提示文本
+                开关的灯泡提示文本。
                 默认值为 False
 
         Returns:

@@ -36,7 +36,7 @@ class OptionGenericCore(BaseComponent):
             ui_node (ScreenNode):
                 该组件所在的屏幕结点
             control (BaseUIControl):
-                该组件所在的控制结点
+                该组件所在的控件结点
             background (BaseUIControl):
                 该组件所在模态表单的背景控件
             control_name (str):

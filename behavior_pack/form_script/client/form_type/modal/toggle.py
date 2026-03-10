@@ -25,7 +25,7 @@ class Toggle(OptionGenericCore):
             ui_node (ScreenNode): 该组件所在的屏幕结点
             control (BaseUIControl): 要将该组件挂接在哪个父节点下
             background (BaseUIControl): 该组件所在模态表单的背景控件
-            tooltip (str): 该组件的提示文本
+            tooltip (str): 该组件的灯泡提示文本
         """
         def_name = "modal_component.custom_toggle"
         if len(tooltip) > 0:
