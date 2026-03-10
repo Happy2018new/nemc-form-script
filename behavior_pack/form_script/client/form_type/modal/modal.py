@@ -375,11 +375,10 @@ class ModalForm(BaseForm):
         if background is None:
             return None
 
-        toggle = (
-            Toggle(self.ui_node, control, background, tooltip)
-            .set_toggle_label(label)
-            .set_toggle_state(toggled)
-        )
+        toggle = Toggle(self.ui_node, control, background, tooltip)
+        _ = toggle.set_title_label(label)
+        _ = toggle.set_toggle_state(toggled)
+
         self.childs.append(toggle)
         self._should_update_screen = True
         return toggle

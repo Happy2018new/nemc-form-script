@@ -14,7 +14,6 @@ class Toggle(OptionGenericCore):
     """Toggle 是开关实现"""
 
     _should_update_screen = False
-    _last_render_label = ""
 
     def __init__(
         self, ui_node, control, background, tooltip
@@ -57,18 +56,12 @@ class Toggle(OptionGenericCore):
         Returns:
             bool: 指示是否需要刷新屏幕
         """
-        should_update = OptionGenericCore.on_update_screen(self)
+        should_update = False
+        if OptionGenericCore.on_update_screen(self):
+            should_update = True
         if self._should_update_screen:
             should_update = True
             self._should_update_screen = False
-
-        label = self.get_toggle_label()
-        if label is None:
-            return False
-        if self._last_render_label != label:
-            self._last_render_label = label
-            should_update = True
-
         return should_update
 
     def on_destroy(self):  # type: () -> None
@@ -76,18 +69,6 @@ class Toggle(OptionGenericCore):
         if self.ui_node is None or self.control is None:
             return
         _ = self.ui_node.RemoveChildControl(self.control)
-
-    def get_toggle_label(self):  # type: () -> str | None
-        """get_toggle_label 获取开关的标题文本
-
-        Returns:
-            str | None: 如果成功，则返回开关的标题文本；
-                        否则失败，那么返回 None
-        """
-        control = self._get_label_control()
-        if control is None:
-            return None
-        return control.GetText()
 
     def get_toggle_state(self):  # type: () -> bool | None
         """get_toggle_state 获取开关的状态
@@ -105,20 +86,6 @@ class Toggle(OptionGenericCore):
         if control is None:
             return None
         return control.GetToggleState("")
-
-    def set_toggle_label(self, label):  # type: (str) -> Toggle
-        """set_toggle_label 设置开关的标题文本
-
-        Args:
-            label (str): 欲设置的标题文本
-
-        Returns:
-            Toggle: 返回 Toggle 本身
-        """
-        control = self._get_label_control()
-        if control is not None:
-            control.SetText(label)
-        return self
 
     def set_toggle_state(self, state):  # type: (bool) -> Toggle
         """set_toggle_state 设置开关的状态

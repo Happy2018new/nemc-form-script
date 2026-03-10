@@ -98,7 +98,11 @@ class OptionGenericCore(BaseComponent):
         )
 
     def _get_tooltip_image(self):  # type: () -> ImageUIControl | None
-        """_get_tooltip_image 获取提示灯泡对应的图片控件
+        """
+        _get_tooltip_image 获取提示灯泡对应的图片控件。
+
+        特别地，如果该图片控件在获取时不可见，
+        即便该控件存在，该函数也会返回 None
 
         Returns:
             ImageUIControl | None:
@@ -107,6 +111,8 @@ class OptionGenericCore(BaseComponent):
         """
         control = self._get_tooltip_control()
         if control is None:
+            return None
+        if not control.GetVisible():
             return None
 
         child = control.GetChildByPath(
