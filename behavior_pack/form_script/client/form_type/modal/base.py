@@ -329,5 +329,6 @@ class OptionGenericCore(BaseComponent):
             if bottom_popup is not None:
                 bottom_popup.SetText(text)
 
+        self._tooltip_text = text
         self._should_update_screen = True
         return self
