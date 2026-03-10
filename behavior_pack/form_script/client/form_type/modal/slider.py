@@ -149,12 +149,12 @@ class Slider(BaseComponent):
         if control is None:
             return self
 
-        raw_bag = control.GetPropertyBag()  # type: Any
-        property = raw_bag  # type: dict[str, Any]
-        property["#slider_steps"] = slider_step
-        property["#slider_value"] = slider_value
+        property = {
+            "#slider_steps": slider_step,
+            "#slider_value": slider_value,
+        }
+        _ = control.SetPropertyBag(property)
 
-        control.SetPropertyBag(property)
         self._should_update_screen = True
         return self
 

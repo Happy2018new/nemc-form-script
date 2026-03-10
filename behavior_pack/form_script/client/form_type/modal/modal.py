@@ -13,7 +13,7 @@ from .input import Input
 from .dropdown import DropDown
 from .slider import Slider, StepSlider
 from ..base import BaseForm
-from ...utils import get_scroll_view_content
+from ...utils import get_scorll_view_background, get_scroll_view_content
 from mod.client.extraClientApi import PopScreen
 
 
@@ -89,7 +89,7 @@ class ModalForm(BaseForm):
             child = button.GetChildByPath("/" + i)
             if child is None:
                 continue
-            child.SetVisible(i == "default")
+            child.SetVisible(i == "default", False)
 
     def _init_submit_callback(self):  # type: () -> None
         """
@@ -119,6 +119,21 @@ class ModalForm(BaseForm):
             except Exception:
                 pass
         PopScreen()
+
+    def _get_background(self):  # type: () -> BaseUIControl | None
+        """_get_background 获取该模态表单的背景控件
+
+        Returns:
+            BaseUIControl | None:
+                如果成功，则返回该模态表单的背景控件；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None or self.control is None:
+            return None
+        return get_scorll_view_background(
+            self.ui_node,
+            self.control.GetPath(),
+        )
 
     def _get_generated_form(self):  # type: () -> BaseUIControl | None
         """
@@ -330,14 +345,20 @@ class ModalForm(BaseForm):
         self._should_update_screen = True
         return result
 
-    def push_toggle(self, label, toggled=False):  # type: (str, bool) -> Toggle | None
+    def push_toggle(
+        self, label, toggled=False, tooltip=""
+    ):  # type: (str, bool, str) -> Toggle | None
         """push_toggle 向模态表单追加一个开关
 
         Args:
-            label (str): 开关的标题文本
+            label (str):
+                开关的标题文本
             toggled (bool, optional):
                 True 如果开关需要打开；
                 False 如果开关需要关闭；
+                默认值为 False
+            tooltip (str, optional):
+                开关的提示文本
                 默认值为 False
 
         Returns:
@@ -350,9 +371,12 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
         toggle = (
-            Toggle(self.ui_node, control)
+            Toggle(self.ui_node, control, background, tooltip)
             .set_toggle_label(label)
             .set_toggle_state(toggled)
         )

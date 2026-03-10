@@ -169,7 +169,7 @@ class DynamicButton(BaseComponent):
         child = self.control.GetChildByPath("/panel_name")
         if child is None:
             return self
-        child.SetVisible(visible)
+        child.SetVisible(visible, False)
 
         self._last_image_view_state = visible
         self._should_update_screen = True
@@ -194,7 +194,7 @@ class DynamicButton(BaseComponent):
         child = self.control.GetChildByPath("/panel_name/progress")
         if child is None:
             return self
-        child.SetVisible(loading)
+        child.SetVisible(loading, False)
 
         self._last_image_load_state = loading
         self._should_update_screen = True
