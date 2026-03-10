@@ -3,6 +3,7 @@
         "ui/command_block_screen.json",
         "ui/form.json",
         "ui/future.json",
+        "ui/layout_label.json",
         "ui/long.json",
         "ui/modal.json",
         "ui/modal_component.json",

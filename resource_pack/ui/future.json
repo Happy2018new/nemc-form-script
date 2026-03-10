@@ -5,10 +5,6 @@
     "option_generic": {
         "type": "panel",
         "$enabled|default": true,
-        "$one_line_layout_label_size|default": [
-            "100% - 34px",
-            "default"
-        ],
         "$option_enabled_binding_name|default": "",
         "$option_generic_panel_size|default": [
             "100%",
@@ -20,17 +16,11 @@
         "$option_tooltip_text_binding_name|default": "",
         "$option_tooltip_visible_binding_name|default": "#default_visibility",
         "$tooltip_visible|default": false,
-        "$two_line_layout_label_size|default": [
-            "100%",
-            "default"
-        ],
         "size": "$option_generic_panel_size",
         "controls": [
             {
                 "option_generic_core@future.option_generic_core": {
-                    "$one_line_layout_label_size": "$one_line_layout_label_size",
-                    "$tooltip_visible": "$tooltip_visible",
-                    "$two_line_layout_label_size": "$two_line_layout_label_size"
+                    "$tooltip_visible": "$tooltip_visible"
                 }
             }
         ]
@@ -43,10 +33,6 @@
         "$label_offset|default": [
             0,
             0
-        ],
-        "$one_line_layout_label_size|default": [
-            "100% - 34px",
-            "default"
         ],
         "$one_line_layout|default": false,
         "$option_description|default": "",
@@ -61,10 +47,6 @@
         "$option_tooltip_visible_binding_name|default": "#default_visibility",
         "$show_option_label|default": true,
         "$tooltip_visible|default": false,
-        "$two_line_layout_label_size|default": [
-            "100%",
-            "default"
-        ],
         "variables": [
             {
                 "$option_enabled_binding_name": "#not_data_bound",
@@ -104,10 +86,17 @@
                                 ],
                                 "controls": [
                                     {
-                                        "option_label@option_generic_core_label": {
+                                        "option_label@layout_label.two_line_layout_label": {
                                             "$option_generic_core_label_anchor_from": "top_left",
                                             "$option_generic_core_label_anchor_to": "top_left",
-                                            "$option_generic_core_label_size": "$two_line_layout_label_size"
+                                            "ignored": "($tooltip_visible)"
+                                        }
+                                    },
+                                    {
+                                        "option_label@layout_label.two_line_layout_tooltip_label": {
+                                            "$option_generic_core_label_anchor_from": "top_left",
+                                            "$option_generic_core_label_anchor_to": "top_left",
+                                            "ignored": "(not $tooltip_visible)"
                                         }
                                     },
                                     {
@@ -178,10 +167,17 @@
                             }
                         },
                         {
-                            "option_label@option_generic_core_label": {
+                            "option_label@layout_label.one_line_layout_label": {
                                 "$option_generic_core_label_anchor_from": "top_left",
                                 "$option_generic_core_label_anchor_to": "top_left",
-                                "$option_generic_core_label_size": "$one_line_layout_label_size"
+                                "ignored": "($tooltip_visible)"
+                            }
+                        },
+                        {
+                            "option_label@layout_label.one_line_layout_tooltip_label": {
+                                "$option_generic_core_label_anchor_from": "top_left",
+                                "$option_generic_core_label_anchor_to": "top_left",
+                                "ignored": "(not $tooltip_visible)"
                             }
                         },
                         {
@@ -208,26 +204,6 @@
                 }
             }
         ]
-    },
-    "option_generic_core_label": {
-        "type": "label",
-        "$option_generic_core_label_anchor_from|default": "center",
-        "$option_generic_core_label_anchor_to|default": "center",
-        "$option_generic_core_label_size|default": [
-            "100%",
-            "default"
-        ],
-        "anchor_from": "$option_generic_core_label_anchor_from",
-        "anchor_to": "$option_generic_core_label_anchor_to",
-        "offset": "$label_offset",
-        "size": "$option_generic_core_label_size",
-        "layer": 1,
-        "visible": "$show_option_label",
-        "color": "$main_header_text_color",
-        "locked_alpha": 0.5,
-        "text": "$option_label",
-        "text_alignment": "$option_label_alignment",
-        "bindings": "$label_bindings"
     },
     "option_generic_tooltip": {
         "type": "panel",

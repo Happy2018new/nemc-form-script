@@ -91,37 +91,13 @@
         "$toggle_state_binding_name": "#custom_toggle_state"
     },
     "custom_tooltip_input@modal_component.custom_input": {
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
-            "default"
-        ],
-        "$tooltip_visible|default": true,
-        "$two_line_layout_label_size|default": [
-            "100% - 30px",
-            "default"
-        ]
+        "$tooltip_visible": true
     },
     "custom_tooltip_step_slider@modal_component.custom_step_slider": {
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
-            "default"
-        ],
-        "$tooltip_visible|default": true,
-        "$two_line_layout_label_size|default": [
-            "100% - 30px",
-            "default"
-        ]
+        "$tooltip_visible": true
     },
     "custom_tooltip_toggle@modal_component.custom_toggle": {
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
-            "default"
-        ],
-        "$tooltip_visible|default": true,
-        "$two_line_layout_label_size|default": [
-            "100% - 30px",
-            "default"
-        ]
+        "$tooltip_visible": true
     },
     "namespace": "modal_component"
 }

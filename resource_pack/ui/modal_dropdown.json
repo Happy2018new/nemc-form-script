@@ -1,15 +1,7 @@
 {
     "custom_dropdown": {
         "type": "panel",
-        "$one_line_layout_label_size|default": [
-            "100% - 34px",
-            "default"
-        ],
         "$tooltip_visible|default": false,
-        "$two_line_layout_label_size|default": [
-            "100%",
-            "default"
-        ],
         "size": [
             "100%",
             "100%c"
@@ -32,15 +24,13 @@
                             "binding_type": "collection"
                         }
                     ],
-                    "$one_line_layout_label_size": "$one_line_layout_label_size",
                     "$option_label": "#custom_text",
                     "$options_dropdown_toggle_label_binding": "#dropdown_option_text",
                     "$options_dropdown_toggle_label_binding_collection_name": "custom_form",
                     "$options_dropdown_toggle_label_binding_type": "collection",
                     "$toggle_binding_type": "collection",
                     "$toggle_grid_collection_name": "custom_form",
-                    "$tooltip_visible": "$tooltip_visible",
-                    "$two_line_layout_label_size": "$two_line_layout_label_size"
+                    "$tooltip_visible": "$tooltip_visible"
                 }
             }
         ]
@@ -84,15 +74,7 @@
         "$toggle_state_binding_name": "#custom_radio_toggled"
     },
     "custom_tooltip_dropdown@modal_dropdown.custom_dropdown": {
-        "$one_line_layout_label_size|default": [
-            "100% - 60px",
-            "default"
-        ],
-        "$tooltip_visible|default": true,
-        "$two_line_layout_label_size|default": [
-            "100% - 30px",
-            "default"
-        ]
+        "$tooltip_visible": true
     },
     "radio_toggled@settings_common.radio_with_label": {
         "$option_enabled_binding_name": "#option_enabled_binding_name",
