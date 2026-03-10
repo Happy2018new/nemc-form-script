@@ -283,7 +283,7 @@
             }
         ]
     },
-    "option_generic_tooltip_bottom_popup@common.static_tooltip_popup_with_image_and_text": {
+    "option_generic_tooltip_bottom_popup@future.static_tooltip_popup_with_image_and_text": {
         "$tooltip_button_binding_type|default": "collection",
         "$tooltip_button_collection_name|default": "",
         "$tooltip_chevron_anchor": "top_right",
@@ -315,7 +315,7 @@
             11
         ]
     },
-    "option_generic_tooltip_top_popup@common.static_tooltip_popup_with_image_and_text": {
+    "option_generic_tooltip_top_popup@future.static_tooltip_popup_with_image_and_text": {
         "$tooltip_button_binding_type|default": "collection",
         "$tooltip_button_collection_name|default": "",
         "$tooltip_chevron_anchor": "bottom_right",
@@ -468,6 +468,183 @@
                 "requires": "$desktop_screen"
             }
         ]
+    },
+    "static_tooltip_popup_with_image_and_text@future.tooltip_background": {
+        "$ignore_tooltip_popup_chevron|default": false,
+        "$ignore_tooltip_popup_image|default": false,
+        "$override_tooltip_popup_image|default": false,
+        "$static_tooltip_popup_with_image_and_text_bindings|default": [
+            {
+                "binding_collection_name": "$tooltip_button_collection_name",
+                "binding_name": "$tooltip_popup_visible_binding",
+                "binding_name_override": "#visible",
+                "binding_type": "$tooltip_button_binding_type"
+            }
+        ],
+        "$tooltip_panel_offset|default": [
+            0,
+            "-100%c - 2px"
+        ],
+        "$tooltip_panel_size|default": [
+            "100%",
+            "100%cm + 8px"
+        ],
+        "$tooltip_popup_image|default": "",
+        "$tooltip_popup_visible_binding|default": "",
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "bindings": "$static_tooltip_popup_with_image_and_text_bindings",
+        "controls": [
+            {
+                "image_and_text_stack_panel": {
+                    "type": "stack_panel",
+                    "$tooltip_image_text_panel_offset|default": [
+                        0,
+                        0
+                    ],
+                    "offset": "$tooltip_image_text_panel_offset",
+                    "size": [
+                        "100% - 10px",
+                        "100%cm"
+                    ],
+                    "layer": 2,
+                    "orientation": "horizontal",
+                    "controls": [
+                        {
+                            "tooltip_text_image_panel": {
+                                "type": "panel",
+                                "size": [
+                                    "100%y",
+                                    "100%sm"
+                                ],
+                                "min_size": [
+                                    8,
+                                    8
+                                ],
+                                "max_size": [
+                                    12,
+                                    200
+                                ],
+                                "ignored": "$ignore_tooltip_popup_image",
+                                "controls": [
+                                    {
+                                        "tooltip_image_panel": {
+                                            "type": "panel",
+                                            "$tooltip_popup_image_control_array|default": [
+                                                {
+                                                    "tooltip_popup_image_panel": {
+                                                        "bilinear": false,
+                                                        "type": "image",
+                                                        "texture": "$tooltip_popup_image"
+                                                    }
+                                                }
+                                            ],
+                                            "variables": [
+                                                {
+                                                    "requires": "$override_tooltip_popup_image",
+                                                    "$tooltip_popup_image_control_array": [
+                                                        {
+                                                            "tooltip_popup_override_image_panel@$tooltip_popup_override_image_panel": {
+                                                                "size": [
+                                                                    "100%",
+                                                                    "100%"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "size": [
+                                                "100%",
+                                                "100%x"
+                                            ],
+                                            "controls": "$tooltip_popup_image_control_array"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "padding": {
+                                "type": "panel",
+                                "size": [
+                                    3,
+                                    0
+                                ],
+                                "ignored": "$ignore_tooltip_popup_image"
+                            }
+                        },
+                        {
+                            "tooltip_text": {
+                                "type": "label",
+                                "$tool_tip_text_max_size|default": [
+                                    "default",
+                                    "default"
+                                ],
+                                "$tooltip_text_binding_name|default": "#tooltip_text",
+                                "$tooltip_text_binding_type|default": "$tooltip_button_binding_type",
+                                "$tooltip_text_bindings|default": [
+                                    {
+                                        "binding_type": "$tooltip_text_binding_type",
+                                        "binding_collection_name": "$tooltip_button_collection_name",
+                                        "binding_condition": "visibility_changed",
+                                        "binding_name": "$tooltip_text_binding_name"
+                                    }
+                                ],
+                                "$tooltip_text_color|default": "$f_color_format",
+                                "$tooltip_text_font_size|default": "normal",
+                                "$tooltip_text_font_type|default": "default",
+                                "$tooltip_text_line_padding|default": 1,
+                                "size": [
+                                    "fill",
+                                    "default"
+                                ],
+                                "max_size": "$tool_tip_text_max_size",
+                                "color": "$tooltip_text_color",
+                                "font_size": "$tooltip_text_font_size",
+                                "font_type": "$tooltip_text_font_type",
+                                "line_padding": "$tooltip_text_line_padding",
+                                "text": "$tooltip_text_binding_name",
+                                "bindings": "$tooltip_text_bindings"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "tooltip_chevron": {
+                    "type": "image",
+                    "$tooltip_chevron_anchor|default": "bottom_left",
+                    "$tooltip_popup_chevron_offset|default": [
+                        "30%x",
+                        "100%y - 3px"
+                    ],
+                    "$tooltip_popup_chevron_size|default": [
+                        19,
+                        13
+                    ],
+                    "$tooltip_popup_chevron_texture|default": "textures/ui/tooltip_default_chevron",
+                    "anchor_from": "$tooltip_chevron_anchor",
+                    "anchor_to": "$tooltip_chevron_anchor",
+                    "offset": "$tooltip_popup_chevron_offset",
+                    "size": "$tooltip_popup_chevron_size",
+                    "layer": 2,
+                    "ignored": "$ignore_tooltip_popup_chevron",
+                    "bilinear": false,
+                    "texture": "$tooltip_popup_chevron_texture"
+                }
+            }
+        ],
+        "layer": 200,
+        "offset": "$tooltip_panel_offset",
+        "size": "$tooltip_panel_size"
+    },
+    "tooltip_background": {
+        "type": "image",
+        "$tooltip_background_color|default": "$f_color_format",
+        "$tooltip_background_texture|default": "textures/ui/tooltip_default_background",
+        "color": "$tooltip_background_color",
+        "texture": "$tooltip_background_texture"
     },
     "namespace": "future"
 }
