@@ -242,9 +242,9 @@ class OptionGenericCore(BaseComponent):
             bool:
                 指示是否需要刷新屏幕
         """
-        if trigger_type != TRIGGER_TYPE_CLICK:
-            return False
         if not is_touch:
+            return False
+        if trigger_type != TRIGGER_TYPE_CLICK:
             return False
 
         control = self._get_tooltip_image()
