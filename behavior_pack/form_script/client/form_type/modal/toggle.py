@@ -13,8 +13,6 @@ from .base import OptionGenericCore
 class Toggle(OptionGenericCore):
     """Toggle 是开关实现"""
 
-    _should_update_screen = False
-
     def __init__(
         self, ui_node, control, background, tooltip
     ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str) -> None
@@ -42,27 +40,9 @@ class Toggle(OptionGenericCore):
             background,
             "settings_common.option_toggle_control",
         )
+
         if len(tooltip) > 0:
             _ = self.set_tooltip_text(tooltip)
-
-        self._should_update_screen = False
-        self._last_render_label = ""
-
-    def on_update_screen(self):  # type: () -> bool
-        """
-        on_update_screen 在游戏每次刷新屏幕时调用。
-        通常情况下，1 秒钟内游戏会调用 30 次
-
-        Returns:
-            bool: 指示是否需要刷新屏幕
-        """
-        should_update = False
-        if OptionGenericCore.on_update_screen(self):
-            should_update = True
-        if self._should_update_screen:
-            should_update = True
-            self._should_update_screen = False
-        return should_update
 
     def on_destroy(self):  # type: () -> None
         """on_destroy 在该组件被销毁时调用"""
