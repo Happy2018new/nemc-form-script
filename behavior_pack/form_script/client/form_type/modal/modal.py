@@ -404,7 +404,7 @@ class ModalForm(BaseForm):
             return None
 
         result = Header(self.ui_node, control)
-        _ = result.set_label_text(label)
+        _ = result.set_header_text(label)
 
         self.childs.append(result)
         self._should_update_screen = True

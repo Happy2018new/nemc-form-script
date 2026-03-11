@@ -150,7 +150,7 @@ class Header(BaseComponent):
         if self.control is None:
             return False
 
-        current_label = self.get_label_text()
+        current_label = self.get_header_text()
         if current_label is None:
             return False
 
@@ -165,8 +165,8 @@ class Header(BaseComponent):
             return
         _ = self.ui_node.RemoveChildControl(self.control)
 
-    def get_label_text(self):  # type: () -> str | None
-        """get_label_text 获取该组件正显示的文本内容
+    def get_header_text(self):  # type: () -> str | None
+        """get_header_text 获取该组件正显示的文本内容
 
         Returns:
             str | None:
@@ -178,9 +178,9 @@ class Header(BaseComponent):
             return None
         return control.GetText()
 
-    def set_label_text(self, text):  # type: (str) -> Header
+    def set_header_text(self, text):  # type: (str) -> Header
         """
-        set_label_text 设置该组件显示的文本内容
+        set_header_text 设置该组件显示的文本内容
 
         Args:
             text (str): 欲显示的文本内容
