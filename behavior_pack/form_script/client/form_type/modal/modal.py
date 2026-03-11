@@ -235,8 +235,8 @@ class ModalForm(BaseForm):
         return self
 
     def push_slider(
-        self, label, contents, index=-1
-    ):  # type: (str, list[str], int) -> Slider | None
+        self, label, contents, index=-1, tooltip=""
+    ):  # type: (str, list[str], int, str) -> Slider | None
         """push_slider 向模态表单追加一个隐式步进滑块
 
         Args:
@@ -247,6 +247,9 @@ class ModalForm(BaseForm):
             index (int, optional):
                 该滑块最开始的位置。
                 不使用请置为 -1
+            tooltip (str, optional):
+                该滑块的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
             Slider | None:
@@ -259,19 +262,21 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        slider = (
-            Slider(self.ui_node, control)
-            .set_slider_label(label)
-            .set_slider_contents(contents, index)
-        )
+        slider = Slider(self.ui_node, control, background, tooltip)
+        _ = slider.set_slider_label(label)
+        _ = slider.set_slider_contents(contents, index)
+
         self.childs.append(slider)
         self._should_update_screen = True
         return slider
 
     def push_step_slider(
-        self, label, contents, index=-1
-    ):  # type: (str, list[str], int) -> StepSlider | None
+        self, label, contents, index=-1, tooltip=""
+    ):  # type: (str, list[str], int, str) -> StepSlider | None
         """
         push_step_slider 向模态表单追加一个显式步进滑块
 
@@ -283,6 +288,9 @@ class ModalForm(BaseForm):
             index (int, optional):
                 该滑块最开始的位置。
                 不使用请置为 -1
+            tooltip (str, optional):
+                该滑块的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
             StepSlider | None:
@@ -295,10 +303,13 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        step_slider = StepSlider(self.ui_node, control)
-        step_slider.set_slider_label(label)
-        step_slider.set_slider_contents(contents, index)
+        step_slider = StepSlider(self.ui_node, control, background, tooltip)
+        _ = step_slider.set_slider_label(label)
+        _ = step_slider.set_slider_contents(contents, index)
 
         self.childs.append(step_slider)
         self._should_update_screen = True

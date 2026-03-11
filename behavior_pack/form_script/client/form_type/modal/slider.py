@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from mod.client.ui.controls.baseUIControl import BaseUIControl
 
 import uuid
-from ..base import BaseComponent
+from .basic import OptionGenericCore
 
 DEF_NAME_SLIDER_STEP = "utils.slider_step"
 DEF_NAME_SLIDER_STEP_PROGRESS = "utils.slider_step_progress"
@@ -68,70 +68,44 @@ def get_slider_step_texture_by_enum(slider_step_enum):  # type: (str) -> str
     return "textures/ui/slider_step_background"
 
 
-class Slider(BaseComponent):
+class Slider(OptionGenericCore):
     """Slider 是隐式步进滑块实现"""
 
-    slider_label = ""  # type: str
     slider_contents = []  # type: list[str]
-    _should_update_screen = False  # type: bool
+    _slider_label = ""  # type: str
     _last_render_text = ""  # type: str
 
-    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+    def __init__(
+        self, ui_node, control, background, tooltip
+    ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str) -> None
         """初始化并返回一个新的 隐式步进滑块 实例
 
         Args:
             ui_node (ScreenNode): 该组件所在的屏幕结点
-            control (BaseUIControl): 要将滑块挂接在哪个父节点下
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+            background (BaseUIControl): 该组件所在模态表单的背景控件
+            tooltip (str): 该组件的灯泡提示文本
         """
-        self.ui_node = ui_node
-        self.control = ui_node.CreateChildControl(
-            "modal_component.custom_step_slider",
-            "slider-" + str(uuid.uuid4()),
-            control,
-            False,
+        def_name = "modal_component.custom_step_slider"
+        if len(tooltip) > 0:
+            def_name = "modal_component.custom_tooltip_step_slider"
+
+        OptionGenericCore.__init__(
+            self,
+            ui_node=ui_node,
+            control=ui_node.CreateChildControl(
+                def_name, "slider-" + str(uuid.uuid4()), control, False
+            ),
+            background=background,
+            control_name="settings_common.option_slider_control",
+            suffix_path="/slider",
         )
-        self.slider_label = ""
+        if len(tooltip) > 0:
+            _ = self.set_tooltip_text(tooltip)
+
         self.slider_contents = []
-        self._should_update_screen = False
+        self._slider_label = ""
         self._last_render_text = ""
-
-    def _get_slider_control(self):  # type: () -> BaseUIControl | None
-        """_get_slider_control 获取滑块控件的基本控件实例
-
-        Returns:
-            BaseUIControl | None: 如果成功，返回对应的控件实例。
-                                  否则失败，那么返回 None
-        """
-        if self.control is None:
-            return None
-        return self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout/settings_common.option_slider_control/slider"
-        )
-
-    def _set_slider_text(self, slider_text):  # type: (str) -> Slider
-        """_set_slider_text 设置滑块的文本
-
-        Args:
-            slider_text (str): 要设置的滑块文本
-
-        Returns:
-            Slider: 返回 Slider 本身
-        """
-        if self.control is None:
-            return self
-
-        child = self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout/option_label_panel/option_label"
-        )
-        if child is None:
-            return self
-
-        child = child.asLabel()
-        if child is None:
-            return self
-        child.SetText(slider_text)
-
-        return self
 
     def _set_slider_progress(
         self, slider_step, slider_value
@@ -145,7 +119,7 @@ class Slider(BaseComponent):
         Returns:
             Slider: 返回 Slider 本身
         """
-        control = self._get_slider_control()
+        control = self.get_current_control()
         if control is None:
             return self
 
@@ -166,28 +140,32 @@ class Slider(BaseComponent):
         Returns:
             bool: 指示是否需要刷新屏幕
         """
-        should_update = self._should_update_screen
-        if self._should_update_screen:
-            self._should_update_screen = False
-
         index = self.get_slider_index()
         if index is None:
-            return should_update
+            return False
 
         content = self.slider_contents[index]
-        current_render_text = self.slider_label + ": " + content
+        current_render_text = self._slider_label + ": " + content
         if self._last_render_text != current_render_text:
-            _ = self._set_slider_text(self.slider_label + ": " + content)
+            _ = self.set_title_label(self._slider_label + ": " + content)
             self._last_render_text = current_render_text
-            should_update = True
 
-        return should_update
+        return OptionGenericCore.on_update_screen(self)
 
     def on_destroy(self):  # type: () -> None
         """on_destroy 在该组件被销毁时调用"""
         if self.ui_node is None or self.control is None:
             return
         self.ui_node.RemoveChildControl(self.control)
+
+    def get_slider_label(self):  # type: () -> str
+        """
+        get_slider_label 获取当前滑块的标题文本
+
+        Returns:
+            str: 当前滑块的标题文本
+        """
+        return self._slider_label
 
     def get_slider_index(self):  # type: () -> int | None
         """get_slider_index 获取当前滑块所指示的内容的索引
@@ -199,14 +177,11 @@ class Slider(BaseComponent):
         if self.control is None:
             return None
 
-        child = self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout"
-            + "/settings_common.option_slider_control/slider"
-        )
-        if child is None:
+        control = self.get_current_control()
+        if control is None:
             return None
 
-        raw_bag = child.GetPropertyBag()  # type: Any
+        raw_bag = control.GetPropertyBag()  # type: Any
         property = raw_bag  # type: dict[str, Any]
         index = int(property["#slider_value"])
         if index < 0 or index >= len(self.slider_contents):
@@ -215,15 +190,16 @@ class Slider(BaseComponent):
         return index
 
     def set_slider_label(self, label):  # type: (str) -> Slider
-        """set_slider_label 设置滑块的标题
+        """
+        set_slider_label 设置当前滑块的标题文本
 
         Args:
-            label (str): 欲设置的标题
+            label (str): 欲设置的标题文本
 
         Returns:
             Slider: 返回 Slider 本身
         """
-        self.slider_label = label
+        self._slider_label = label
         return self
 
     def set_slider_contents(
@@ -252,14 +228,18 @@ class StepSlider(Slider):
     _slider_steps_control = []  # type: list[BaseUIControl]
     _slider_steps_def_name = []  # type: list[str]
 
-    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+    def __init__(
+        self, ui_node, control, background, tooltip
+    ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str) -> None
         """初始化并返回一个新的 显式步进滑块 实例
 
         Args:
             ui_node (ScreenNode): 该组件所在的屏幕结点
-            control (BaseUIControl): 要将滑块挂接在哪个父节点下
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+            background (BaseUIControl): 该组件所在模态表单的背景控件
+            tooltip (str): 该组件的灯泡提示文本
         """
-        Slider.__init__(self, ui_node, control)
+        Slider.__init__(self, ui_node, control, background, tooltip)
         self._last_slider_steps = 0
         self._slider_steps_control = []
         self._slider_steps_def_name = []
@@ -274,7 +254,7 @@ class StepSlider(Slider):
         if self.ui_node is None:
             return False
 
-        control = self._get_slider_control()
+        control = self.get_current_control()
         if control is None:
             return False
         slider_size = control.GetSize()
