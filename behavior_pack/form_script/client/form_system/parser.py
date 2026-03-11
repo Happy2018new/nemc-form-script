@@ -11,7 +11,7 @@ from ..utils import format_number
 from ..form_type.other.long import LongForm
 from ..form_type.other.popup import PopupForm
 from ..form_type.modal.modal import ModalForm
-from ..form_type.modal.label import Label
+from ..form_type.modal.text import Label, Header, Divider
 from ..form_type.modal.toggle import Toggle
 from ..form_type.modal.input import Input
 from ..form_type.modal.dropdown import DropDown
@@ -198,7 +198,7 @@ def pack_modal_form_response(
     result = []  # type: list[bool | str | int | float | None]
 
     for i in modal.childs:
-        if isinstance(i, Label):
+        if isinstance(i, (Label, Header, Divider)):
             result.append(None)
         elif isinstance(i, Toggle):
             value = i.get_toggle_state()

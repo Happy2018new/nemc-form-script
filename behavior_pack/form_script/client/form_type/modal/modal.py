@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from mod.client.extraClientApi import ScreenNode
     from mod.client.ui.controls.baseUIControl import BaseUIControl, ButtonUIControl
 
-from .label import Label
+from .text import Label, Header, Divider
 from .toggle import Toggle
 from .input import Input
 from .dropdown import DropDown
@@ -379,10 +379,57 @@ class ModalForm(BaseForm):
             return None
 
         result = Label(self.ui_node, control)
-        result.set_label_text(label)
+        _ = result.set_label_text(label)
 
         self.childs.append(result)
         self._should_update_screen = True
+        return result
+
+    def push_header(self, label):  # type: (str) -> Header | None
+        """
+        push_header 向模态表单追加一个大字纯文本显示组件
+
+        Args:
+            label (str): 该组件要显示的纯文本
+
+        Returns:
+            Header | None: 如果成功，则返回追加的组件；
+                           否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_generated_form()
+        if control is None:
+            return None
+
+        result = Header(self.ui_node, control)
+        _ = result.set_label_text(label)
+
+        self.childs.append(result)
+        self._should_update_screen = True
+        return result
+
+    def push_divider(self):  # type: () -> Divider | None
+        """
+        push_divider 向模态表单追加一个分割线组件
+
+        Returns:
+            Divider | None:
+                如果成功，则返回追加的组件；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_generated_form()
+        if control is None:
+            return None
+
+        result = Divider(self.ui_node, control)
+        self.childs.append(result)
+        self._should_update_screen = True
+
         return result
 
     def push_toggle(
@@ -399,7 +446,7 @@ class ModalForm(BaseForm):
                 默认值为 False
             tooltip (str, optional):
                 开关的灯泡提示文本。
-                默认值为 False
+                默认值为空字符串
 
         Returns:
             Toggle | None:
