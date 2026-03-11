@@ -152,12 +152,6 @@ class Slider(OptionGenericCore):
 
         return OptionGenericCore.on_update_screen(self)
 
-    def on_destroy(self):  # type: () -> None
-        """on_destroy 在该组件被销毁时调用"""
-        if self.ui_node is None or self.control is None:
-            return
-        self.ui_node.RemoveChildControl(self.control)
-
     def get_slider_label(self):  # type: () -> str
         """
         get_slider_label 获取当前滑块的标题文本

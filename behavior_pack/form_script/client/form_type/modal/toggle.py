@@ -44,12 +44,6 @@ class Toggle(OptionGenericCore):
         if len(tooltip) > 0:
             _ = self.set_tooltip_text(tooltip)
 
-    def on_destroy(self):  # type: () -> None
-        """on_destroy 在该组件被销毁时调用"""
-        if self.ui_node is None or self.control is None:
-            return
-        _ = self.ui_node.RemoveChildControl(self.control)
-
     def get_toggle_state(self):  # type: () -> bool | None
         """get_toggle_state 获取开关的状态
 

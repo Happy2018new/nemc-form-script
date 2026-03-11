@@ -425,8 +425,8 @@ class ModalForm(BaseForm):
         return toggle
 
     def push_input(
-        self, label_text, place_holder_text="", edit_text=""
-    ):  # type: (str, str, str) -> Input | None
+        self, label_text, place_holder_text="", edit_text="", tooltip=""
+    ):  # type: (str, str, str, str) -> Input | None
         """push_input 向模态表单追加一个输入框
 
         Args:
@@ -438,6 +438,9 @@ class ModalForm(BaseForm):
             edit_text (str, optional):
                 输入框中用户输入的内容。
                 默认为空字符串
+            tooltip (str, optional):
+                输入框的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
             Input | None:
@@ -450,13 +453,15 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        panel = (
-            Input(self.ui_node, control)
-            .set_label_text(label_text)
-            .set_place_holder_text(place_holder_text)
-            .set_edit_text(edit_text)
-        )
+        panel = Input(self.ui_node, control, background, tooltip)
+        _ = panel.set_title_label(label_text)
+        _ = panel.set_place_holder_text(place_holder_text)
+        _ = panel.set_edit_text(edit_text)
+
         self.childs.append(panel)
         self._should_update_screen = True
         return panel

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     )
 
 from mod.client.extraClientApi import GetEngineCompFactory, GetLocalPlayerId
-from ..base import TRIGGER_TYPE_CLICK, BaseComponent
+from ..base import BaseComponent
 from ...utils import point_is_in_rect, rect_in_rect, input_mode_is_touch
 
 
@@ -254,6 +254,12 @@ class OptionGenericCore(BaseComponent):
         )
 
         return False
+
+    def on_destroy(self):  # type: () -> None
+        """on_destroy 在该组件被销毁时调用"""
+        if self.ui_node is None or self.control is None:
+            return
+        _ = self.ui_node.RemoveChildControl(self.control)
 
     def get_current_control(self):  # type: () -> BaseUIControl | None
         """get_current_control 获取控制该组件的实际控件
