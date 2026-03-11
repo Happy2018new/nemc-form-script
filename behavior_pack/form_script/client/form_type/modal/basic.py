@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 from mod.client.extraClientApi import GetEngineCompFactory, GetLocalPlayerId
 from ..base import TRIGGER_TYPE_CLICK, BaseComponent
-from ...utils import point_is_in_rect, rect_in_rect
+from ...utils import point_is_in_rect, rect_in_rect, input_mode_is_touch
 
 
 class OptionGenericCore(BaseComponent):
@@ -22,14 +22,16 @@ class OptionGenericCore(BaseComponent):
     """
 
     background = None  # type: BaseUIControl | None
-    control_name = ""  # type: str
+    _control_name = ""  # type: str
+    _prefix_path = ""  # type: str
+    _suffix_path = ""  # type: str
     _tooltip_text = ""  # type: str
     _actor_motion_comp = None  # type: ActorMotionComponentClient | None
     _should_update_screen = False  # type: bool
 
     def __init__(
-        self, ui_node, control, background, control_name
-    ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str) -> None
+        self, ui_node, control, background, control_name, prefix_path="", suffix_path=""
+    ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str, str, str) -> None
         """初始化并返回一个新的 OptionGenericCore
 
         Args:
@@ -42,11 +44,19 @@ class OptionGenericCore(BaseComponent):
             control_name (str):
                 该组件的 JSON UI Control 名称。
                 例如 `settings_common.option_text_edit_control`
+            prefix_path (str, optional):
+                获取该组件各子控件所需的前置路径。
+                默认值为空字符串
+            suffix_path (str, optional):
+                获取该组件各子控件所需的后置路径。
+                默认值为空字符串
         """
         self.ui_node = ui_node
         self.control = control
         self.background = background
-        self.control_name = control_name
+        self._control_name = control_name
+        self._prefix_path = prefix_path
+        self._suffix_path = suffix_path
         self._tooltip_text = ""
         self._actor_motion_comp = GetEngineCompFactory().CreateActorMotion(
             GetLocalPlayerId()
@@ -65,11 +75,15 @@ class OptionGenericCore(BaseComponent):
             return None
 
         child = self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout/option_label_panel/option_label"
+            self._prefix_path
+            + "/option_generic_core/two_line_layout"
+            + "/option_label_panel/option_label"
         )
         if child is None:
             child = self.control.GetChildByPath(
-                "/option_generic_core/one_line_layout/option_label"
+                self._prefix_path
+                + "/option_generic_core/one_line_layout"
+                + "/option_label"
             )
         if child is None:
             return None
@@ -88,7 +102,9 @@ class OptionGenericCore(BaseComponent):
             return None
 
         child = self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout/option_label_panel/option_tooltip"
+            self._prefix_path
+            + "/option_generic_core/two_line_layout"
+            + "/option_label_panel/option_tooltip"
         )
         if child is not None:
             return child
@@ -122,27 +138,6 @@ class OptionGenericCore(BaseComponent):
             return None
 
         return child.asImage()
-
-    def _get_current_control(self):  # type: () -> BaseUIControl | None
-        """_get_current_control 获取控制该组件的实际控件
-
-        Returns:
-            BaseUIControl | None:
-                如果成功，则返回对应的控件实例；
-                如果失败，那么返回 None
-        """
-        if self.control is None:
-            return None
-
-        child = self.control.GetChildByPath(
-            "/option_generic_core/two_line_layout/" + self.control_name
-        )
-        if child is not None:
-            return child
-
-        return self.control.GetChildByPath(
-            "/option_generic_core/one_line_layout/" + self.control_name
-        )
 
     def _set_tooltip_visible(self, visible):  # type: (bool) -> OptionGenericCore
         """_set_tooltip_visible 设置该组件提示灯泡中提示文本的可见性
@@ -209,17 +204,21 @@ class OptionGenericCore(BaseComponent):
         if self._actor_motion_comp is None:
             return False
 
-        position = self._actor_motion_comp.GetMousePosition()
-        if position is not None:
-            control = self._get_tooltip_image()
-            if control is not None:
-                _ = self._set_tooltip_visible(
-                    point_is_in_rect(control.GetRotateRect(), position)
-                )
-
         should_update = self._should_update_screen
         if self._should_update_screen:
             self._should_update_screen = False
+
+        if input_mode_is_touch():
+            return should_update
+        position = self._actor_motion_comp.GetMousePosition()
+        if position is None:
+            return should_update
+        control = self._get_tooltip_image()
+        if control is not None:
+            _ = self._set_tooltip_visible(
+                point_is_in_rect(control.GetRotateRect(), position)
+            )
+
         return should_update
 
     def on_trigger_screen(
@@ -240,11 +239,11 @@ class OptionGenericCore(BaseComponent):
 
         Returns:
             bool:
-                指示是否需要刷新屏幕
+                指示是否需要刷新屏幕。
+                总是返回 False
         """
+        _ = trigger_type
         if not is_touch:
-            return False
-        if trigger_type != TRIGGER_TYPE_CLICK:
             return False
 
         control = self._get_tooltip_image()
@@ -254,10 +253,30 @@ class OptionGenericCore(BaseComponent):
             point_is_in_rect(control.GetRotateRect(), touch_pos)
         )
 
-        should_update = self._should_update_screen
-        if self._should_update_screen:
-            self._should_update_screen = False
-        return should_update
+        return False
+
+    def get_current_control(self):  # type: () -> BaseUIControl | None
+        """get_current_control 获取控制该组件的实际控件
+
+        Returns:
+            BaseUIControl | None:
+                如果成功，则返回对应的控件实例；
+                如果失败，那么返回 None
+        """
+        if self.control is None:
+            return None
+
+        path = "{}/option_generic_core/two_line_layout/{}{}".format(
+            self._prefix_path, self._control_name, self._suffix_path
+        )
+        child = self.control.GetChildByPath(path)
+        if child is not None:
+            return child
+
+        path = "{}/option_generic_core/one_line_layout/{}{}".format(
+            self._prefix_path, self._control_name, self._suffix_path
+        )
+        return self.control.GetChildByPath(path)
 
     def get_title_label(self):  # type: () -> str | None
         """get_title_label 获取该组件的标题文本

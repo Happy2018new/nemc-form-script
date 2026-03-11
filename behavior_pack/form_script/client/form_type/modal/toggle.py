@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from mod.client.ui.controls.baseUIControl import BaseUIControl
 
 import uuid
-from .base import OptionGenericCore
+from .basic import OptionGenericCore
 
 
 class Toggle(OptionGenericCore):
@@ -59,7 +59,7 @@ class Toggle(OptionGenericCore):
                 返回 False 如果开关处于关闭状态；
                 否则，获取开关状态失败，那么返回 None
         """
-        control = self._get_current_control()
+        control = self.get_current_control()
         if control is None:
             return None
         control = control.asSwitchToggle()
@@ -77,7 +77,7 @@ class Toggle(OptionGenericCore):
         Returns:
             Toggle: 返回 Toggle 本身
         """
-        control = self._get_current_control()
+        control = self.get_current_control()
         if control is None:
             return self
         control = control.asSwitchToggle()

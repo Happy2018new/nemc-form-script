@@ -88,7 +88,7 @@ class Label(BaseComponent):
         """set_label_text 设置该组件显示的文本内容
 
         Args:
-            text (int): 欲显示的文本内容
+            text (str): 欲显示的文本内容
 
         Returns:
             Label: 返回 Label 本身
