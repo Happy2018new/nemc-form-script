@@ -372,7 +372,7 @@ class LongForm(BaseForm):
             content (str, optional):
                 长表单的内容文本。
                 默认值为空字符串
-            elements (list, optional):
+            elements (list[LongFormElement], optional):
                 长表单中的元素。
                 默认值为空列表
         """

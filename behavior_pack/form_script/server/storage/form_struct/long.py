@@ -301,7 +301,7 @@ class LongForm(BaseForm):
             content (StringWithHash, optional):
                 长表单的内容文本。
                 默认值为 EMPTY_STRING_WITH_HASH
-            elements (list, optional):
+            elements (list[LongFormElement], optional):
                 长表单中的按钮。
                 默认值为空列表
             onsubmit (StringWithHash, optional):
