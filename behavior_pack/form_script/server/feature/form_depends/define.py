@@ -5,7 +5,10 @@ import json
 from ...storage.base import StringWithHash
 from ....packet.packet import ModalFormResponse
 from ....formal.base import BaseForm as BaseFormalForm
-from ....formal.long import LongForm as LongFormalForm
+from ....formal.long import (
+    LongForm as LongFormalForm,
+    LongFormButton as LongFormalFormButton,
+)
 from ....formal.popup import PopupForm as PopupFormalForm
 from ....formal.modal import (
     ModalForm as ModalFormalForm,
@@ -94,13 +97,19 @@ class FormalWithCallback:
         if isinstance(self.formal, LongFormalForm):
             if isinstance(resp, bool) or not isinstance(resp, int):
                 return None
-            if resp < 0 or resp >= len(self.formal.buttons):
+            count = 0
+            for i in self.formal.elements:
+                if isinstance(i, LongFormalFormButton):
+                    count += 1
+            if resp < 0 or resp >= count:
                 return None
             return resp
+
         if isinstance(self.formal, PopupFormalForm):
             if not isinstance(resp, bool):
                 return None
             return resp
+
         if isinstance(self.formal, ModalFormalForm):
             if not isinstance(resp, list):
                 return None

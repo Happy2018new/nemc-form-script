@@ -16,12 +16,21 @@ from ..form_type.modal.toggle import Toggle
 from ..form_type.modal.input import Input
 from ..form_type.modal.dropdown import DropDown
 from ..form_type.modal.slider import Slider, StepSlider
-from ...formal.long import LongFormIconPathImage, LongFormIconURLImage
 from ...formal.long import LongForm as LongFormalForm
 from ...formal.popup import PopupForm as PopupFormalForm
 from ...formal.modal import ModalForm as ModalFormalForm
+from ...formal.long import (
+    LongFormIconPathImage,
+    LongFormIconURLImage,
+    LongFormButton,
+    LongFormLabel,
+    LongFormHeader,
+    LongFormDivider,
+)
 from ...formal.modal import (
     ModalFormElementLabel,
+    ModalFormElementHeader,
+    ModalFormElementDivider,
     ModalFormElementInput,
     ModalFormElementToggle,
     ModalFormElementDropdown,
@@ -65,13 +74,20 @@ def parse_json_to_long_form(
         .set_inside_label(formal.content)
     )
 
-    for i in formal.buttons:
-        if isinstance(i.icon, LongFormIconPathImage):
-            form.push_button(i.text, i.icon.image_path, False)
-        elif isinstance(i.icon, LongFormIconURLImage):
-            form.push_button(i.text, i.icon.image_url, True)
-        else:
-            form.push_button(i.text, "", False)
+    for i in formal.elements:
+        if isinstance(i, LongFormButton):
+            if isinstance(i.icon, LongFormIconPathImage):
+                _ = form.push_button(i.text, i.icon.image_path, False)
+            elif isinstance(i.icon, LongFormIconURLImage):
+                _ = form.push_button(i.text, i.icon.image_url, True)
+            else:
+                _ = form.push_button(i.text, "", False)
+        elif isinstance(i, LongFormLabel):
+            _ = form.push_label(i.text)
+        elif isinstance(i, LongFormHeader):
+            _ = form.push_header(i.text)
+        elif isinstance(i, LongFormDivider):
+            _ = form.push_divider()
 
     return form
 
@@ -144,14 +160,18 @@ def parse_json_to_modal_form(
     for i in formal.content:
         if isinstance(i, ModalFormElementLabel):
             _ = form.push_label(i.text)
+        if isinstance(i, ModalFormElementHeader):
+            _ = form.push_header(i.text)
+        if isinstance(i, ModalFormElementDivider):
+            _ = form.push_divider()
         elif isinstance(i, ModalFormElementInput):
-            _ = form.push_input(i.text, i.place_holder, i.default)
+            _ = form.push_input(i.text, i.place_holder, i.default, i.tooltip)
         elif isinstance(i, ModalFormElementToggle):
-            _ = form.push_toggle(i.text, i.default)
+            _ = form.push_toggle(i.text, i.default, i.tooltip)
         elif isinstance(i, ModalFormElementDropdown):
-            _ = form.push_dropdown(i.text, i.options, i.default)
+            _ = form.push_dropdown(i.text, i.options, i.default, i.tooltip)
         elif isinstance(i, ModalFormElementStepSlider):
-            _ = form.push_step_slider(i.text, i.steps, i.default)
+            _ = form.push_step_slider(i.text, i.steps, i.default, i.tooltip)
         elif isinstance(i, ModalFormElementSlider):
             default_index = 0  # type: int
             current_value = i.min_val  # type: float
@@ -166,7 +186,7 @@ def parse_json_to_modal_form(
                 if i.default >= float(value):
                     default_index = index
 
-            _ = form.push_slider(i.text, slider_contents, default_index)
+            _ = form.push_slider(i.text, slider_contents, default_index, i.tooltip)
 
     return form
 
@@ -182,6 +202,8 @@ def pack_modal_form_response(
     对于每个元素的输入，确保打包规则和结果如下。
 
     - 将 Label 打包为 None
+    - 将 Header 打包为 None
+    - 将 Divider 打包为 None
     - 将 Toggle 打包为布尔值
     - 将 Input 打包为字符串
     - 将 DropDown 打包为整数

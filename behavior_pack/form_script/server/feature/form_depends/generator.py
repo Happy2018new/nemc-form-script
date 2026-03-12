@@ -21,7 +21,7 @@ from ...storage.form_struct.modal import (
 )
 from ....formal.long import (
     LongForm as LongFormalForm,
-    LongFormElement as LongFormalFormElement,
+    LongFormButton as LongFormalFormButton,
     LongFormIconPathImage as LongFormalFormIconPathImage,
 )
 from ....formal.popup import PopupForm as PopupFormalForm
@@ -95,7 +95,7 @@ def _generate_long_form(
 
     for index, value in enumerate(form.buttons):
         # prepare
-        element = LongFormalFormElement()
+        button = LongFormalFormButton()
         # text
         ctx = "In text of button which indexed in {}".format(index)
         text = runner.run_code(value.text, ctx, executor, dimension, position)
@@ -105,7 +105,7 @@ def _generate_long_form(
                     index, text
                 )
             )
-        element.text = filter_sentence(text)
+        button.text = filter_sentence(text)
         # icon
         if isinstance(value.icon, LongStorageFormIconPathImage):
             ctx = "In image path of button which indexed in {}".format(index)
@@ -118,9 +118,9 @@ def _generate_long_form(
                         index, image_path
                     )
                 )
-            element.icon = LongFormalFormIconPathImage(image_path)
+            button.icon = LongFormalFormIconPathImage(image_path)
         # append
-        result.buttons.append(element)
+        result.elements.append(button)
 
     return FormalWithCallback(
         result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
