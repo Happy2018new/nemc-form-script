@@ -15,12 +15,18 @@ from ..utils import disconnect_player
 from ..executor.executor import GameCodeExecutor
 from ..storage.form import FORM_TYPE_LONG, FORM_TYPE_MODAL, FormStorage
 from ..storage.form_struct.long import (
-    LongForm as LongStorageForm,
     LongFormIconPathImage as LongStorageFormIconPathImage,
+    LongFormButton as LongStorageFormButton,
+    LongFormLabel as LongStorageFormLabel,
+    LongFormHeader as LongStorageFormHeader,
+    LongFormDivider as LongStorageFormDivider,
+    LongForm as LongStorageForm,
 )
 from ..storage.form_struct.modal import (
     ModalForm as ModalStorageForm,
     ModalFormElementLabel as ModalStorageFormElementLabel,
+    ModalFormElementHeader as ModalStorageFormElementHeader,
+    ModalFormElementDivider as ModalStorageFormElementDivider,
     ModalFormElementInput as ModalStorageFormElementInput,
     ModalFormElementToggle as ModalStorageFormElementToggle,
     ModalFormElementDropdown as ModalStorageFormElementDropdown,
@@ -45,15 +51,22 @@ from ...packet.packet import (
 
 MAX_PENDING_FORM_COUNT = 8
 
-LONG_FORM_ICON_TYPE_NONE = 0
-LONG_FORM_ICON_TYPE_PATH_IMAGE = 1
+LONG_FORM_ELEMENT_TYPE_BUTTON = 0
+LONG_FORM_ELEMENT_TYPE_LABEL = 1
+LONG_FORM_ELEMENT_TYPE_HEADER = 2
+LONG_FORM_ELEMENT_TYPE_DIVIDER = 3
+
+LONG_FORM_BUTTON_ICON_TYPE_NONE = 0
+LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE = 1
 
 MODAL_FORM_ELEMENT_TYPE_LABEL = 0
-MODAL_FORM_ELEMENT_TYPE_INPUT = 1
-MODAL_FORM_ELEMENT_TYPE_TOGGLE = 2
-MODAL_FORM_ELEMENT_TYPE_DROPDOWN = 3
-MODAL_FORM_ELEMENT_TYPE_SLIDER = 4
-MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER = 5
+MODAL_FORM_ELEMENT_TYPE_HEADER = 1
+MODAL_FORM_ELEMENT_TYPE_DIVIDER = 2
+MODAL_FORM_ELEMENT_TYPE_INPUT = 3
+MODAL_FORM_ELEMENT_TYPE_TOGGLE = 4
+MODAL_FORM_ELEMENT_TYPE_DROPDOWN = 5
+MODAL_FORM_ELEMENT_TYPE_SLIDER = 6
+MODAL_FORM_ELEMENT_TYPE_STEP_SLIDER = 7
 
 
 class FormFeature:
@@ -107,14 +120,18 @@ class FormFeature:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["form.list_all_form"] = lambda: manager.ref(self.list_form())
-        funcs["form.list_long_form_icon_type"] = lambda form_name: manager.ref(
-            self.list_long_form_icon_type(form_name)
+        funcs["form.list_long_form_element_type"] = lambda form_name: manager.ref(
+            self.list_long_form_element_type(form_name)
+        )
+        funcs["form.list_long_form_button_icon_type"] = lambda form_name: manager.ref(
+            self.list_long_form_button_icon_type(form_name)
         )
         funcs["form.list_modal_form_element_type"] = lambda form_name: manager.ref(
             self.list_modal_form_element_type(form_name)
         )
         funcs["form.custom_form_type"] = self.custom_form_type
-        funcs["form.long_form_element_icon_type"] = self.long_form_element_icon_type
+        funcs["form.long_form_element_type"] = self.long_form_element_type
+        funcs["form.long_form_button_icon_type"] = self.long_form_button_icon_type
         funcs["form.modal_form_element_type"] = self.modal_form_element_type
         funcs["form.modal_form_length"] = self.modal_form_length
         funcs["form.long_form_length"] = self.long_form_length
@@ -386,9 +403,9 @@ class FormFeature:
             else:
                 return self.storage.form_type(form_name)
 
-    def list_long_form_icon_type(self, form_name):  # type: (str) -> list[int]
+    def list_long_form_element_type(self, form_name):  # type: (str) -> list[int]
         """
-        list_long_form_icon_type 列出长表单中所有按钮的图标类型
+        list_long_form_element_type 列出长表单中所有元素的类型
 
         Args:
             form_name (str): 长表单的名称
@@ -402,7 +419,7 @@ class FormFeature:
         Returns:
             list[int]:
                 目标长表单中，
-                所有按钮的图标类型
+                所有元素的类型
         """
         assert self.storage is not None
 
@@ -412,24 +429,80 @@ class FormFeature:
             form_type = self.storage.form_type(form_name)
             if form_type is None:
                 raise Exception(
-                    "list_long_form_icon_type: Form {} not found".format(
+                    "list_long_form_element_type: Form {} not found".format(
                         json.dumps(form_name, ensure_ascii=False)
                     )
                 )
             if form_type != FORM_TYPE_LONG:
                 raise Exception(
-                    "list_long_form_icon_type: Target form is not a long form"
+                    "list_long_form_element_type: Target form is not a long form"
                 )
 
             storage_form = self.storage.get_form(form_name)
             if storage_form is None or not isinstance(storage_form, LongStorageForm):
                 return result
 
-            for i in storage_form.buttons:
-                if isinstance(i.icon, LongStorageFormIconPathImage):
-                    result.append(LONG_FORM_ICON_TYPE_PATH_IMAGE)
+            for i in storage_form.elements:
+                if isinstance(i, LongStorageFormButton):
+                    result.append(LONG_FORM_ELEMENT_TYPE_BUTTON)
+                elif isinstance(i, LongStorageFormLabel):
+                    result.append(LONG_FORM_ELEMENT_TYPE_LABEL)
+                elif isinstance(i, LongStorageFormHeader):
+                    result.append(LONG_FORM_ELEMENT_TYPE_HEADER)
+                elif isinstance(i, LongStorageFormDivider):
+                    result.append(LONG_FORM_ELEMENT_TYPE_DIVIDER)
+            return result
+
+    def list_long_form_button_icon_type(
+        self, form_name
+    ):  # type: (str) -> list[int | None]
+        """
+        list_long_form_button_icon_type
+        列出长表单中所有按钮的图标类型
+
+        Args:
+            form_name (str): 长表单的名称
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是长表单，
+                则抛出相应的错误
+
+        Returns:
+            list[int | None]:
+                返回一个列表，指示目标长表单中所有按钮的图标类型。
+                如果某一元素不是按钮，则列表该位置处的元素将置为 None
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            result = []  # type: list[int | None]
+
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "list_long_form_button_icon_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_LONG:
+                raise Exception(
+                    "list_long_form_button_icon_type: Target form is not a long form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, LongStorageForm):
+                return result
+
+            for i in storage_form.elements:
+                if isinstance(i, LongStorageFormButton):
+                    if isinstance(i.icon, LongStorageFormIconPathImage):
+                        result.append(LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE)
+                    else:
+                        result.append(LONG_FORM_BUTTON_ICON_TYPE_NONE)
                 else:
-                    result.append(LONG_FORM_ICON_TYPE_NONE)
+                    result.append(None)
             return result
 
     def list_modal_form_element_type(self, form_name):  # type: (str) -> list[int]
@@ -474,6 +547,10 @@ class FormFeature:
             for i in storage_form.content:
                 if isinstance(i, ModalStorageFormElementLabel):
                     result.append(MODAL_FORM_ELEMENT_TYPE_LABEL)
+                elif isinstance(i, ModalStorageFormElementHeader):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_HEADER)
+                elif isinstance(i, ModalStorageFormElementDivider):
+                    result.append(MODAL_FORM_ELEMENT_TYPE_DIVIDER)
                 elif isinstance(i, ModalStorageFormElementInput):
                     result.append(MODAL_FORM_ELEMENT_TYPE_INPUT)
                 elif isinstance(i, ModalStorageFormElementToggle):
@@ -516,12 +593,12 @@ class FormFeature:
                 )
             )
 
-    def long_form_element_icon_type(self, form_name, index):  # type: (str, int) -> int
-        """long_form_element_icon_type 查询长表单中指定按钮的图标类型
+    def long_form_element_type(self, form_name, index):  # type: (str, int) -> int
+        """long_form_element_type 查询长表单中指定元素的类型
 
         Args:
             form_name (str): 目标长表单的名称
-            index (int): 目标按钮在给定长表单中的索引
+            index (int): 目标元素在给定长表单中的索引
 
         Raises:
             Exception:
@@ -532,9 +609,11 @@ class FormFeature:
 
         Returns:
             int:
-                目标按钮的图标类型，只可能为下列之一。
-                    - LONG_FORM_ICON_TYPE_NONE: 该按钮无图标
-                    - LONG_FORM_ICON_TYPE_PATH_IMAGE: 该按钮使用材质贴图
+                目标元素的类型，只可能为下列之一。
+                    - LONG_FORM_ELEMENT_TYPE_BUTTON: 按钮
+                    - LONG_FORM_ELEMENT_TYPE_LABEL: 普通文本
+                    - LONG_FORM_ELEMENT_TYPE_HEADER: 大字文本
+                    - LONG_FORM_ELEMENT_TYPE_DIVIDER: 分割线
         """
         assert self.storage is not None
 
@@ -542,30 +621,93 @@ class FormFeature:
             form_type = self.storage.form_type(form_name)
             if form_type is None:
                 raise Exception(
-                    "long_form_element_icon_type: Form {} not found".format(
+                    "long_form_element_type: Form {} not found".format(
                         json.dumps(form_name, ensure_ascii=False)
                     )
                 )
             if form_type != FORM_TYPE_LONG:
                 raise Exception(
-                    "long_form_element_icon_type: Target form is not a long form"
+                    "long_form_element_type: Target form is not a long form"
                 )
 
             storage_form = self.storage.get_form(form_name)
             if storage_form is None or not isinstance(storage_form, LongStorageForm):
                 return 0
-            if index < 0 or index >= len(storage_form.buttons):
+            if index < 0 or index >= len(storage_form.elements):
                 raise Exception(
-                    "long_form_element_icon_type: Index out of range [{}] with length {}".format(
-                        index, len(storage_form.buttons)
+                    "long_form_element_type: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.elements)
                     )
                 )
 
-            button = storage_form.buttons[index]
-            if isinstance(button.icon, LongStorageFormIconPathImage):
-                return LONG_FORM_ICON_TYPE_PATH_IMAGE
+            element = storage_form.elements[index]
+            if isinstance(element, LongStorageFormButton):
+                return LONG_FORM_ELEMENT_TYPE_BUTTON
+            elif isinstance(element, LongStorageFormLabel):
+                return LONG_FORM_ELEMENT_TYPE_LABEL
+            elif isinstance(element, LongStorageFormHeader):
+                return LONG_FORM_ELEMENT_TYPE_HEADER
+            elif isinstance(element, LongStorageFormDivider):
+                return LONG_FORM_ELEMENT_TYPE_DIVIDER
             else:
-                return LONG_FORM_ICON_TYPE_NONE
+                raise Exception("unreachable")
+
+    def long_form_button_icon_type(self, form_name, index):  # type: (str, int) -> int
+        """
+        long_form_button_icon_type 查询长表单指定按钮的图标类型
+
+        Args:
+            form_name (str): 目标长表单的名称
+            index (int): 目标按钮在给定长表单中的索引
+
+        Raises:
+            Exception:
+                如果目标表单不存在，
+                或目标表单不是长表单，
+                或索引超过范围，
+                或目标元素不是按钮，
+                则抛出相应的错误
+
+        Returns:
+            int:
+                目标按钮的图标类型，只可能为下列之一。
+                    - LONG_FORM_BUTTON_ICON_TYPE_NONE: 该按钮无图标
+                    - LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE: 该按钮使用材质贴图
+        """
+        assert self.storage is not None
+
+        with self.storage.get_locker():
+            form_type = self.storage.form_type(form_name)
+            if form_type is None:
+                raise Exception(
+                    "long_form_button_icon_type: Form {} not found".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if form_type != FORM_TYPE_LONG:
+                raise Exception(
+                    "long_form_button_icon_type: Target form is not a long form"
+                )
+
+            storage_form = self.storage.get_form(form_name)
+            if storage_form is None or not isinstance(storage_form, LongStorageForm):
+                return 0
+            if index < 0 or index >= len(storage_form.elements):
+                raise Exception(
+                    "long_form_button_icon_type: Index out of range [{}] with length {}".format(
+                        index, len(storage_form.elements)
+                    )
+                )
+
+            button = storage_form.elements[index]
+            if not isinstance(button, LongStorageFormButton):
+                raise Exception(
+                    "long_form_button_icon_type: Target element is not a button"
+                )
+            if isinstance(button.icon, LongStorageFormIconPathImage):
+                return LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE
+            else:
+                return LONG_FORM_BUTTON_ICON_TYPE_NONE
 
     def modal_form_element_type(self, form_name, index):  # type: (str, int) -> int
         """modal_form_element_type 查询模态表单中指定元素的类型
@@ -585,6 +727,8 @@ class FormFeature:
             int:
                 目标元素的类型，只可能为下列之一。
                     - MODAL_FORM_ELEMENT_TYPE_LABEL: 普通文本
+                    - MODAL_FORM_ELEMENT_TYPE_HEADER: 大字文本
+                    - MODAL_FORM_ELEMENT_TYPE_DIVIDER: 分割线
                     - MODAL_FORM_ELEMENT_TYPE_INPUT: 输入框
                     - MODAL_FORM_ELEMENT_TYPE_TOGGLE: 开关
                     - MODAL_FORM_ELEMENT_TYPE_DROPDOWN: 下拉框
@@ -619,6 +763,10 @@ class FormFeature:
             element = storage_form.content[index]
             if isinstance(element, ModalStorageFormElementLabel):
                 return MODAL_FORM_ELEMENT_TYPE_LABEL
+            elif isinstance(element, ModalStorageFormElementHeader):
+                return MODAL_FORM_ELEMENT_TYPE_HEADER
+            elif isinstance(element, ModalStorageFormElementDivider):
+                return MODAL_FORM_ELEMENT_TYPE_DIVIDER
             elif isinstance(element, ModalStorageFormElementInput):
                 return MODAL_FORM_ELEMENT_TYPE_INPUT
             elif isinstance(element, ModalStorageFormElementToggle):
@@ -665,7 +813,8 @@ class FormFeature:
             return 0
 
     def long_form_length(self, form_name):  # type: (str) -> int
-        """long_form_length 返回长表单中按钮的数量
+        """
+        long_form_length 返回长表单中元素的数量
 
         Args:
             form_name (str): 长表单的名称
@@ -677,7 +826,7 @@ class FormFeature:
                 则抛出相应的错误
 
         Returns:
-            int: 长表单中按钮的数量
+            int: 长表单中元素的数量
         """
         assert self.storage is not None
 
@@ -694,7 +843,7 @@ class FormFeature:
 
             storage_form = self.storage.get_form(form_name)
             if isinstance(storage_form, LongStorageForm):
-                return len(storage_form.buttons)
+                return len(storage_form.elements)
             return 0
 
     def dropdown_length(self, form_name, index):  # type: (str, int) -> int

@@ -108,5 +108,27 @@
             "name": "textCode",
             "type": "str"
         }
+    ],
+    "args6": [
+        {
+            "name": "formName",
+            "type": "str"
+        },
+        {
+            "name": "index",
+            "type": "int"
+        },
+        {
+            "name": "tooltip",
+            "type": "enum",
+            "options": [
+                "tooltip"
+            ]
+        },
+        {
+            "name": "tooltipCode",
+            "type": "str",
+            "default": ""
+        }
     ]
 }

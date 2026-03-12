@@ -95,7 +95,13 @@ class LongFormIconPathImage(LongFormIcon):
 
 
 class LongFormElement(Marshaler):
-    """LongFormElement 指示长表单中的单个按钮"""
+    """
+    LongFormElement 是长表单中各种元素类别的总称
+    """
+
+
+class LongFormButton(LongFormElement):
+    """LongFormButton 指示长表单中的单个按钮"""
 
     text = EMPTY_STRING_WITH_HASH
     icon = LongFormIcon()
@@ -103,7 +109,7 @@ class LongFormElement(Marshaler):
     def __init__(
         self, text=EMPTY_STRING_WITH_HASH, icon=LongFormIconNone()
     ):  # type: (StringWithHash, LongFormIcon) -> None
-        """初始化并返回一个新的 LongFormElement
+        """初始化并返回一个新的 LongFormButton
 
         Args:
             text (StringWithHash, optional):
@@ -134,7 +140,7 @@ class LongFormElement(Marshaler):
                 "text": self.text.marshal(),
             }
 
-    def unmarshal(self, data):  # type: (Any) -> LongFormElement
+    def unmarshal(self, data):  # type: (Any) -> LongFormButton
         """
         unmarshal 从 data 所指示的 JSON 数据中解码，
         然后将解码所得的数据传输到本实例中
@@ -144,7 +150,7 @@ class LongFormElement(Marshaler):
                         应确保它是一个字典
 
         Returns:
-            LongFormElement: 返回 LongFormElement 本身
+            LongFormButton: 返回 LongFormButton 本身
         """
         self.text = StringWithHash().unmarshal(data["text"])
         self.icon = (
@@ -155,12 +161,121 @@ class LongFormElement(Marshaler):
         return self
 
 
+class LongFormLabel(LongFormElement):
+    """LongFormLabel 指示长表单中的单个普通文本"""
+
+    text = EMPTY_STRING_WITH_HASH
+
+    def __init__(self, text=EMPTY_STRING_WITH_HASH):  # type: (StringWithHash) -> None
+        """初始化并返回一个新的 LongFormLabel
+
+        Args:
+            text (StringWithHash, optional):
+                普通文本的内容。
+                默认值为 EMPTY_STRING_WITH_HASH
+        """
+        self.text = text
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """marshal 将本实例编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]: 本实例对应的 JSON 表示
+        """
+        return {"text": self.text.marshal()}
+
+    def unmarshal(self, data):  # type: (Any) -> LongFormLabel
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据传输到本实例中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            LongFormLabel: 返回 LongFormLabel 本身
+        """
+        self.text = StringWithHash().unmarshal(data["text"])
+        return self
+
+
+class LongFormHeader(LongFormElement):
+    """LongFormHeader 指示长表单中的单个大字文本"""
+
+    text = EMPTY_STRING_WITH_HASH
+
+    def __init__(self, text=EMPTY_STRING_WITH_HASH):  # type: (StringWithHash) -> None
+        """初始化并返回一个新的 LongFormHeader
+
+        Args:
+            text (StringWithHash, optional):
+                大字文本的内容。
+                默认值为 EMPTY_STRING_WITH_HASH
+        """
+        self.text = text
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """marshal 将本实例编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]: 本实例对应的 JSON 表示
+        """
+        return {"text": self.text.marshal()}
+
+    def unmarshal(self, data):  # type: (Any) -> LongFormHeader
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据传输到本实例中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            LongFormHeader: 返回 LongFormHeader 本身
+        """
+        self.text = StringWithHash().unmarshal(data["text"])
+        return self
+
+
+class LongFormDivider(LongFormElement):
+    """LongFormDivider 指示长表单中的单个分割线"""
+
+    def __init__(self):  # type: () -> None
+        """初始化并返回一个新的 LongFormDivider"""
+        pass
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """marshal 将本实例编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]: 本实例对应的 JSON 表示
+        """
+        return {}
+
+    def unmarshal(self, data):  # type: (Any) -> LongFormDivider
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据传输到本实例中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            LongFormDivider: 返回 LongFormDivider 本身
+        """
+        _ = data
+        return self
+
+
 class LongForm(BaseForm):
     """LongForm 是数据保存实现中的长表单"""
 
     title = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     content = EMPTY_STRING_WITH_HASH  # type: StringWithHash
-    buttons = []  # type: list[LongFormElement]
+    elements = []  # type: list[LongFormElement]
 
     onsubmit = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     oncancel = EMPTY_STRING_WITH_HASH  # type: StringWithHash
@@ -171,7 +286,7 @@ class LongForm(BaseForm):
         self,
         title=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         content=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
-        buttons=[],  # type: list[LongFormElement]
+        elements=[],  # type: list[LongFormElement]
         onsubmit=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         oncancel=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         onsuberr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
@@ -186,7 +301,7 @@ class LongForm(BaseForm):
             content (StringWithHash, optional):
                 长表单的内容文本。
                 默认值为 EMPTY_STRING_WITH_HASH
-            buttons (list, optional):
+            elements (list, optional):
                 长表单中的按钮。
                 默认值为空列表
             onsubmit (StringWithHash, optional):
@@ -206,7 +321,7 @@ class LongForm(BaseForm):
         """
         self.title = title
         self.content = content
-        self.buttons = buttons if len(buttons) > 0 else []
+        self.elements = elements if len(elements) > 0 else []
         self.onsubmit = onsubmit
         self.oncancel = oncancel
         self.onsuberr = onsuberr
@@ -218,10 +333,24 @@ class LongForm(BaseForm):
         Returns:
             dict[str, Any]: 该长表单对应的 JSON 表示
         """
+        elements = []  # type: list[dict[str, Any]]
+
+        for i in self.elements:
+            value = i.marshal()
+            if isinstance(i, LongFormButton):
+                value["type"] = "button"
+            elif isinstance(i, LongFormLabel):
+                value["type"] = "label"
+            elif isinstance(i, LongFormHeader):
+                value["type"] = "header"
+            elif isinstance(i, LongFormDivider):
+                value["type"] = "divider"
+            elements.append(value)
+
         return {
             "title": self.title.marshal(),
             "content": self.content.marshal(),
-            "buttons": [i.marshal() for i in self.buttons],
+            "elements": elements,
             "onsubmit": self.onsubmit.marshal(),
             "oncancel": self.oncancel.marshal(),
             "onsuberr": self.onsuberr.marshal(),
@@ -240,13 +369,31 @@ class LongForm(BaseForm):
         Returns:
             LongForm: 返回 LongForm 本身
         """
+        assert isinstance(data, dict)
+
         self.title = StringWithHash().unmarshal(data["title"])
         self.content = StringWithHash().unmarshal(data["content"])
-        self.buttons = [LongFormElement().unmarshal(i) for i in data["buttons"]]
         self.onsubmit = StringWithHash().unmarshal(data["onsubmit"])
         self.oncancel = StringWithHash().unmarshal(data["oncancel"])
         self.onsuberr = StringWithHash().unmarshal(data["onsuberr"])
         self.oncanerr = StringWithHash().unmarshal(data["oncanerr"])
+
+        if "buttons" in data:
+            self.elements = [LongFormButton().unmarshal(i) for i in data["buttons"]]
+            return self
+
+        self.elements = []
+        for i in data["elements"]:
+            element_type = i["type"]
+            if element_type == "button":
+                self.elements.append(LongFormButton().unmarshal(i))
+            elif element_type == "label":
+                self.elements.append(LongFormLabel().unmarshal(i))
+            elif element_type == "header":
+                self.elements.append(LongFormHeader().unmarshal(i))
+            elif element_type == "divider":
+                self.elements.append(LongFormDivider().unmarshal(i))
+
         return self
 
     def all_codes(self):  # type: () -> list[StringWithHash]
@@ -266,9 +413,16 @@ class LongForm(BaseForm):
             self.oncanerr,
         ]  # type: list[StringWithHash]
 
-        for i in self.buttons:
-            codes.append(i.text)
-            if isinstance(i.icon, LongFormIconPathImage):
-                codes.append(i.icon.image_path)
+        for i in self.elements:
+            if isinstance(i, LongFormButton):
+                codes.append(i.text)
+                if isinstance(i.icon, LongFormIconPathImage):
+                    codes.append(i.icon.image_path)
+            elif isinstance(i, LongFormLabel):
+                codes.append(i.text)
+            elif isinstance(i, LongFormHeader):
+                codes.append(i.text)
+            elif isinstance(i, LongFormDivider):
+                pass
 
         return codes

@@ -9,12 +9,19 @@ import json
 from ..feature.form import FormFeature
 from ..storage.base import StringWithHash
 from ..storage.form import FormStorage
+from ..storage.form_struct.long import (
+    LongForm as LongStorageForm,
+    LongFormLabel as LongStorageFormLabel,
+    LongFormHeader as LongStorageFormHeader,
+)
 from ..storage.form_struct.modal import (
     ModalForm as ModalStorageForm,
     ModalFormElementLabel as ModalStorageFormElementLabel,
+    ModalFormElementHeader as ModalStorageFormElementHeader,
 )
 
-SUB_COMMAND_TYPE_LABEL = 1
+SUB_COMMAND_TYPE_HEADER = 1
+SUB_COMMAND_TYPE_LABEL = 2
 
 
 class EditLabelHandler:
@@ -50,11 +57,79 @@ class EditLabelHandler:
         cmdargs = args["args"]  # type: list[dict[str, Any]]
 
         try:
-            if variant == SUB_COMMAND_TYPE_LABEL:
+            if variant == SUB_COMMAND_TYPE_HEADER:
+                args["return_msg_key"] = self.handle_header(cmdargs)
+            elif variant == SUB_COMMAND_TYPE_LABEL:
                 args["return_msg_key"] = self.handle_label(cmdargs)
         except Exception as e:
             args["return_failed"] = True
             args["return_msg_key"] = str(e)
+
+    def handle_header(self, args):  # type: (list[dict[str, Any]]) -> str
+        """handle_header 处理 header 子命令
+
+        Args:
+            args (list[dict[str, Any]]):
+                用户通过命令行提供的参数列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            str: 命令执行输出
+        """
+        assert self.storage is not None
+        assert self.feature is not None
+        assert self.feature.executor is not None
+        assert self.feature.executor.compile_cache is not None
+
+        form_name = args[0]["value"]  # type: str
+        index = args[1]["value"]  # type: int
+        header_code = args[3]["value"]  # type: str
+
+        with self.storage.get_locker():
+            form = self.storage.get_form(form_name)
+            if form is None:
+                raise Exception(
+                    "名为 {} 的表单不存在".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+
+            if isinstance(form, LongStorageForm):
+                if index < 0 or index >= len(form.elements):
+                    raise Exception(
+                        "给出的索引 {} 超出长度 {}".format(index, len(form.elements))
+                    )
+
+                element = form.elements[index]
+                if not isinstance(element, LongStorageFormHeader):
+                    raise Exception("commands.editlabel.elementnotheader")
+
+                real_header_code = StringWithHash(header_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_header_code)
+                element.text = real_header_code
+
+                return "commands.editlabel.success"
+
+            if isinstance(form, ModalStorageForm):
+                if index < 0 or index >= len(form.content):
+                    raise Exception(
+                        "给出的索引 {} 超出长度 {}".format(index, len(form.content))
+                    )
+
+                element = form.content[index]
+                if not isinstance(element, ModalStorageFormElementHeader):
+                    raise Exception("commands.editlabel.elementnotheader")
+
+                real_header_code = StringWithHash(header_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_header_code)
+                element.text = real_header_code
+
+                return "commands.editlabel.success"
+
+            raise Exception("commands.editlabel.formnotmatch")
 
     def handle_label(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_label 处理 label 子命令
@@ -83,23 +158,41 @@ class EditLabelHandler:
             form = self.storage.get_form(form_name)
             if form is None:
                 raise Exception(
-                    "名为 {} 的模态表单不存在".format(
+                    "名为 {} 的表单不存在".format(
                         json.dumps(form_name, ensure_ascii=False)
                     )
                 )
-            if not isinstance(form, ModalStorageForm):
-                raise Exception("commands.editlabel.formnotmatch")
 
-            if index < 0 or index >= len(form.content):
-                raise Exception(
-                    "给出的索引 {} 超出长度 {}".format(index, len(form.content))
-                )
-            element = form.content[index]
-            if not isinstance(element, ModalStorageFormElementLabel):
-                raise Exception("commands.editlabel.elementnotmatch")
+            if isinstance(form, LongStorageForm):
+                if index < 0 or index >= len(form.elements):
+                    raise Exception(
+                        "给出的索引 {} 超出长度 {}".format(index, len(form.elements))
+                    )
 
-            real_label_code = StringWithHash(label_code)
-            _ = self.feature.executor.compile_cache.get_runner(real_label_code)
-            element.text = real_label_code
+                element = form.elements[index]
+                if not isinstance(element, LongStorageFormLabel):
+                    raise Exception("commands.editlabel.elementnotlabel")
 
-            return "commands.editlabel.success"
+                real_label_code = StringWithHash(label_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_label_code)
+                element.text = real_label_code
+
+                return "commands.editlabel.success"
+
+            if isinstance(form, ModalStorageForm):
+                if index < 0 or index >= len(form.content):
+                    raise Exception(
+                        "给出的索引 {} 超出长度 {}".format(index, len(form.content))
+                    )
+
+                element = form.content[index]
+                if not isinstance(element, ModalStorageFormElementLabel):
+                    raise Exception("commands.editlabel.elementnotlabel")
+
+                real_label_code = StringWithHash(label_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_label_code)
+                element.text = real_label_code
+
+                return "commands.editlabel.success"
+
+            raise Exception("commands.editlabel.formnotmatch")

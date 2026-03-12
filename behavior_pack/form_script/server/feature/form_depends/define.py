@@ -6,8 +6,8 @@ from ...storage.base import StringWithHash
 from ....packet.packet import ModalFormResponse
 from ....formal.base import BaseForm as BaseFormalForm
 from ....formal.long import (
-    LongForm as LongFormalForm,
     LongFormButton as LongFormalFormButton,
+    LongForm as LongFormalForm,
 )
 from ....formal.popup import PopupForm as PopupFormalForm
 from ....formal.modal import (

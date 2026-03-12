@@ -426,22 +426,26 @@ class LongForm(BaseForm):
 
         title = data.get("title", "")
         content = data.get("content", "")
-        elements = (
-            data.get("elements", []) if "elements" in data else data.get("buttons", [])
-        )
 
         if isinstance(title, str):
             self.title = title
         if isinstance(content, str):
             self.content = content
-        if not isinstance(elements, list):
+
+        if "buttons" in data:
+            buttons = data["buttons"]
+            if isinstance(buttons, list):
+                self.elements = [LongFormButton().unmarshal(i) for i in buttons]
             return self
 
+        elements = data.get("elements", [])
+        if not isinstance(elements, list):
+            return self
         for i in elements:
             if not isinstance(i, dict):
                 continue
 
-            element_type = i.get("type", "button")
+            element_type = i.get("type", "")
             if not isinstance(element_type, str):
                 continue
             if len(element_type) == 0:

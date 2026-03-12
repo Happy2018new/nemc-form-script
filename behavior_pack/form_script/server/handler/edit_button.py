@@ -10,9 +10,10 @@ from ..feature.form import FormFeature
 from ..storage.base import StringWithHash
 from ..storage.form import FormStorage
 from ..storage.form_struct.long import (
-    LongForm as LongStorageForm,
-    LongFormIconNone as LongStorageFormIconNone,
     LongFormIconPathImage as LongStorageFormIconPathImage,
+    LongFormIconNone as LongStorageFormIconNone,
+    LongFormButton as LongStorageFormButton,
+    LongForm as LongStorageForm,
 )
 
 SUB_COMMAND_TYPE_ICON = 1
@@ -80,7 +81,7 @@ class EditButtonHandler:
         assert self.feature.executor.compile_cache is not None
 
         form_name = args[0]["value"]  # type: str
-        button_index = args[1]["value"]  # type: int
+        index = args[1]["value"]  # type: int
         texture_code = args[3]["value"]  # type: str
 
         with self.storage.get_locker():
@@ -94,18 +95,20 @@ class EditButtonHandler:
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editbutton.formnotmatch")
 
-            if button_index < 0 or button_index >= len(form.buttons):
+            if index < 0 or index >= len(form.elements):
                 raise Exception(
-                    "给出的索引 {} 超出长度 {}".format(button_index, len(form.buttons))
+                    "给出的索引 {} 超出长度 {}".format(index, len(form.elements))
                 )
+            button = form.elements[index]
+            if not isinstance(button, LongStorageFormButton):
+                raise Exception("commands.editbutton.elementnotmatch")
+
             if len(texture_code) == 0:
-                form.buttons[button_index].icon = LongStorageFormIconNone()
+                button.icon = LongStorageFormIconNone()
             else:
                 real_texture_code = StringWithHash(texture_code)
                 _ = self.feature.executor.compile_cache.get_runner(real_texture_code)
-                form.buttons[button_index].icon = LongStorageFormIconPathImage(
-                    real_texture_code
-                )
+                button.icon = LongStorageFormIconPathImage(real_texture_code)
 
             return "commands.editbuttonicon.success"
 
@@ -129,7 +132,7 @@ class EditButtonHandler:
         assert self.feature.executor.compile_cache is not None
 
         form_name = args[0]["value"]  # type: str
-        button_index = args[1]["value"]  # type: int
+        index = args[1]["value"]  # type: int
         text_code = args[3]["value"]  # type: str
 
         with self.storage.get_locker():
@@ -143,12 +146,16 @@ class EditButtonHandler:
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editbutton.formnotmatch")
 
-            if button_index < 0 or button_index >= len(form.buttons):
+            if index < 0 or index >= len(form.elements):
                 raise Exception(
-                    "给出的索引 {} 超出长度 {}".format(button_index, len(form.buttons))
+                    "给出的索引 {} 超出长度 {}".format(index, len(form.elements))
                 )
+            button = form.elements[index]
+            if not isinstance(button, LongStorageFormButton):
+                raise Exception("commands.editbutton.elementnotmatch")
+
             real_text_code = StringWithHash(text_code)
             _ = self.feature.executor.compile_cache.get_runner(real_text_code)
-            form.buttons[button_index].text = real_text_code
+            button.text = real_text_code
 
             return "commands.editbuttontext.success"
