@@ -51,7 +51,7 @@ def parse_json_to_long_form(
 
     另，对于 callback 参数：
         - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
-        - 该函数的第二个参数，也即 int 参数，用于指示按钮的索引
+        - 该函数的第二个参数指示在只保留长表单的按钮后，玩家所点击的按钮的索引
 
     Args:
         form_data (dict[str, Any]):
