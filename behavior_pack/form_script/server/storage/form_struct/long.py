@@ -131,14 +131,9 @@ class LongFormButton(LongFormElement):
             dict[str, Any]: 本实例对应的 JSON 表示
         """
         if isinstance(self.icon, LongFormIconPathImage):
-            return {
-                "text": self.text.marshal(),
-                "image": self.icon.marshal(),
-            }
+            return {"text": self.text.marshal(), "image": self.icon.marshal()}
         else:
-            return {
-                "text": self.text.marshal(),
-            }
+            return {"text": self.text.marshal(), "image": None}
 
     def unmarshal(self, data):  # type: (Any) -> LongFormButton
         """
@@ -155,7 +150,7 @@ class LongFormButton(LongFormElement):
         self.text = StringWithHash().unmarshal(data["text"])
         self.icon = (
             LongFormIconPathImage().unmarshal(data["image"])
-            if "image" in data
+            if "image" in data and data["image"] is not None
             else LongFormIconNone()
         )
         return self

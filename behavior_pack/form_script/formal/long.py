@@ -180,18 +180,12 @@ class LongFormButton(LongFormElement):
 
         if isinstance(self.icon, LongFormIconPathImage):
             image["type"] = "path"
-            return {
-                "text": self.text,
-                "image": image,
-            }
+            return {"text": self.text, "image": image}
         elif isinstance(self.icon, LongFormIconURLImage):
             image["type"] = "url"
-            return {
-                "text": self.text,
-                "image": image,
-            }
+            return {"text": self.text, "image": image}
 
-        return {"text": self.text}
+        return {"text": self.text, "image": None}
 
     def unmarshal(self, data):  # type: (Any) -> LongFormButton
         """
@@ -215,8 +209,8 @@ class LongFormButton(LongFormElement):
         if isinstance(text, str):
             self.text = text
 
-        image = data.get("image", {})
-        if not isinstance(image, dict):
+        image = data.get("image", None)
+        if image is None or not isinstance(image, dict):
             return self
         if len(image) == 0:
             return self
