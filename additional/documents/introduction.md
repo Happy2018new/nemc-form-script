@@ -33,14 +33,14 @@
   - 大字文本元素
   - 分割线元素
 
+<img width="449" height="398" alt="Image" src="../images/sample_long_form_1.png" /><img width="10" height="1" style="border:0;"><img width="449" height="398" alt="Image" src="../images/sample_long_form_2.png" />
+
 另外，每个按钮可以指定它是否需要图标。<br/>
-并且，**长表单**实际上可以不存在任何按钮。
+并且，**长表单**实际上可以不存在任何元素。
 
 在玩家实际与**长表单**交互时，玩家只能点击其中一个按钮。<br/>
 在玩家点击任何一个按钮之后，该**长表单**将会被立即关闭。<br/>
 当然，玩家亦可选择点击右上角的叉号来关掉**长表单**。
-
-<img width="449" height="398" alt="Image" src="../images/sample_long_form_1.png" /><img width="10" height="1" style="border:0;"><img width="449" height="398" alt="Image" src="../images/sample_long_form_2.png" />
 
 
 
