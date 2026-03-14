@@ -285,31 +285,33 @@ class EditLongFormHandler:
             str: 命令执行输出
         """
         assert self.feature is not None
+        assert self.storage is not None
         form_name = args[0]["value"]  # type: str
 
-        resp = self.feature.list_long_form_element_type(form_name)
-        if len(resp) == 0:
-            return "长表单 {} 目前没有任何元素".format(
-                json.dumps(form_name, ensure_ascii=False)
-            )
-        extra = self.feature.list_long_form_button_icon_type(form_name)
+        with self.storage.get_locker():
+            resp = self.feature.list_long_form_element_type(form_name)
+            if len(resp) == 0:
+                return "长表单 {} 目前没有任何元素".format(
+                    json.dumps(form_name, ensure_ascii=False)
+                )
+            extra = self.feature.list_long_form_button_icon_type(form_name)
 
-        result = "长表单 {} 目前已存在 {} 个元素: ".format(
-            json.dumps(form_name, ensure_ascii=False), len(resp)
-        )
-        for index, value in enumerate(resp):
-            if value == LONG_FORM_ELEMENT_TYPE_BUTTON:
-                if extra[index] == LONG_FORM_BUTTON_ICON_TYPE_NONE:
-                    result += "\n  - 按钮 (无图标)"
-                elif extra[index] == LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE:
-                    result += "\n  - 按钮 (使用材质贴图)"
-            elif value == LONG_FORM_ELEMENT_TYPE_LABEL:
-                result += "\n  - 普通文本"
-            elif value == LONG_FORM_ELEMENT_TYPE_HEADER:
-                result += "\n  - 大字文本"
-            elif value == LONG_FORM_ELEMENT_TYPE_DIVIDER:
-                result += "\n  - 分割线"
-        return result
+            result = "长表单 {} 目前已存在 {} 个元素: ".format(
+                json.dumps(form_name, ensure_ascii=False), len(resp)
+            )
+            for index, value in enumerate(resp):
+                if value == LONG_FORM_ELEMENT_TYPE_BUTTON:
+                    if extra[index] == LONG_FORM_BUTTON_ICON_TYPE_NONE:
+                        result += "\n  - 按钮 (无图标)"
+                    elif extra[index] == LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE:
+                        result += "\n  - 按钮 (使用材质贴图)"
+                elif value == LONG_FORM_ELEMENT_TYPE_LABEL:
+                    result += "\n  - 普通文本"
+                elif value == LONG_FORM_ELEMENT_TYPE_HEADER:
+                    result += "\n  - 大字文本"
+                elif value == LONG_FORM_ELEMENT_TYPE_DIVIDER:
+                    result += "\n  - 分割线"
+            return result
 
     def handle_pop(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_pop 处理 pop 子命令
