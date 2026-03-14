@@ -289,16 +289,18 @@ class EditLongFormHandler:
         form_name = args[0]["value"]  # type: str
 
         with self.storage.get_locker():
-            resp = self.feature.list_long_form_element_type(form_name)
-            if len(resp) == 0:
+            long_form_length = self.feature.long_form_length(form_name)
+            if long_form_length == 0:
                 return "长表单 {} 目前没有任何元素".format(
                     json.dumps(form_name, ensure_ascii=False)
                 )
-            extra = self.feature.list_long_form_button_icon_type(form_name)
 
+            resp = self.feature.list_long_form_element_type(form_name)
+            extra = self.feature.list_long_form_button_icon_type(form_name)
             result = "长表单 {} 目前已存在 {} 个元素: ".format(
-                json.dumps(form_name, ensure_ascii=False), len(resp)
+                json.dumps(form_name, ensure_ascii=False), long_form_length
             )
+
             for index, value in enumerate(resp):
                 if value == LONG_FORM_ELEMENT_TYPE_BUTTON:
                     if extra[index] == LONG_FORM_BUTTON_ICON_TYPE_NONE:

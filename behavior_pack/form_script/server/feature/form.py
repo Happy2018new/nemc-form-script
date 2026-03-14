@@ -797,7 +797,7 @@ class FormFeature:
         assert self.storage is not None
 
         with self.storage.get_locker():
-            form_type = self.storage.get_form(form_name)
+            form_type = self.storage.form_type(form_name)
             if form_type is None:
                 raise Exception(
                     "modal_form_length: Form {} not found".format(
@@ -831,7 +831,7 @@ class FormFeature:
         assert self.storage is not None
 
         with self.storage.get_locker():
-            form_type = self.storage.get_form(form_name)
+            form_type = self.storage.form_type(form_name)
             if form_type is None:
                 raise Exception(
                     "long_form_length: Form {} not found".format(
