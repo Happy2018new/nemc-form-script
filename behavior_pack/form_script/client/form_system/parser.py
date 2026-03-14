@@ -160,9 +160,9 @@ def parse_json_to_modal_form(
     for i in formal.content:
         if isinstance(i, ModalFormElementLabel):
             _ = form.push_label(i.text)
-        if isinstance(i, ModalFormElementHeader):
+        elif isinstance(i, ModalFormElementHeader):
             _ = form.push_header(i.text)
-        if isinstance(i, ModalFormElementDivider):
+        elif isinstance(i, ModalFormElementDivider):
             _ = form.push_divider()
         elif isinstance(i, ModalFormElementInput):
             _ = form.push_input(i.text, i.place_holder, i.default, i.tooltip)
