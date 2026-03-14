@@ -335,8 +335,6 @@ class LongFormDivider(LongFormElement):
         Returns:
             dict[str, Any]: 本实例对应的 JSON 表示
         """
-        # server-ui/v2 协议要求分割线在网络传输时
-        # 以 {"text": ""} 的形式表示
         return {"text": ""}
 
     def unmarshal(self, data):  # type: (Any) -> LongFormDivider
