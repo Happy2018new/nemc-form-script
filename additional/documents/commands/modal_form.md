@@ -3,7 +3,6 @@
 - [前情提要](#前情提要)
 - [指令概览](#指令概览)
   - [编辑模态表单](#编辑模态表单)
-  - [编辑模态表单中的普通文本](#编辑模态表单中的普通文本)
   - [编辑模态表单中的输入框](#编辑模态表单中的输入框)
   - [编辑模态表单中的开关](#编辑模态表单中的开关)
   - [编辑模态表单中的下拉框](#编辑模态表单中的下拉框)
@@ -35,36 +34,32 @@
   - [设置标题文本](#设置标题文本)
     - [语法](#语法-5)
     - [示例](#示例-5)
-- [编辑模态表单中的普通文本](#编辑模态表单中的普通文本-1)
-  - [语法](#语法-6)
-  - [补充](#补充)
-  - [示例](#示例-6)
 - [编辑模态表单中的输入框](#编辑模态表单中的输入框-1)
-  - [语法](#语法-7)
-  - [示例](#示例-7)
+  - [语法](#语法-6)
+  - [示例](#示例-6)
   - [效果（示例）](#效果示例-1)
-  - [补充](#补充-1)
+  - [补充](#补充)
 - [编辑模态表单中的开关](#编辑模态表单中的开关-1)
-  - [语法](#语法-8)
+  - [语法](#语法-7)
   - [示例一](#示例一)
   - [示例二](#示例二)
   - [效果（示例二）](#效果示例二)
 - [编辑模态表单中的下拉框](#编辑模态表单中的下拉框-1)
-  - [语法](#语法-9)
+  - [语法](#语法-8)
   - [示例一](#示例一-1)
   - [示例二](#示例二-1)
   - [效果（示例二）](#效果示例二-1)
 - [编辑模态表单中的隐式步进滑块](#编辑模态表单中的隐式步进滑块-1)
-  - [语法](#语法-10)
-  - [示例](#示例-8)
+  - [语法](#语法-9)
+  - [示例](#示例-7)
   - [效果（示例）](#效果示例-2)
   - [解释](#解释)
   - [备注一](#备注一-2)
   - [备注二](#备注二-2)
 - [编辑模态表单中的显式步进滑块](#编辑模态表单中的显式步进滑块-1)
   - [概览](#概览)
-  - [语法](#语法-11)
-  - [示例](#示例-9)
+  - [语法](#语法-10)
+  - [示例](#示例-8)
   - [效果（示例）](#效果示例-3)
 
 
@@ -87,21 +82,12 @@
 # 指令概览
 ## 编辑模态表单
 ```mcfunction
-editmodalform <formName: string> append label|input|toggle|dropdown|slider|stepslider
-editmodalform <formName: string> insert <index: int> label|input|toggle|dropdown|slider|stepslider
+editmodalform <formName: string> append label|header|divider|input|toggle|dropdown|slider|stepslider
+editmodalform <formName: string> insert <index: int> label|header|divider|input|toggle|dropdown|slider|stepslider
 editmodalform <formName: string> list
 editmodalform <formName: string> pop left|right
 editmodalform <formName: string> sub keep|discard <startIndex: int> <endIndex: int>
 editmodalform <formName: string> title <titleCode: string>
-```
-
-
-
-
-
-## 编辑模态表单中的普通文本
-```mcfunction
-editlabel <formName: string> <index: int> label <labelCode: string>
 ```
 
 
@@ -113,6 +99,7 @@ editlabel <formName: string> <index: int> label <labelCode: string>
 editinput <formName: string> <index: int> default <defaultCode: string>
 editinput <formName: string> <index: int> placeholder <placeHolderCode: string>
 editinput <formName: string> <index: int> text <textCode: string>
+editinput <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -123,6 +110,7 @@ editinput <formName: string> <index: int> text <textCode: string>
 ```mcfunction
 edittoggle <formName: string> <index: int> default <stateCode: string>
 edittoggle <formName: string> <index: int> text <textCode: string>
+edittoggle <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -138,6 +126,7 @@ editdropdown <formName: string> <index: int> list
 editdropdown <formName: string> <index: int> pop left|right
 editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
 editdropdown <formName: string> <index: int> text <textCode: string>
+editdropdown <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -151,6 +140,7 @@ editslider <formName: string> <index: int> min <minCode: string>
 editslider <formName: string> <index: int> max <maxCode: string>
 editslider <formName: string> <index: int> step <stepCode: string>
 editslider <formName: string> <index: int> text <textCode: string>
+editslider <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -166,6 +156,7 @@ editstepslider <formName: string> <index: int> list
 editstepslider <formName: string> <index: int> pop left|right
 editstepslider <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
 editstepslider <formName: string> <index: int> text <textCode: string>
+editstepslider <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -179,17 +170,19 @@ editstepslider <formName: string> <index: int> text <textCode: string>
 ### 语法
 向模态表单 `<formName: string>` 添加（追加）一个元素。
 ```mcfunction
-editmodalform <formName: string> append label|input|toggle|dropdown|slider|stepslider
+editmodalform <formName: string> append label|header|divider|input|toggle|dropdown|slider|stepslider
 ```
 
-| 元素 ID    | 元素名称           | 图例                                                                                  |
-| ---------- | ------------------ | ------------------------------------------------------------------------------------- |
-| label      | 普通文本（纯文本） | <img width="400" height="35" alt="Image" src="../../images/sample_label.png" />       |
-| input      | 输入框             | <img width="400" height="100" alt="Image" src="../../images/sample_input.png" />      |
-| toggle     | 开关               | <img width="400" height="50" alt="Image" src="../../images/sample_toggle.png" />      |
-| dropdown   | 下拉框             | <img width="400" height="100" alt="Image" src="../../images/sample_dropdown.png" />   |
-| slider     | 隐式步进滑块       | <img width="400" height="75" alt="Image" src="../../images/sample_slider.png" />      |
-| stepslider | 显式步进滑块       | <img width="400" height="75" alt="Image" src="../../images/sample_step_slider.png" /> |
+| 元素 ID    | 元素名称     | 图例                                                                                    |
+| ---------- | ------------ | --------------------------------------------------------------------------------------- |
+| label      | 普通文本     | <img width="400" height="35" alt="Image" src="../../images/sample_modal_label.png" />   |
+| header     | 大字文本     | <img width="400" height="59" alt="Image" src="../../images/sample_modal_header.png" />  |
+| divider    | 分割线       | <img width="400" height="35" alt="Image" src="../../images/sample_modal_divider.png" /> |
+| input      | 输入框       | <img width="400" height="100" alt="Image" src="../../images/sample_input.png" />        |
+| toggle     | 开关         | <img width="400" height="50" alt="Image" src="../../images/sample_toggle.png" />        |
+| dropdown   | 下拉框       | <img width="400" height="100" alt="Image" src="../../images/sample_dropdown.png" />     |
+| slider     | 隐式步进滑块 | <img width="400" height="75" alt="Image" src="../../images/sample_slider.png" />        |
+| stepslider | 显式步进滑块 | <img width="400" height="75" alt="Image" src="../../images/sample_step_slider.png" />   |
 
 
 
@@ -197,17 +190,22 @@ editmodalform <formName: string> append label|input|toggle|dropdown|slider|steps
 通过该方式添加的元素后，您需要通过其他指令来进一步编辑它们。<br/>
 这意味着通过该方式添加的元素在一开始都保持下面列出的默认状态。
 
-- 普通文本（纯文本）
+- 普通文本
+  - 空文本
+- 大字文本
   - 空文本
 - 输入框
   - 标题文本为空文本
   - 输入框提示语为空文本
   - 输入框的已输入内容（默认内容）为空文本
+  - 空灯泡提示文本
 - 开关
   - 标题文本为空文本
   - 开关默认保持关闭
+  - 空灯泡提示文本
 - 下拉框
   - 标题文本为空文本
+  - 空灯泡提示文本
   - **默认没有任何选项**
 - 隐式步进滑块
   - 标题文本为空文本
@@ -215,9 +213,13 @@ editmodalform <formName: string> append label|input|toggle|dropdown|slider|steps
   - 最大值为 1.0
   - 单次步进长度为 1.0
   - 默认值为 0.0
+  - 空灯泡提示文本
 - 显式步进滑块
   - 标题文本为空文本
+  - 空灯泡提示文本
   - **默认没有任何选项**
+
+由于分割线在添加后无需进一步修改，因此它将始终保持在相同的状态。
 
 
 
@@ -235,8 +237,14 @@ editmodalform <formName: string> append label|input|toggle|dropdown|slider|steps
 
 ### 示例
 ```mcfunction
-# 向模态表单 你好 添加一个普通文本（纯文本）
+# 向模态表单 你好 添加一个普通文本
 editmodalform 你好 append label
+
+# 向模态表单 667788 添加一个大字文本
+editmodalform "667788" append header
+
+# 向模态表单 wow 添加一个分割线
+editmodalform wow append divider
 
 # 向模态表单 happy2018new 添加一个输入框
 editmodalform happy2018new append input
@@ -262,7 +270,7 @@ editmodalform my_form append stepslider
 ### 语法
 在模态表单 `<formName: string>` 的索引 `<index: int>` 处插入一个元素。
 ```mcfunction
-editmodalform <formName: string> insert <index: int> label|input|toggle|dropdown|slider|stepslider
+editmodalform <formName: string> insert <index: int> label|header|divider|input|toggle|dropdown|slider|stepslider
 ```
 
 
@@ -272,7 +280,7 @@ editmodalform <formName: string> insert <index: int> label|input|toggle|dropdown
 它们的唯一区别在于插入元素可以指定插入的位置。
 
 关于索引的概念，以及在何处插入元素，<br/>
-请参看 [编辑长表单 § 插入按钮](./long_form.md#插入按钮) 章节。
+请参看 [编辑长表单 § 插入元素](./long_form.md#插入元素) 章节。
 
 
 
@@ -312,6 +320,8 @@ editmodalform cookie list
 ```
 模态表单 "cookie" 目前已存在 4 个元素:
   - 普通文本
+  - 分割线
+  - 大字文本
   - 普通文本
   - 普通文本
   - 开关
@@ -375,7 +385,7 @@ editmodalform <formName: string> sub keep|discard <startIndex: int> <endIndex: i
 
 
 ### 备注二
-模态表单的截断元素的行为与 [编辑长表单 § 截断按钮](./long_form.md#截断按钮) 的行为基本一致。<br/>
+模态表单的截断元素的行为与 [编辑长表单 § 截断元素](./long_form.md#截断元素) 的行为基本一致。<br/>
 它们在本质上并没有太大的区别，因此本处不再赘述截断元素在编辑模态表单中的用法。
 
 
@@ -424,49 +434,6 @@ editmodalform aaaaa title "return '我我是是标标题题'"
 
 
 
-# 编辑模态表单中的普通文本
-## 语法
-假定模态表单 `<formName: string>` 中索引为 `<index: int>` 的元素为普通文本（纯文本），<br/>
-并将控制该普通文本（纯文本）所显示文本内容的代码设置为 `<labelCode: string>`。
-
-```mcfunction
-editlabel <formName: string> <index: int> label <labelCode: string>
-```
-
-
-
-
-
-## 补充
-第 1 个元素的索引值是 0。<br/>
-第 2 个元素的索引值是 1。<br/>
-第 3 个元素的索引值是 2。<br/>
-...<br/>
-第 n 个元素的索引值是 n-1。
-
-
-
-
-
-## 示例
-```mcfunction
-# 将模态表单 welcome 中第 2 个元素视作为普通文本元素，
-# 并将其所使用的文本设置为固定的 hhhc
-editlabel welcome 1 label "return 'hhhc'"
-
-# 将模态表单 unhappy 中索引为 7 的元素视作为普通文本元素，
-# 并将其所使用的文本设置为展示（打开）表单时的月份
-editlabel unhappy 7 label "ptr = {func, datetime_datetime.now()}
-month = {func, datetime_datetime.month(ptr)}
-return str(month)"
-```
-
-
-
-
-
-
-
 # 编辑模态表单中的输入框
 ## 语法
 假定模态表单 `<formName: string>` 中索引为 `<index: int>` 的元素为输入框。
@@ -498,6 +465,17 @@ editinput <formName: string> <index: int> placeholder <placeHolderCode: string>
 editinput <formName: string> <index: int> text <textCode: string>
 ```
 
+---
+
+将该输入框的灯泡提示文本设置为 `[tooltipCode: string]`。<br/>
+应确保它是一个代码，该代码被用于生成该输入框的灯泡提示文本。
+
+```mcfunction
+editinput <formName: string> <index: int> tooltip [tooltipCode: string]
+```
+
+可以通过不填 `[tooltipCode: string]` 来清空已设置的灯泡提示文本。
+
 
 
 
@@ -516,6 +494,9 @@ editinput ohhh 0 text "return '您的生日是什么时候？'"
 # 将输入框的的提示文本设置为固定的 “1990-01-01”
 editinput ohhh 0 placeholder "return '1990-01-01'"
 
+# 将输入框的灯泡提示文本设置为固定的 生日是您的出生日期
+editinput ohhh 0 tooltip "return '生日是您的出生日期'"
+
 # 向最近的玩家展示（打开）该模态表单（在命令方块中执行）
 customform show @p ~ ~ ~ @p ohhh
 ```
@@ -525,7 +506,7 @@ customform show @p ~ ~ ~ @p ohhh
 
 
 ## 效果（示例）
-<img width="449" height="400" alt="Image" src="../../images/edit_input_1.png" />
+<img width="450" height="400" alt="Image" src="../../images/edit_input_1.png" /><img width="10" height="1" style="border:0;"><img width="450" height="400" alt="Image" src="../../images/edit_input_2.png" />
 
 
 
@@ -537,7 +518,7 @@ customform show @p ~ ~ ~ @p ohhh
 editinput ohhh 0 default "return '2000-12-31'"
 ```
 
-<img width="449" height="400" alt="Image" src="../../images/edit_input_2.png" />
+<img width="450" height="400" alt="Image" src="../../images/edit_input_3.png" />
 
 在将这些已输入内容删除后，原来的灰色提示语会重新出现。
 
@@ -569,6 +550,17 @@ edittoggle <formName: string> <index: int> default <stateCode: string>
 edittoggle <formName: string> <index: int> text <textCode: string>
 ```
 
+---
+
+将这个开关的灯泡提示文本设置为 `[tooltipCode: string]`。<br/>
+应确保它是一个代码，该代码被用于生成这个开关的灯泡提示文本。
+
+```mcfunction
+edittoggle <formName: string> <index: int> tooltip [tooltipCode: string]
+```
+
+可以通过不填 `[tooltipCode: string]` 来清空已设置的灯泡提示文本。
+
 
 
 
@@ -597,6 +589,10 @@ for i, 101:
   total = total + i
 rof
 return str(total)"
+
+# 将模态表单 wu_ming 中第一个元素（开关）的
+# 灯泡提示文本设置为固定的 一到一百的求和结果
+edittoggle wu_ming 0 tooltip "return '一到一百的求和结果'"
 ```
 
 
@@ -604,7 +600,7 @@ return str(total)"
 
 
 ## 效果（示例二）
-<img width="449" height="400" alt="Image" src="../../images/edit_toggle.png" />
+<img width="450" height="400" alt="Image" src="../../images/edit_toggle_1.png" /><img width="10" height="1" style="border:0;"><img width="450" height="400" alt="Image" src="../../images/edit_toggle_2.png" />
 
 
 
@@ -644,7 +640,7 @@ editdropdown <formName: string> <index: int> default <indexCode: string>
 editdropdown <formName: string> <index: int> insert <index: int> <optionCode: string>
 ```
 
-该子命令的工作方式与 [编辑长表单 § 插入按钮](./long_form.md#插入按钮) 的没有太大区别，<br/>
+该子命令的工作方式与 [编辑长表单 § 插入元素](./long_form.md#插入元素) 的没有太大区别，<br/>
 因此如果您不知道该子命令的工作方式，那么请参看上面的章节。
 
 ---
@@ -682,7 +678,7 @@ editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> 
 - keep: 只保留下拉框中的一部分选项
 - discard: 只丢弃下拉框中的一部分选项
 
-该子命令的工作方式与 [编辑长表单 § 截断按钮](./long_form.md#截断按钮) 的没有太大区别，<br/>
+该子命令的工作方式与 [编辑长表单 § 截断元素](./long_form.md#截断元素) 的没有太大区别，<br/>
 因此如果您不知道该子命令的工作方式，那么请参看上面的章节。
 
 ---
@@ -693,6 +689,17 @@ editdropdown <formName: string> <index: int> sub keep|discard <startIndex: int> 
 ```mcfunction
 editdropdown <formName: string> <index: int> text <textCode: string>
 ```
+
+---
+
+将该下拉框的灯泡提示文本设置为 `[tooltipCode: string]`。<br/>
+应确保它是一个代码，该代码被用于生成该下拉框的灯泡提示文本。
+
+```mcfunction
+editdropdown <formName: string> <index: int> tooltip [tooltipCode: string]
+```
+
+可以通过不填 `[tooltipCode: string]` 来清空已设置的灯泡提示文本。
 
 
 
@@ -733,7 +740,7 @@ editdropdown gamma 7 sub discard 0 3
 # 创建一个名为 abc 的模态表单
 customform add abc modal
 
-# 向该模态表单添加一个普通文本（纯文本）
+# 向该模态表单添加一个普通文本
 editmodalform abc append label
 
 # 向该模态表单添加一个下拉框
@@ -751,6 +758,9 @@ editdropdown abc 1 text "return 'c'"
 # 将这个下拉框一开始选中的选项（默认选项）设置为第二个选项
 editdropdown abc 1 default "return 1"
 
+# 将这个下拉框的灯泡提示文本设置为固定的 我是一个提示文本
+editdropdown abc 1 tooltip "return '我是一个提示文本'"
+
 # 向最近的玩家展示（打开）该模态表单（在命令方块中执行）
 customform show @p ~ ~ ~ @p abc
 ```
@@ -760,7 +770,7 @@ customform show @p ~ ~ ~ @p abc
 
 
 ## 效果（示例二）
-<img width="449" height="400" alt="Image" src="../../images/edit_dropdown_1.png" /><img width="10" height="1" style="border:0;"><img width="449" height="400" alt="Image" src="../../images/edit_dropdown_2.png" />
+<img width="313" height="278" alt="Image" src="../../images/edit_dropdown_1.png" /><img width="10" height="1" style="border:0;"><img width="313" height="278" alt="Image" src="../../images/edit_dropdown_2.png" /><img width="10" height="1" style="border:0;"><img width="313" height="278" alt="Image" src="../../images/edit_dropdown_3.png" />
 
 
 
@@ -811,11 +821,22 @@ editslider <formName: string> <index: int> step <stepCode: string>
 ---
 
 设置该隐式步进滑块的标题文本为 `<textCode: string>`。<br/>
-应确保它是一个代码，该代码被用于生成该隐式步进滑块的的标题文本。
+应确保它是一个代码，该代码被用于生成该隐式步进滑块的标题文本。
 
 ```mcfunction
 editslider <formName: string> <index: int> text <textCode: string>
 ```
+
+---
+
+设置该隐式步进滑块的灯泡提示文本为 `[tooltipCode: string]`。<br/>
+应确保它是一个代码，该代码被用于生成该隐式步进滑块的灯泡提示文本。
+
+```mcfunction
+editslider <formName: string> <index: int> tooltip [tooltipCode: string]
+```
+
+可以通过不填 `[tooltipCode: string]` 来清空已设置的灯泡提示文本。
 
 
 
@@ -841,8 +862,11 @@ editslider app 0 max "return 5"
 # 将该隐式步进滑块的步进长度设置为固定的 0.5
 editslider app 0 step "return 0.5"
 
-# 将该隐式步进滑块的默认值设置为 3.5
+# 将该隐式步进滑块的默认值设置为固定的 3.5
 editslider app 0 default "return 3.5"
+
+# 将该隐式步进滑块的灯泡提示文本设置为固定的 666
+editslider app 0 tooltip "return '666'"
 
 # 向最近的玩家展示（打开）该模态表单（在命令方块中执行）
 customform show @p ~ ~ ~ @p app
@@ -853,7 +877,7 @@ customform show @p ~ ~ ~ @p app
 
 
 ## 效果（示例）
-<img width="449" height="400" alt="Image" src="../../images/edit_slider.png" />
+<img width="450" height="400" alt="Image" src="../../images/edit_slider_1.png" /><img width="10" height="1" style="border:0;"><img width="450" height="400" alt="Image" src="../../images/edit_slider_2.png" />
 
 
 
@@ -944,6 +968,7 @@ editstepslider <formName: string> <index: int> list
 editstepslider <formName: string> <index: int> pop left|right
 editstepslider <formName: string> <index: int> sub keep|discard <startIndex: int> <endIndex: int>
 editstepslider <formName: string> <index: int> text <textCode: string>
+editstepslider <formName: string> <index: int> tooltip [tooltipCode: string]
 ```
 
 
@@ -951,7 +976,7 @@ editstepslider <formName: string> <index: int> text <textCode: string>
 
 
 ## 语法
-该章节的语法和 [编辑模态表单中的下拉框 § 语法](#语法-9) 几乎没有区别，<br/>
+该章节的语法和 [编辑模态表单中的下拉框 § 语法](#语法-8) 几乎没有区别，<br/>
 因此本处将不再赘述语法，具体参看上面该章节的内容进行理解。
 
 
@@ -993,6 +1018,9 @@ editstepslider ggb 0 pop left
 # 将该显式步进滑块的默认选项设置为第二个选项
 editstepslider ggb 0 default "return 2"
 
+# 将该显式步进滑块的灯泡提示文本设置为固定的 献给机械の花束
+editstepslider ggb 0 tooltip "return '献给机械の花束'"
+
 # 向最近的玩家展示（打开）该模态表单（在命令方块中执行）
 customform show @p ~ ~ ~ @p ggb
 ```
@@ -1002,4 +1030,4 @@ customform show @p ~ ~ ~ @p ggb
 
 
 ## 效果（示例）
-<img width="449" height="400" alt="Image" src="../../images/edit_step_slider.png" />
+<img width="450" height="400" alt="Image" src="../../images/edit_step_slider_1.png" /><img width="10" height="1" style="border:0;"><img width="450" height="400" alt="Image" src="../../images/edit_step_slider_2.png" />

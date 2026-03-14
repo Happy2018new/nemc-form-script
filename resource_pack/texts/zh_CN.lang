@@ -1,6 +1,6 @@
 commands.customform.description=操作自定义表单。
 commands.editlongform.description=编辑长表单的内容。
-commands.editlabel.description=编辑长表单或模态表单中的普通文本或大字文本。
+commands.editlabel.description=编辑长表单或模态表单中的文本元素。
 commands.editbutton.description=编辑长表单中的按钮。
 commands.editpopupform.description=编辑信息表单的内容。
 commands.editmodalform.description=编辑模态表单的内容。

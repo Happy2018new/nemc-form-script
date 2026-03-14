@@ -17,7 +17,9 @@
 
 
 # 效果图
-<img width="313" height="280" alt="Image" src="additional/images/sample_long_form.png" /><img width="10" height="1" style="border:0;"><img width="342" height="280" alt="Image" src="additional/images/sample_popup_form.png" /><img width="10" height="1" style="border:0;"><img width="313" height="280" alt="Image" src="additional/images/sample_modal_form_1.png" />
+<img width="313" height="280" alt="Image" src="additional/images/sample_long_form_1.png" /><img width="10" height="1" style="border:0;"><img width="342" height="280" alt="Image" src="additional/images/sample_popup_form.png" />
+
+<img width="313" height="280" alt="Image" src="additional/images/sample_modal_form_1.png" /><img width="10" height="1" style="border:0;"><img width="313" height="280" alt="Image" src="additional/images/sample_modal_form_2.png" /><img width="10" height="1" style="border:0;"><img width="313" height="280" alt="Image" src="additional/images/sample_modal_form_3.png" />
 
 
 
@@ -116,6 +118,7 @@
 - [指令概览](./additional/documents/commands/overview.md)
 - [操作自定义表单](./additional/documents/commands/custom_form.md)
 - [编辑长表单及其中的按钮](./additional/documents/commands/long_form.md)
+- [编辑长表单或模态表单中的文本元素](./additional/documents/commands/edit_label.md)
 - [编辑信息表单](./additional/documents/commands/popup_form.md)
 - [编辑模态表单及其中的元素](./additional/documents/commands/modal_form.md)
 - [操作或执行自定义函数](./additional/documents/commands/custom_function.md)

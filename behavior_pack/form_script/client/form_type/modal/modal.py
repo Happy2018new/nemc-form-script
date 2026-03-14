@@ -363,8 +363,7 @@ class ModalForm(BaseForm):
         push_label 向模态表单追加一个纯文本显示组件
 
         Args:
-            label (str):
-                该组件要显示的纯文本
+            label (str): 欲该纯文本所显示的内容
 
         Returns:
             Label | None:
@@ -390,7 +389,7 @@ class ModalForm(BaseForm):
         push_header 向模态表单追加一个大字纯文本显示组件
 
         Args:
-            label (str): 该组件要显示的纯文本
+            label (str): 欲该纯文本所显示的内容
 
         Returns:
             Header | None: 如果成功，则返回追加的组件；
