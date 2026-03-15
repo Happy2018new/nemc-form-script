@@ -61,7 +61,7 @@ for _, 2048:
 
       next = {func, strings.find(code, '$', select_mark+1)}
       if next == -1:
-        _ = {func, function.panic('compile_code: Unexpected EOF')}
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
       fi
       ptr = next + 1
 
@@ -86,11 +86,11 @@ for _, 2048:
 
       first_next = {func, strings.find(code, '#', score_mark+1)}
       if first_next == -1:
-        _ = {func, function.panic('compile_code: Unexpected EOF')}
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
       fi
       second_next = {func, strings.find(code, '#', first_next+1)}
       if second_next == -1:
-        _ = {func, function.panic('compile_code: Unexpected EOF')}
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
       fi
       ptr = second_next + 1
 
