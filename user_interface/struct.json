@@ -1,0 +1,165 @@
+{
+    "form_ui_storage": {
+        "long": {
+            "a_long_form": {
+                "title": "TITLE: DynamicString",
+                "content": "CONTENT: DynamicString",
+                "elements": [
+                    {
+                        "type": "label",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "header",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "button",
+                        "text": "TEXT: DynamicString",
+                        "optional_image": {
+                            "set": "SET: FinalBool",
+                            "payload": "IMAGE: FinalString"
+                        },
+                        "onclick": "COMMAND: FinalString"
+                    }
+                ],
+                "oncancel": {
+                    "normal": "COMMAND: FinalString",
+                    "busy": "COMMAND: FinalString",
+                    "exit": "COMMAND: FinalString"
+                }
+            }
+        },
+        "popup": {
+            "a_popup_form": {
+                "title": "TITLE: DynamicString",
+                "content": "CONTENT: DynamicString",
+                "button1": {
+                    "text": "TEXT: DynamicString",
+                    "onclick": "COMMAND: FinalString"
+                },
+                "button2": {
+                    "text": "TEXT: DynamicString",
+                    "onclick": "COMMAND: FinalString"
+                },
+                "oncancel": {
+                    "normal": "COMMAND: FinalString",
+                    "busy": "COMMAND: FinalString",
+                    "exit": "COMMAND: FinalString"
+                }
+            }
+        },
+        "modal": {
+            "a_modal_form": {
+                "title": "TITLE: DynamicString",
+                "content": [
+                    {
+                        "type": "label",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "header",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "input",
+                        "text": "TEXT: DynamicString",
+                        "optional_default": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "DEFAULT: DynamicString"
+                        },
+                        "optional_place_holder": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "PLACEHOLDER: DynamicString"
+                        },
+                        "optional_tooltip": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "TOOLTIP: DynamicString"
+                        },
+                        "onsubmit": "COMMAND: FinalString"
+                    },
+                    {
+                        "type": "toggle",
+                        "text": "TEXT: DynamicString",
+                        "default": "COMMAND: FinalString",
+                        "optional_tooltip": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "TOOLTIP: DynamicString"
+                        },
+                        "onsubmit": "COMMAND: FinalString"
+                    },
+                    {
+                        "type": "dropdown",
+                        "text": "TEXT: DynamicString",
+                        "options": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_1: DynamicString"
+                            },
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_2: DynamicString"
+                            },
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_N: DynamicString"
+                            }
+                        ],
+                        "optional_tooltip": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "TOOLTIP: DynamicString"
+                        },
+                        "onsubmit": "COMMAND: FinalString"
+                    },
+                    {
+                        "type": "slider",
+                        "text": "TEXT: DynamicString",
+                        "min": "MIN: FinalInt",
+                        "max": "MAX: FinalInt",
+                        "step": "STEP: FinalInt",
+                        "default": "DEFAULT: DynamicString",
+                        "optional_tooltip": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "TOOLTIP: DynamicString"
+                        },
+                        "onsubmit": "COMMAND: FinalString"
+                    },
+                    {
+                        "type": "step_slider",
+                        "text": "TEXT: DynamicString",
+                        "steps": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_1: DynamicString"
+                            },
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_2: DynamicString"
+                            },
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "OPT_N: DynamicString"
+                            }
+                        ],
+                        "optional_tooltip": {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "TOOLTIP: DynamicString"
+                        },
+                        "onsubmit": "COMMAND: FinalString"
+                    }
+                ],
+                "oncancel": {
+                    "normal": "COMMAND: FinalString",
+                    "busy": "COMMAND: FinalString",
+                    "exit": "COMMAND: FinalString"
+                }
+            }
+        }
+    }
+}
