@@ -13,6 +13,8 @@ from ....formal.popup import PopupForm as PopupFormalForm
 from ....formal.modal import (
     ModalForm as ModalFormalForm,
     ModalFormElementLabel as ModalFormalFormElementLabel,
+    ModalFormElementHeader as ModalFormalFormElementHeader,
+    ModalFormElementDivider as ModalFormalFormElementDivider,
     ModalFormElementInput as ModalFormalFormElementInput,
     ModalFormElementToggle as ModalFormalFormElementToggle,
     ModalFormElementDropdown as ModalFormalFormElementDropdown,
@@ -117,6 +119,12 @@ class FormalWithCallback:
                 return None
             for index, value in enumerate(self.formal.content):
                 if isinstance(value, ModalFormalFormElementLabel):
+                    if resp[index] is not None:
+                        return None
+                elif isinstance(value, ModalFormalFormElementHeader):
+                    if resp[index] is not None:
+                        return None
+                elif isinstance(value, ModalFormalFormElementDivider):
                     if resp[index] is not None:
                         return None
                 elif isinstance(value, ModalFormalFormElementInput):
