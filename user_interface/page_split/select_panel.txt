@@ -68,7 +68,7 @@ for offset, end-start+1:
   fi
 
   text = {func, function.call('utils/as_code_string', text)}
-  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, 'editlongform page_split_select append button'}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return {}"', offset, text)}}
 rof
 
@@ -76,23 +76,23 @@ rof
 
 if page == 1 and all_pages > 1:
   page_mark = 1 | buttons = buttons + 1
-  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, 'editlongform page_split_select append button'}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'下一页\'"', buttons-1)}}
 elif all_pages > 1 and page == all_pages:
   page_mark = 2 | buttons = buttons + 1
-  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, 'editlongform page_split_select append button'}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'上一页\'"', buttons-1)}}
 elif 1 < page and page < all_pages:
   page_mark = 3 | buttons = buttons + 2
-  _ = {command, 'editlongform page_split_select append'}
-  _ = {command, 'editlongform page_split_select append'}
+  _ = {command, 'editlongform page_split_select append button'}
+  _ = {command, 'editlongform page_split_select append button'}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'上一页\'"', buttons-2)}}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'下一页\'"', buttons-1)}}
 fi
 
 buttons = buttons + 2
-_ = {command, 'editlongform page_split_select append'}
-_ = {command, 'editlongform page_split_select append'}
+_ = {command, 'editlongform page_split_select append button'}
+_ = {command, 'editlongform page_split_select append button'}
 _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'跳转到\'"', buttons-2)}}
 _ = {command, {func, strings.format('editbutton page_split_select {} text "return \'返回上一级\'"', buttons-1)}}
 

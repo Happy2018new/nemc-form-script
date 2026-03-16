@@ -98,19 +98,11 @@
                         "type": "dropdown",
                         "text": "TEXT: DynamicString",
                         "options": [
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_1: DynamicString"
-                            },
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_2: DynamicString"
-                            },
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_N: DynamicString"
-                            }
+                            "OPT_1: DynamicString",
+                            "OPT_2: DynamicString",
+                            "OPT_N: DynamicString"
                         ],
+                        "default": "DEFAULT: DynamicString",
                         "optional_tooltip": {
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
@@ -134,19 +126,11 @@
                         "type": "step_slider",
                         "text": "TEXT: DynamicString",
                         "steps": [
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_1: DynamicString"
-                            },
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_2: DynamicString"
-                            },
-                            {
-                                "condition": "COMMAND: FinalString",
-                                "payload": "OPT_N: DynamicString"
-                            }
+                            "STEP_1: DynamicString",
+                            "STEP_2: DynamicString",
+                            "STEP_N: DynamicString"
                         ],
+                        "default": "DEFAULT: DynamicString",
                         "optional_tooltip": {
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
