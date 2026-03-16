@@ -95,11 +95,11 @@ for _, 2048:
       ptr = second_next + 1
 
       target = {func, strings.sub(code, score_mark+1, first_next)}
-      target = {func, function.call('utils/as_code_string', target)}
       scoreboard = {func, strings.sub(code, first_next+1, second_next)}
-      scoreboard = {func, function.call('utils/as_code_string', scoreboard)}
 
-      temp = '{score, ' + target + ', ' + scoreboard + '}'
+      temp = {func, slices.new(target, scoreboard, True)}
+      temp = {func, function.call('utils/as_func_string', 'utils/get_score_public', temp)}
+      temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
       _ = {func, slices.append(result, temp)}
     fi
   fi
