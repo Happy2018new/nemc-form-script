@@ -22,8 +22,7 @@ scoreboard = {func, json.fast_dumps(scoreboard)}
 
 
 
-cmd = {func, strings.format('scoreboard players test {} {} -2147483648 2147483647', target, scoreboard)}
-if {command, cmd} == 0:
+if {command, 'scoreboard players test ' + target + ' ' + scoreboard + ' -2147483648 2147483647'} == 0:
   if as_str:
     return '0'
   else:

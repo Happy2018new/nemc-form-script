@@ -45,6 +45,7 @@ if total < -2147483648:
 elif total > 2147483647:
   total = 2147483647
 fi
+
 if as_str:
   return str(total)
 else:
