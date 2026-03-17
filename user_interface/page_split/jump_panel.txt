@@ -3,13 +3,15 @@ page_split/jump_panel(
   title: str,
   content: str,
   options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  extra: ptr@map,
   last_page: int,
   callback: str,
 ) -> bool
 
 callback(
   submit_type: int,
-  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]], 
+  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  extra: ptr@map
   selected: int,
 ) -> int | bool | float | str
 
@@ -23,11 +25,12 @@ SUBMIT_TYPE_CANCEL = 3
 title = {func, tuple.get(args, 0)}
 content = {func, tuple.get(args, 1)}
 options = {func, tuple.get(args, 2)}
+extra = {func, tuple.get(args, 3)}
+last_page = {func, tuple.get(args, 4)}
+callback = {func, tuple.get(args, 5)}
+
 options = {func, reflect.deepcopy(options)}
-last_page = {func, tuple.get(args, 3)}
-callback = {func, tuple.get(args, 4)}
-
-
+extra = {func, maps.copy(extra)}
 
 length = {func, slices.length(options)}
 all_pages = int({func, math.ceil(length/5)})
@@ -46,12 +49,13 @@ _ = {command, 'editinput page_split_jump 1 placeholder "return \'请输入要跳
 
 
 _ = {func, object.pin(options)}
+_ = {func, object.pin(extra)}
 
-temp = {func, slices.new(True, title, content, options, last_page, callback)}
+temp = {func, slices.new(True, title, content, options, extra, last_page, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
 _ = {command, {func, strings.format('customform onsubmit page_split_jump "{}"', code)}}
 
-temp = {func, slices.new(False, title, content, options, last_page, callback)}
+temp = {func, slices.new(False, title, content, options, extra, last_page, callback)}
 code = {func, function.call('utils/as_func_string', 'page_split/handle_jump', temp)}
 _ = {command, {func, strings.format('customform oncancel page_split_jump "{}"', code)}}
 
