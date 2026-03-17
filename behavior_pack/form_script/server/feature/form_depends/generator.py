@@ -6,13 +6,19 @@ from ...utils import filter_sentence
 from ...executor.executor import GameCodeExecutor
 from ...storage.form_struct.base import BaseForm as BaseStorageForm
 from ...storage.form_struct.long import (
-    LongForm as LongStorageForm,
     LongFormIconPathImage as LongStorageFormIconPathImage,
+    LongFormButton as LongStorageFormButton,
+    LongFormLabel as LongStorageFormLabel,
+    LongFormHeader as LongStorageFormHeader,
+    LongFormDivider as LongStorageFormDivider,
+    LongForm as LongStorageForm,
 )
 from ...storage.form_struct.popup import PopupForm as PopupStorageForm
 from ...storage.form_struct.modal import (
     ModalForm as ModalStorageForm,
     ModalFormElementLabel as ModalStorageFormElementLabel,
+    ModalFormElementHeader as ModalStorageFormElementHeader,
+    ModalFormElementDivider as ModalStorageFormElementDivider,
     ModalFormElementInput as ModalStorageFormElementInput,
     ModalFormElementToggle as ModalStorageFormElementToggle,
     ModalFormElementDropdown as ModalStorageFormElementDropdown,
@@ -20,14 +26,19 @@ from ...storage.form_struct.modal import (
     ModalFormElementStepSlider as ModalStorageFormElementStepSlider,
 )
 from ....formal.long import (
-    LongForm as LongFormalForm,
-    LongFormElement as LongFormalFormElement,
     LongFormIconPathImage as LongFormalFormIconPathImage,
+    LongFormButton as LongFormalFormButton,
+    LongFormLabel as LongFormalFormLabel,
+    LongFormHeader as LongFormalFormHeader,
+    LongFormDivider as LongFormalFormDivider,
+    LongForm as LongFormalForm,
 )
 from ....formal.popup import PopupForm as PopupFormalForm
 from ....formal.modal import (
     ModalForm as ModalFormalForm,
     ModalFormElementLabel as ModalFormalFormElementLabel,
+    ModalFormElementHeader as ModalFormalFormElementHeader,
+    ModalFormElementDivider as ModalFormalFormElementDivider,
     ModalFormElementInput as ModalFormalFormElementInput,
     ModalFormElementToggle as ModalFormalFormElementToggle,
     ModalFormElementDropdown as ModalFormalFormElementDropdown,
@@ -93,34 +104,57 @@ def _generate_long_form(
         )
     result.content = filter_sentence(content)
 
-    for index, value in enumerate(form.buttons):
-        # prepare
-        element = LongFormalFormElement()
-        # text
-        ctx = "In text of button which indexed in {}".format(index)
-        text = runner.run_code(value.text, ctx, executor, dimension, position)
-        if not isinstance(text, str):
-            raise Exception(
-                "_generate_long_form: The text of button which indexed in {} must be str (text={})".format(
-                    index, text
-                )
-            )
-        element.text = filter_sentence(text)
-        # icon
-        if isinstance(value.icon, LongStorageFormIconPathImage):
-            ctx = "In image path of button which indexed in {}".format(index)
-            image_path = runner.run_code(
-                value.icon.image_path, ctx, executor, dimension, position
-            )
-            if not isinstance(image_path, str):
+    for index, value in enumerate(form.elements):
+        if isinstance(value, LongStorageFormButton):
+            # prepare
+            button = LongFormalFormButton()
+            # text
+            ctx = "In text of button which indexed in {}".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position)
+            if not isinstance(text, str):
                 raise Exception(
-                    "_generate_long_form: The image path of button which indexed in {} must be str (image_path={})".format(
-                        index, image_path
+                    "_generate_long_form: The text of button which indexed in {} must be str (text={})".format(
+                        index, text
                     )
                 )
-            element.icon = LongFormalFormIconPathImage(image_path)
-        # append
-        result.buttons.append(element)
+            button.text = filter_sentence(text)
+            # icon
+            if isinstance(value.icon, LongStorageFormIconPathImage):
+                ctx = "In image path of button which indexed in {}".format(index)
+                image_path = runner.run_code(
+                    value.icon.image_path, ctx, executor, dimension, position
+                )
+                if not isinstance(image_path, str):
+                    raise Exception(
+                        "_generate_long_form: The image path of button which indexed in {} must be str (image_path={})".format(
+                            index, image_path
+                        )
+                    )
+                button.icon = LongFormalFormIconPathImage(image_path)
+            # append
+            result.elements.append(button)
+        elif isinstance(value, LongStorageFormLabel):
+            ctx = "In label which indexed in {}".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position)
+            if not isinstance(text, str):
+                raise Exception(
+                    "_generate_long_form: The text of label which indexed in {} must be str (text={})".format(
+                        index, text
+                    )
+                )
+            result.elements.append(LongFormalFormLabel(filter_sentence(text)))
+        elif isinstance(value, LongStorageFormHeader):
+            ctx = "In header which indexed in {}".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position)
+            if not isinstance(text, str):
+                raise Exception(
+                    "_generate_long_form: The text of header which indexed in {} must be str (text={})".format(
+                        index, text
+                    )
+                )
+            result.elements.append(LongFormalFormHeader(filter_sentence(text)))
+        elif isinstance(value, LongStorageFormDivider):
+            result.elements.append(LongFormalFormDivider())
 
     return FormalWithCallback(
         result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
@@ -268,6 +302,18 @@ def _generate_modal_form(
                     )
                 )
             result.content.append(ModalFormalFormElementLabel(filter_sentence(text)))
+        elif isinstance(value, ModalStorageFormElementHeader):
+            ctx = "In text of header (index={})".format(index)
+            text = runner.run_code(value.text, ctx, executor, dimension, position)
+            if not isinstance(text, str):
+                raise Exception(
+                    "_generate_modal_form: The text of header must be str (index={}, text={})".format(
+                        index, text
+                    )
+                )
+            result.content.append(ModalFormalFormElementHeader(filter_sentence(text)))
+        elif isinstance(value, ModalStorageFormElementDivider):
+            result.content.append(ModalFormalFormElementDivider())
         elif isinstance(value, ModalStorageFormElementInput):
             # text
             ctx = "In text of input (index={})".format(index)
@@ -298,12 +344,22 @@ def _generate_modal_form(
                         index, place_holder
                     )
                 )
+            # tooltip
+            ctx = "In tooltip of input (index={})".format(index)
+            tooltip = runner.run_code(value.tooltip, ctx, executor, dimension, position)
+            if not isinstance(tooltip, str):
+                raise Exception(
+                    "_generate_modal_form: The tooltip of input must be str (index={}, tooltip={})".format(
+                        index, tooltip
+                    )
+                )
             # append
             result.content.append(
                 ModalFormalFormElementInput(
                     filter_sentence(text),
                     filter_sentence(default),
                     filter_sentence(place_holder),
+                    filter_sentence(tooltip),
                 )
             )
         elif isinstance(value, ModalStorageFormElementToggle):
@@ -325,9 +381,20 @@ def _generate_modal_form(
                         index, default
                     )
                 )
+            # tooltip
+            ctx = "In tooltip of toggle (index={})".format(index)
+            tooltip = runner.run_code(value.tooltip, ctx, executor, dimension, position)
+            if not isinstance(tooltip, str):
+                raise Exception(
+                    "_generate_modal_form: The tooltip of toggle must be str (index={}, tooltip={})".format(
+                        index, tooltip
+                    )
+                )
             # append
             result.content.append(
-                ModalFormalFormElementToggle(filter_sentence(text), default)
+                ModalFormalFormElementToggle(
+                    filter_sentence(text), default, filter_sentence(tooltip)
+                )
             )
         elif isinstance(value, ModalStorageFormElementDropdown):
             # prepare
@@ -358,6 +425,16 @@ def _generate_modal_form(
                     )
                 )
             element.default = default
+            # tooltip
+            ctx = "In tooltip of dropdown (index={})".format(index)
+            tooltip = runner.run_code(value.tooltip, ctx, executor, dimension, position)
+            if not isinstance(tooltip, str):
+                raise Exception(
+                    "_generate_modal_form: The tooltip of dropdown must be str (index={}, tooltip={})".format(
+                        index, tooltip
+                    )
+                )
+            element.tooltip = filter_sentence(tooltip)
             # options
             if len(value.options) == 0:
                 raise Exception(
@@ -441,6 +518,15 @@ def _generate_modal_form(
                         index, min_val, max_val, default
                     )
                 )
+            # tooltip
+            ctx = "In tooltip of slider (index={})".format(index)
+            tooltip = runner.run_code(value.tooltip, ctx, executor, dimension, position)
+            if not isinstance(tooltip, str):
+                raise Exception(
+                    "_generate_modal_form: The tooltip of slider must be str (index={}, tooltip={})".format(
+                        index, tooltip
+                    )
+                )
             # append
             result.content.append(
                 ModalFormalFormElementSlider(
@@ -449,6 +535,7 @@ def _generate_modal_form(
                     float(max_val),
                     float(step),
                     float(default),
+                    filter_sentence(tooltip),
                 )
             )
         elif isinstance(value, ModalStorageFormElementStepSlider):
@@ -480,6 +567,16 @@ def _generate_modal_form(
                     )
                 )
             element.default = default
+            # tooltip
+            ctx = "In tooltip of step slider (index={})".format(index)
+            tooltip = runner.run_code(value.tooltip, ctx, executor, dimension, position)
+            if not isinstance(tooltip, str):
+                raise Exception(
+                    "_generate_modal_form: The tooltip of step slider must be str (index={}, tooltip={})".format(
+                        index, tooltip
+                    )
+                )
+            element.tooltip = filter_sentence(tooltip)
             # steps
             if len(value.steps) <= 1:
                 raise Exception(

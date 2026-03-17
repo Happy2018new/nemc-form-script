@@ -79,9 +79,9 @@ class Block:
             )
         )
         funcs["block.GetCommandBlock"] = (
-            lambda player_id, pos_ptr, dimension_id: self._manager.ref(
+            lambda pos_ptr, dimension_id: self._manager.ref(
                 GetEngineCompFactory()
-                .CreateBlockEntity(player_id)
+                .CreateBlockEntity(GetLevelId())
                 .GetCommandBlock(self._manager.deref(pos_ptr), dimension_id)
             )
         )

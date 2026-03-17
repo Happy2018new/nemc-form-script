@@ -6,31 +6,31 @@ customform add art_gallery long
 editlongform art_gallery title "return '画廊'"
 editlongform art_gallery content "return '欢迎来到画廊！您要观看哪副画呢？'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 0 icon "return 'textures/painting/baroque'"
 editbutton art_gallery 0 text "return 'Baroque'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 1 icon "return 'textures/painting/bouquet'"
 editbutton art_gallery 1 text "return 'Bouquet'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 2 icon "return 'textures/painting/cavebird'"
 editbutton art_gallery 2 text "return 'Cavebird'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 3 icon "return 'textures/painting/cotan'"
 editbutton art_gallery 3 text "return 'Cotan'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 4 icon "return 'textures/painting/endboss'"
 editbutton art_gallery 4 text "return 'Endboss'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 5 icon "return 'textures/painting/fern'"
 editbutton art_gallery 5 text "return 'Fern'"
 
-editlongform art_gallery append
+editlongform art_gallery append button
 editbutton art_gallery 6 icon "return 'textures/painting/humble'"
 editbutton art_gallery 6 text "return 'Humble'"
 

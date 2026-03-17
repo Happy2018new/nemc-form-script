@@ -21,6 +21,8 @@
             "type": "enum_short",
             "options": [
                 "label",
+                "header",
+                "divider",
                 "input",
                 "toggle",
                 "dropdown",
@@ -50,6 +52,8 @@
             "type": "enum_short",
             "options": [
                 "label",
+                "header",
+                "divider",
                 "input",
                 "toggle",
                 "dropdown",

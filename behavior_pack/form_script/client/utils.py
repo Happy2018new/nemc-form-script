@@ -41,8 +41,10 @@ def point_is_in_rect(
     point_is_in_rect 测定给定的点是否在给定的矩形内（含边界）
 
     Args:
-        rect (tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]): 矩形的四个顶点坐标
-        point (tuple[float, float]): 给定的待测点的坐标
+        rect (tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]):
+            矩形的四个顶点坐标
+        point (tuple[float, float]):
+            给定的待测点的坐标
 
     Returns:
         bool: 如果给定的点在给定的矩形内（含边界），则返回 True；
@@ -57,6 +59,25 @@ def point_is_in_rect(
     max_y = max(rect[0][1], rect[1][1], rect[2][1], rect[3][1])
 
     return min_x <= point[0] <= max_x and min_y <= point[1] <= max_y
+
+
+def rect_in_rect(
+    rect1,  # type: tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]
+    rect2,  # type: tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]
+):
+    """rect_in_rect 报告 rect1 所指示的矩形是否被 rect2 所指示的矩形包含（含边界）
+
+    Args:
+        rect1 (tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]):
+            矩形 rect1 的四个顶点坐标
+        rect2 (tuple[tuple[float,float], tuple[float,float], tuple[float,float], tuple[float,float]]):
+            矩形 rect2 的四个顶点坐标
+
+    Returns:
+        bool:
+            rect1 所指示的矩形是否被 rect2 所指示的矩形包含（含边界）
+    """
+    return all(point_is_in_rect(rect2, point) for point in rect1)
 
 
 def input_mode_is_touch():  # type: () -> bool

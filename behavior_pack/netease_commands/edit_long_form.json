@@ -15,6 +15,17 @@
             "options": [
                 "append"
             ]
+        },
+        {
+            "name": "elementType",
+            "type": "enum_short",
+            "options": [
+                "button",
+                "label",
+                "header",
+                "divider"
+            ],
+            "default": "button"
         }
     ],
     "args2": [
@@ -49,6 +60,17 @@
         {
             "name": "index",
             "type": "int"
+        },
+        {
+            "name": "elementType",
+            "type": "enum_short",
+            "options": [
+                "button",
+                "label",
+                "header",
+                "divider"
+            ],
+            "default": "button"
         }
     ],
     "args4": [

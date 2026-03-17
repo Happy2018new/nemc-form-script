@@ -88,12 +88,36 @@
             }
         ]
     },
+    "dynamic_header@future.option_group_spaced_header": {
+        "$text": "#form_button_text",
+        "$text_bindings": [
+            {
+                "binding_collection_name": "form_buttons",
+                "binding_name": "#form_button_text",
+                "binding_type": "collection"
+            }
+        ]
+    },
+    "dynamic_label@future.option_group_spaced_label": {
+        "$text": "#form_button_text",
+        "$text_bindings": [
+            {
+                "binding_collection_name": "form_buttons",
+                "binding_name": "#form_button_text",
+                "binding_type": "collection"
+            }
+        ]
+    },
     "long_form@common_dialogs.main_panel_no_buttons": {
         "$child_control": "long.long_form_panel",
         "$text_name": "#title_text",
+        "$title_max_size": [
+            "100% - 15px",
+            10
+        ],
         "$title_panel": "common_dialogs.standard_title_label",
         "$title_size": [
-            "100% - 14px",
+            "100% - 15px",
             10
         ],
         "$title_text_binding_type": "none",
@@ -101,6 +125,36 @@
         "size": [
             225,
             200
+        ]
+    },
+    "long_form_dynamic_buttons_panel": {
+        "type": "stack_panel",
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "offset": [
+            2,
+            0
+        ],
+        "size": [
+            "100% - 4px",
+            "100%c"
+        ],
+        "collection_name": "form_buttons",
+        "factory": {
+            "control_ids": {
+                "header": "@long.dynamic_header",
+                "button": "long.dynamic_button",
+                "divider": "@future.option_group_section_divider",
+                "label": "@long.dynamic_label"
+            },
+            "name": "buttons"
+        },
+        "orientation": "vertical",
+        "bindings": [
+            {
+                "binding_name_override": "#collection_length",
+                "binding_name": "#form_button_contents"
+            }
         ]
     },
     "long_form_panel": {
@@ -200,31 +254,7 @@
                     ],
                     "controls": [
                         {
-                            "long_form_dynamic_buttons_panel": {
-                                "type": "stack_panel",
-                                "anchor_from": "top_middle",
-                                "anchor_to": "top_middle",
-                                "offset": [
-                                    2,
-                                    0
-                                ],
-                                "size": [
-                                    "100% - 4px",
-                                    "100%c"
-                                ],
-                                "collection_name": "form_buttons",
-                                "factory": {
-                                    "control_name": "long.dynamic_button",
-                                    "name": "buttons"
-                                },
-                                "orientation": "vertical",
-                                "bindings": [
-                                    {
-                                        "binding_name_override": "#collection_length",
-                                        "binding_name": "#form_button_length"
-                                    }
-                                ]
-                            }
+                            "long_form_dynamic_buttons_panel@long.long_form_dynamic_buttons_panel": {}
                         }
                     ]
                 }

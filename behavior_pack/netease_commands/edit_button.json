@@ -10,7 +10,7 @@
             "type": "str"
         },
         {
-            "name": "buttonIndex",
+            "name": "index",
             "type": "int"
         },
         {
@@ -32,7 +32,7 @@
             "type": "str"
         },
         {
-            "name": "buttonIndex",
+            "name": "index",
             "type": "int"
         },
         {

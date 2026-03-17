@@ -58,6 +58,83 @@ class ModalFormElementLabel(ModalFormElement):
         return self
 
 
+class ModalFormElementHeader(ModalFormElement):
+    """
+    ModalFormElementHeader 指示模态表单中的大字文本元素
+    """
+
+    text = EMPTY_STRING_WITH_HASH
+
+    def __init__(self, text=EMPTY_STRING_WITH_HASH):  # type: (StringWithHash) -> None
+        """
+        初始化并返回一个可放置在模态表单中的大字文本
+
+        Args:
+            text (StringWithHash, optional):
+                大字文本的内容。
+                默认值为 EMPTY_STRING_WITH_HASH
+        """
+        self.text = text
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """marshal 将本实例编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]: 本实例对应的 JSON 表示
+        """
+        return {"text": self.text.marshal()}
+
+    def unmarshal(self, data):  # type: (Any) -> ModalFormElementHeader
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据传输到本实例中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            ModalFormElementHeader: 返回 ModalFormElementHeader 本身
+        """
+        self.text = StringWithHash().unmarshal(data["text"])
+        return self
+
+
+class ModalFormElementDivider(ModalFormElement):
+    """
+    ModalFormElementDivider 指示模态表单中的分割线元素
+    """
+
+    def __init__(self):  # type: () -> None
+        """
+        初始化并返回一个可放置在模态表单中的分割线
+        """
+        pass
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """marshal 将本实例编码为其对应 JSON 表示
+
+        Returns:
+            dict[str, Any]: 本实例对应的 JSON 表示
+        """
+        return {}
+
+    def unmarshal(self, data):  # type: (Any) -> ModalFormElementDivider
+        """
+        unmarshal 从 data 所指示的 JSON 数据中解码，
+        然后将解码所得的数据传输到本实例中
+
+        Args:
+            data (Any): 给定的 JSON 数据。
+                        应确保它是一个字典
+
+        Returns:
+            ModalFormElementDivider: 返回 ModalFormElementDivider 本身
+        """
+        _ = data
+        return self
+
+
 class ModalFormElementInput(ModalFormElement):
     """
     ModalFormElementInput 指示模态表单中的输入框
@@ -66,12 +143,14 @@ class ModalFormElementInput(ModalFormElement):
     text = EMPTY_STRING_WITH_HASH
     default = EMPTY_STRING_WITH_HASH
     place_holder = EMPTY_STRING_WITH_HASH
+    tooltip = EMPTY_STRING_WITH_HASH
 
     def __init__(
         self,
         text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         place_holder=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
     ):  # type: (...) -> None
         """
         初始化并返回一个可放置在模态表单中的输入框
@@ -86,10 +165,14 @@ class ModalFormElementInput(ModalFormElement):
             place_holder (StringWithHash, optional):
                 输入框的提示文本。
                 默认值为 EMPTY_STRING_WITH_HASH
+            tooltip (StringWithHash, optional):
+                输入框的灯泡提示文本。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.text = text
         self.default = default
         self.place_holder = place_holder
+        self.tooltip = tooltip
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将本实例编码为其对应 JSON 表示
@@ -101,6 +184,7 @@ class ModalFormElementInput(ModalFormElement):
             "text": self.text.marshal(),
             "default": self.default.marshal(),
             "placeholder": self.place_holder.marshal(),
+            "tooltip": self.tooltip.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalFormElementInput
@@ -115,9 +199,17 @@ class ModalFormElementInput(ModalFormElement):
         Returns:
             ModalFormElementInput: 返回 ModalFormElementInput 本身
         """
+        assert isinstance(data, dict)
+
         self.text = StringWithHash().unmarshal(data["text"])
         self.default = StringWithHash().unmarshal(data["default"])
         self.place_holder = StringWithHash().unmarshal(data["placeholder"])
+        self.tooltip = (
+            StringWithHash().unmarshal(data["tooltip"])
+            if "tooltip" in data
+            else StringWithHash("return ''")
+        )
+
         return self
 
 
@@ -128,10 +220,14 @@ class ModalFormElementToggle(ModalFormElement):
 
     text = EMPTY_STRING_WITH_HASH
     default = EMPTY_STRING_WITH_HASH
+    tooltip = EMPTY_STRING_WITH_HASH
 
     def __init__(
-        self, text=EMPTY_STRING_WITH_HASH, default=EMPTY_STRING_WITH_HASH
-    ):  # type: (StringWithHash, StringWithHash) -> None
+        self,
+        text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+    ):  # type: (...) -> None
         """
         初始化并返回一个可放置在模态表单中的开关
 
@@ -142,9 +238,13 @@ class ModalFormElementToggle(ModalFormElement):
             default (StringWithHash, optional):
                 开关的默认状态。
                 默认值为 EMPTY_STRING_WITH_HASH
+            tooltip (StringWithHash, optional):
+                开关的灯泡提示文本。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.text = text
         self.default = default
+        self.tooltip = tooltip
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将本实例编码为其对应 JSON 表示
@@ -155,6 +255,7 @@ class ModalFormElementToggle(ModalFormElement):
         return {
             "text": self.text.marshal(),
             "default": self.default.marshal(),
+            "tooltip": self.tooltip.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalFormElementToggle
@@ -169,8 +270,16 @@ class ModalFormElementToggle(ModalFormElement):
         Returns:
             ModalFormElementToggle: 返回 ModalFormElementToggle 本身
         """
+        assert isinstance(data, dict)
+
         self.text = StringWithHash().unmarshal(data["text"])
         self.default = StringWithHash().unmarshal(data["default"])
+        self.tooltip = (
+            StringWithHash().unmarshal(data["tooltip"])
+            if "tooltip" in data
+            else StringWithHash("return ''")
+        )
+
         return self
 
 
@@ -182,10 +291,15 @@ class ModalFormElementDropdown(ModalFormElement):
     text = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     options = []  # type: list[StringWithHash]
     default = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    tooltip = EMPTY_STRING_WITH_HASH  # type: StringWithHash
 
     def __init__(
-        self, text=EMPTY_STRING_WITH_HASH, options=[], default=EMPTY_STRING_WITH_HASH
-    ):  # type: (StringWithHash, list[StringWithHash], StringWithHash) -> None
+        self,
+        text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        options=[],  # type: list[StringWithHash]
+        default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+    ):  # type: (...) -> None
         """
         初始化并返回一个可放置在模态表单中的下拉框
 
@@ -200,10 +314,14 @@ class ModalFormElementDropdown(ModalFormElement):
                 下拉框在初始状态下，
                 所选中选项的索引。
                 默认值为 EMPTY_STRING_WITH_HASH
+            tooltip (StringWithHash, optional):
+                下拉框的灯泡提示文本。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.text = text
         self.options = options if len(options) > 0 else []
         self.default = default
+        self.tooltip = tooltip
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将本实例编码为其对应 JSON 表示
@@ -215,6 +333,7 @@ class ModalFormElementDropdown(ModalFormElement):
             "text": self.text.marshal(),
             "options": [i.marshal() for i in self.options],
             "default": self.default.marshal(),
+            "tooltip": self.tooltip.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalFormElementDropdown
@@ -229,9 +348,17 @@ class ModalFormElementDropdown(ModalFormElement):
         Returns:
             ModalFormElementDropdown: 返回 ModalFormElementDropdown 本身
         """
+        assert isinstance(data, dict)
+
         self.text = StringWithHash().unmarshal(data["text"])
         self.options = [StringWithHash().unmarshal(i) for i in data["options"]]
         self.default = StringWithHash().unmarshal(data["default"])
+        self.tooltip = (
+            StringWithHash().unmarshal(data["tooltip"])
+            if "tooltip" in data
+            else StringWithHash("return ''")
+        )
+
         return self
 
 
@@ -245,6 +372,7 @@ class ModalFormElementSlider(ModalFormElement):
     max_val = EMPTY_STRING_WITH_HASH
     step = EMPTY_STRING_WITH_HASH
     default = EMPTY_STRING_WITH_HASH
+    tooltip = EMPTY_STRING_WITH_HASH
 
     def __init__(
         self,
@@ -253,6 +381,7 @@ class ModalFormElementSlider(ModalFormElement):
         max_val=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         step=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
     ):  # type: (...) -> None
         """
         初始化并返回一个可放置在模态表单中的隐式步进滑块
@@ -273,12 +402,16 @@ class ModalFormElementSlider(ModalFormElement):
             default (StringWithHash, optional):
                 滑块的初始值。
                 默认值为 EMPTY_STRING_WITH_HASH
+            tooltip (StringWithHash, optional):
+                滑块的灯泡提示文本。
+                默认值为 EMPTY_STRING_WITH_HASH
         """
         self.text = text
         self.min_val = min_val
         self.max_val = max_val
         self.step = step
         self.default = default
+        self.tooltip = tooltip
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将本实例编码为其对应 JSON 表示
@@ -292,6 +425,7 @@ class ModalFormElementSlider(ModalFormElement):
             "max": self.max_val.marshal(),
             "step": self.step.marshal(),
             "default": self.default.marshal(),
+            "tooltip": self.tooltip.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalFormElementSlider
@@ -306,11 +440,19 @@ class ModalFormElementSlider(ModalFormElement):
         Returns:
             ModalFormElementSlider: 返回 ModalFormElementSlider 本身
         """
+        assert isinstance(data, dict)
+
         self.text = StringWithHash().unmarshal(data["text"])
         self.min_val = StringWithHash().unmarshal(data["min"])
         self.max_val = StringWithHash().unmarshal(data["max"])
         self.step = StringWithHash().unmarshal(data["step"])
         self.default = StringWithHash().unmarshal(data["default"])
+        self.tooltip = (
+            StringWithHash().unmarshal(data["tooltip"])
+            if "tooltip" in data
+            else StringWithHash("return ''")
+        )
+
         return self
 
 
@@ -322,10 +464,15 @@ class ModalFormElementStepSlider(ModalFormElement):
     text = EMPTY_STRING_WITH_HASH  # type: StringWithHash
     steps = []  # type: list[StringWithHash]
     default = EMPTY_STRING_WITH_HASH  # type: StringWithHash
+    tooltip = EMPTY_STRING_WITH_HASH  # type: StringWithHash
 
     def __init__(
-        self, text=EMPTY_STRING_WITH_HASH, steps=[], default=EMPTY_STRING_WITH_HASH
-    ):  # type: (StringWithHash, list[StringWithHash], StringWithHash) -> None
+        self,
+        text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        steps=[],  # type: list[StringWithHash]
+        default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+        tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
+    ):  # type: (...) -> None
         """
         初始化并返回一个可放置在模态表单中的显式步进滑块
 
@@ -340,10 +487,14 @@ class ModalFormElementStepSlider(ModalFormElement):
                 滑块在初始状态下，
                 所显示内容的索引。
                 默认值为 StringWithHash
+            tooltip (StringWithHash, optional):
+                滑块的灯泡提示文本。
+                默认值为 StringWithHash
         """
         self.text = text
         self.steps = steps if len(steps) > 0 else []
         self.default = default
+        self.tooltip = tooltip
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将本实例编码为其对应 JSON 表示
@@ -355,6 +506,7 @@ class ModalFormElementStepSlider(ModalFormElement):
             "text": self.text.marshal(),
             "steps": [i.marshal() for i in self.steps],
             "default": self.default.marshal(),
+            "tooltip": self.tooltip.marshal(),
         }
 
     def unmarshal(self, data):  # type: (Any) -> ModalFormElementStepSlider
@@ -369,9 +521,17 @@ class ModalFormElementStepSlider(ModalFormElement):
         Returns:
             ModalFormElementStepSlider: 返回 ModalFormElementStepSlider 本身
         """
+        assert isinstance(data, dict)
+
         self.text = StringWithHash().unmarshal(data["text"])
         self.steps = [StringWithHash().unmarshal(i) for i in data["steps"]]
         self.default = StringWithHash().unmarshal(data["default"])
+        self.tooltip = (
+            StringWithHash().unmarshal(data["tooltip"])
+            if "tooltip" in data
+            else StringWithHash("return ''")
+        )
+
         return self
 
 
@@ -438,6 +598,10 @@ class ModalForm(BaseForm):
             value = i.marshal()
             if isinstance(i, ModalFormElementLabel):
                 value["type"] = "label"
+            elif isinstance(i, ModalFormElementHeader):
+                value["type"] = "header"
+            elif isinstance(i, ModalFormElementDivider):
+                value["type"] = "divider"
             elif isinstance(i, ModalFormElementInput):
                 value["type"] = "input"
             elif isinstance(i, ModalFormElementToggle):
@@ -482,6 +646,10 @@ class ModalForm(BaseForm):
             element_type = i["type"]
             if element_type == "label":
                 self.content.append(ModalFormElementLabel().unmarshal(i))
+            elif element_type == "header":
+                self.content.append(ModalFormElementHeader().unmarshal(i))
+            elif element_type == "divider":
+                self.content.append(ModalFormElementDivider().unmarshal(i))
             elif element_type == "input":
                 self.content.append(ModalFormElementInput().unmarshal(i))
             elif element_type == "toggle":
@@ -514,16 +682,23 @@ class ModalForm(BaseForm):
         for i in self.content:
             if isinstance(i, ModalFormElementLabel):
                 codes.append(i.text)
+            elif isinstance(i, ModalFormElementHeader):
+                codes.append(i.text)
+            elif isinstance(i, ModalFormElementDivider):
+                pass
             elif isinstance(i, ModalFormElementInput):
                 codes.append(i.text)
                 codes.append(i.default)
                 codes.append(i.place_holder)
+                codes.append(i.tooltip)
             elif isinstance(i, ModalFormElementToggle):
                 codes.append(i.text)
                 codes.append(i.default)
+                codes.append(i.tooltip)
             elif isinstance(i, ModalFormElementDropdown):
                 codes.append(i.text)
                 codes.append(i.default)
+                codes.append(i.tooltip)
                 for option in i.options:
                     codes.append(option)
             elif isinstance(i, ModalFormElementSlider):
@@ -532,9 +707,11 @@ class ModalForm(BaseForm):
                 codes.append(i.max_val)
                 codes.append(i.step)
                 codes.append(i.default)
+                codes.append(i.tooltip)
             elif isinstance(i, ModalFormElementStepSlider):
                 codes.append(i.text)
                 codes.append(i.default)
+                codes.append(i.tooltip)
                 for step in i.steps:
                     codes.append(step)
 

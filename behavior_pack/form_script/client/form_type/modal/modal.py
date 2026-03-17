@@ -7,13 +7,13 @@ if TYPE_CHECKING:
     from mod.client.extraClientApi import ScreenNode
     from mod.client.ui.controls.baseUIControl import BaseUIControl, ButtonUIControl
 
-from .label import Label
+from .text import Label, Header, Divider
 from .toggle import Toggle
 from .input import Input
 from .dropdown import DropDown
 from .slider import Slider, StepSlider
 from ..base import BaseForm
-from ...utils import get_scroll_view_content
+from ...utils import get_scorll_view_background, get_scroll_view_content
 from mod.client.extraClientApi import PopScreen
 
 
@@ -31,15 +31,18 @@ class ModalForm(BaseForm):
         """初始化并返回一个新的模态表单
 
         Args:
-            ui_node (ScreenNode): 该表单所在的屏幕结点
-            control (BaseUIControl): 要将该表单挂接在哪个父节点下
+            ui_node (ScreenNode):
+                该表单所在的屏幕结点
+            control (BaseUIControl):
+                要将该表单挂接在哪个父节点下
             callback (Callable[[dict[str, Any]], None] | None, optional):
                 当用户点击提交按钮时，应当执行的回调函数。
                 该回调函数的输入是事件 SetButtonTouchUpCallback 的参数。
                 默认值为 None，指示不需要执行回调函数
         Raises:
-            Exception: 如果 control 下已经挂接了一个模态表单，
-                       则将创建失败，对抛出对应的错误
+            Exception:
+                如果 control 下已经挂接了一个模态表单，
+                则将创建失败，对抛出对应的错误
         """
         if control.GetChildByName("custom_form") is not None:
             raise Exception(
@@ -89,13 +92,12 @@ class ModalForm(BaseForm):
             child = button.GetChildByPath("/" + i)
             if child is None:
                 continue
-            child.SetVisible(i == "default")
+            child.SetVisible(i == "default", False)
 
     def _init_submit_callback(self):  # type: () -> None
         """
-        _init_submit_callback 为提交按钮
-        启用按下后回调的功能，
-        并注册对应的回调函数
+        _init_submit_callback 为提交按钮启用
+        按下后回调的功能，并注册对应的回调函数
         """
         button = self._get_submit_button_control()
         if button is None:
@@ -119,6 +121,21 @@ class ModalForm(BaseForm):
             except Exception:
                 pass
         PopScreen()
+
+    def _get_background(self):  # type: () -> BaseUIControl | None
+        """_get_background 获取该模态表单的背景控件
+
+        Returns:
+            BaseUIControl | None:
+                如果成功，则返回该模态表单的背景控件；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None or self.control is None:
+            return None
+        return get_scorll_view_background(
+            self.ui_node,
+            self.control.GetPath(),
+        )
 
     def _get_generated_form(self):  # type: () -> BaseUIControl | None
         """
@@ -182,14 +199,18 @@ class ModalForm(BaseForm):
         return self
 
     def set_modal_submit_button(self, text="提交"):  # type: (str) -> ModalForm
-        """set_modal_submit_button 设置模态表单中提交按钮的文本
+        """
+        set_modal_submit_button
+        设置模态表单中提交按钮的文本
 
         Args:
-            text (str, optional): 提交按钮的文本。
-                                  默认为“提交”
+            text (str, optional):
+                提交按钮的文本。
+                默认为“提交”
 
         Returns:
-            ModalForm: 返回 ModalForm 本身
+            ModalForm:
+                返回 ModalForm 本身
         """
         if self._last_render_submit_button == text:
             return self
@@ -214,19 +235,26 @@ class ModalForm(BaseForm):
         return self
 
     def push_slider(
-        self, label, contents, index=-1
-    ):  # type: (str, list[str], int) -> Slider | None
+        self, label, contents, index=-1, tooltip=""
+    ):  # type: (str, list[str], int, str) -> Slider | None
         """push_slider 向模态表单追加一个隐式步进滑块
 
         Args:
-            label (str): 该滑块的标题
-            contents (list[str]): 该滑块可以选择的内容
-            index (int, optional): 该滑块最开始的位置。
-                                   不使用请置为 -1
+            label (str):
+                该滑块的标题
+            contents (list[str]):
+                该滑块可以选择的内容
+            index (int, optional):
+                该滑块最开始的位置。
+                不使用请置为 -1
+            tooltip (str, optional):
+                该滑块的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
-            Slider | None: 如果成功，则返回追加的滑块；
-                           否则失败，那么返回 None
+            Slider | None:
+                如果成功，则返回追加的滑块；
+                否则失败，那么返回 None
         """
         if self.ui_node is None:
             return None
@@ -234,30 +262,40 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        slider = (
-            Slider(self.ui_node, control)
-            .set_slider_label(label)
-            .set_slider_contents(contents, index)
-        )
+        slider = Slider(self.ui_node, control, background, tooltip)
+        _ = slider.set_slider_label(label)
+        _ = slider.set_slider_contents(contents, index)
+
         self.childs.append(slider)
         self._should_update_screen = True
         return slider
 
     def push_step_slider(
-        self, label, contents, index=-1
-    ):  # type: (str, list[str], int) -> StepSlider | None
-        """push_step_slider 向模态表单追加一个显式步进滑块
+        self, label, contents, index=-1, tooltip=""
+    ):  # type: (str, list[str], int, str) -> StepSlider | None
+        """
+        push_step_slider 向模态表单追加一个显式步进滑块
 
         Args:
-            label (str): 该滑块的标题
-            contents (list[str]): 该滑块可以选择的内容
-            index (int, optional): 该滑块最开始的位置。
-                                   不使用请置为 -1
+            label (str):
+                该滑块的标题
+            contents (list[str]):
+                该滑块可以选择的内容
+            index (int, optional):
+                该滑块最开始的位置。
+                不使用请置为 -1
+            tooltip (str, optional):
+                该滑块的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
-            StepSlider | None: 如果成功，则返回追加的滑块；
-                               否则失败，那么返回 None
+            StepSlider | None:
+                如果成功，则返回追加的滑块；
+                否则失败，那么返回 None
         """
         if self.ui_node is None:
             return None
@@ -265,29 +303,40 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        step_slider = StepSlider(self.ui_node, control)
-        step_slider.set_slider_label(label)
-        step_slider.set_slider_contents(contents, index)
+        step_slider = StepSlider(self.ui_node, control, background, tooltip)
+        _ = step_slider.set_slider_label(label)
+        _ = step_slider.set_slider_contents(contents, index)
 
         self.childs.append(step_slider)
         self._should_update_screen = True
         return step_slider
 
     def push_dropdown(
-        self, label, contents, index=-1
-    ):  # type: (str, list[str], int) -> DropDown | None
-        """push_dropdown 向模态表单追加一个下拉框
+        self, label, contents, index=-1, tooltip=""
+    ):  # type: (str, list[str], int, str) -> DropDown | None
+        """
+        push_dropdown 向模态表单追加一个下拉框
 
         Args:
-            label (str): 该下拉框的标题
-            contents (list[str]): 该下拉框的可选择内容
-            index (int, optional): 该下拉框在一开始所选择的内容。
-                                   如果不使用该字段，请置为 -1
+            label (str):
+                该下拉框的标题
+            contents (list[str]):
+                该下拉框的可选择内容
+            index (int, optional):
+                该下拉框在一开始所选择的内容。
+                如果不使用该字段，请置为 -1
+            tooltip (str, optional):
+                该下拉框的灯泡提示文本。
+                默认值为空字符串
 
         Returns:
-            DropDown | None: 如果成功，则返回追加的下拉框；
-                             否则失败，那么返回 None
+            DropDown | None:
+                如果成功，则返回追加的下拉框；
+                否则失败，那么返回 None
         """
         if self.ui_node is None:
             return None
@@ -295,26 +344,31 @@ class ModalForm(BaseForm):
         control = self._get_generated_form()
         if control is None:
             return None
+        background = self._get_background()
+        if background is None:
+            return None
 
-        dropdown = DropDown(self.ui_node, control)
+        dropdown = DropDown(self.ui_node, control, background, tooltip)
         for i in contents:
-            dropdown.add_new_option(i)
-        dropdown.set_dropdown_label(label)
-        dropdown.set_selected_option(index if index != -1 else 0)
+            _ = dropdown.add_new_option(i)
+        _ = dropdown.set_title_label(label)
+        _ = dropdown.set_selected_option(index if index != -1 else 0)
 
         self.childs.append(dropdown)
         self._should_update_screen = True
         return dropdown
 
     def push_label(self, label):  # type: (str) -> Label | None
-        """push_label 向模态表单追加一个纯文本显示组件
+        """
+        push_label 向模态表单追加一个纯文本显示组件
 
         Args:
-            label (str): 该组件要显示的纯文本
+            label (str): 欲该纯文本所显示的内容
 
         Returns:
-            Label | None: 如果成功，则返回追加的组件；
-                          否则失败，那么返回 None
+            Label | None:
+                如果成功，则返回追加的组件；
+                否则失败，那么返回 None
         """
         if self.ui_node is None:
             return None
@@ -324,24 +378,21 @@ class ModalForm(BaseForm):
             return None
 
         result = Label(self.ui_node, control)
-        result.set_label_text(label)
+        _ = result.set_label_text(label)
 
         self.childs.append(result)
         self._should_update_screen = True
         return result
 
-    def push_toggle(self, label, toggled=False):  # type: (str, bool) -> Toggle | None
-        """push_toggle 向模态表单追加一个开关
+    def push_header(self, label):  # type: (str) -> Header | None
+        """
+        push_header 向模态表单追加一个大字纯文本显示组件
 
         Args:
-            label (str): 开关的标题文本
-            toggled (bool, optional):
-                True 如果开关需要打开；
-                False 如果开关需要关闭；
-                默认值为 False
+            label (str): 欲该纯文本所显示的内容
 
         Returns:
-            Toggle | None: 如果成功，则返回追加的开关；
+            Header | None: 如果成功，则返回追加的组件；
                            否则失败，那么返回 None
         """
         if self.ui_node is None:
@@ -351,30 +402,21 @@ class ModalForm(BaseForm):
         if control is None:
             return None
 
-        toggle = (
-            Toggle(self.ui_node, control)
-            .set_toggle_label(label)
-            .set_toggle_state(toggled)
-        )
-        self.childs.append(toggle)
+        result = Header(self.ui_node, control)
+        _ = result.set_header_text(label)
+
+        self.childs.append(result)
         self._should_update_screen = True
-        return toggle
+        return result
 
-    def push_input(
-        self, label_text, place_holder_text="", edit_text=""
-    ):  # type: (str, str, str) -> Input | None
-        """push_input 向模态表单追加一个输入框
-
-        Args:
-            label_text (str): 输入框的标题文本
-            place_holder_text (str, optional): 输入框的提示内容。
-                                          默认为空字符串
-            edit_text (str, optional): 输入框中用户输入的内容。
-                                      默认为空字符串
+    def push_divider(self):  # type: () -> Divider | None
+        """
+        push_divider 向模态表单追加一个分割线组件
 
         Returns:
-            Input | None: 如果成功，则返回追加的输入框；
-                          否则失败，那么返回 None
+            Divider | None:
+                如果成功，则返回追加的组件；
+                否则失败，那么返回 None
         """
         if self.ui_node is None:
             return None
@@ -383,12 +425,89 @@ class ModalForm(BaseForm):
         if control is None:
             return None
 
-        panel = (
-            Input(self.ui_node, control)
-            .set_label_text(label_text)
-            .set_place_holder_text(place_holder_text)
-            .set_edit_text(edit_text)
-        )
+        result = Divider(self.ui_node, control)
+        self.childs.append(result)
+        self._should_update_screen = True
+
+        return result
+
+    def push_toggle(
+        self, label, toggled=False, tooltip=""
+    ):  # type: (str, bool, str) -> Toggle | None
+        """push_toggle 向模态表单追加一个开关
+
+        Args:
+            label (str):
+                开关的标题文本
+            toggled (bool, optional):
+                True 如果开关需要打开；
+                False 如果开关需要关闭；
+                默认值为 False
+            tooltip (str, optional):
+                开关的灯泡提示文本。
+                默认值为空字符串
+
+        Returns:
+            Toggle | None:
+                如果成功，则返回追加的开关；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_generated_form()
+        if control is None:
+            return None
+        background = self._get_background()
+        if background is None:
+            return None
+
+        toggle = Toggle(self.ui_node, control, background, tooltip)
+        _ = toggle.set_title_label(label)
+        _ = toggle.set_toggle_state(toggled)
+
+        self.childs.append(toggle)
+        self._should_update_screen = True
+        return toggle
+
+    def push_input(
+        self, label_text, place_holder_text="", edit_text="", tooltip=""
+    ):  # type: (str, str, str, str) -> Input | None
+        """push_input 向模态表单追加一个输入框
+
+        Args:
+            label_text (str):
+                输入框的标题文本
+            place_holder_text (str, optional):
+                输入框的提示内容。
+                默认为空字符串
+            edit_text (str, optional):
+                输入框中用户输入的内容。
+                默认为空字符串
+            tooltip (str, optional):
+                输入框的灯泡提示文本。
+                默认值为空字符串
+
+        Returns:
+            Input | None:
+                如果成功，则返回追加的输入框；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_generated_form()
+        if control is None:
+            return None
+        background = self._get_background()
+        if background is None:
+            return None
+
+        panel = Input(self.ui_node, control, background, tooltip)
+        _ = panel.set_title_label(label_text)
+        _ = panel.set_place_holder_text(place_holder_text)
+        _ = panel.set_edit_text(edit_text)
+
         self.childs.append(panel)
         self._should_update_screen = True
         return panel

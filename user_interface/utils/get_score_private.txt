@@ -1,0 +1,82 @@
+/*
+utils/get_score_private(
+  target: str,
+  scoreboard: str,
+  as_str: bool
+) -> int | str
+*/
+
+
+
+
+
+target = {func, tuple.get(args, 0)}
+scoreboard = {func, tuple.get(args, 1)}
+as_str = {func, tuple.get(args, 2)}
+
+
+
+target = {func, strings.strip(target)}
+if not {func, strings.startswith(target, '@')}:
+  target = {func, json.fast_dumps(target)}
+fi
+scoreboard = {func, json.fast_dumps(scoreboard)}
+
+
+
+if {command, 'scoreboard players test ' + target + ' ' + scoreboard + ' -2147483648 2147483647'} == 0:
+  if as_str:
+    return '0'
+  else:
+    return 0
+  fi
+fi
+
+
+
+
+
+result = 0
+left = -2147483648
+right = 2147483647
+
+
+
+if {command, 'scoreboard players test ' + target + ' ' + scoreboard + ' -65536 65536'} > 0:
+  left = -65536
+  right = 65536
+fi
+if {command, 'scoreboard players test ' + target + ' ' + scoreboard + ' -8192 8192'} > 0:
+  left = -8192
+  right = 8192
+fi
+if {command, 'scoreboard players test ' + target + ' ' + scoreboard + ' -1024 1024'} > 0:
+  left = -1024
+  right = 1024
+fi
+
+
+
+for _, 2048:
+  if left > right:
+    break
+  fi
+
+  middle = int((left + right) / 2)
+  cmd = 'scoreboard players test ' + target + ' ' + scoreboard + ' ' + str(left) + ' ' + str(middle)
+
+  if {command, cmd} > 0:
+    right = middle - 1
+    result = middle
+  else:
+    left = middle + 1
+  fi
+rof
+
+
+
+if as_str:
+  return str(result)
+else:
+  return result
+fi

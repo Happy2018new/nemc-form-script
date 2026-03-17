@@ -8,12 +8,12 @@ if TYPE_CHECKING:
     from mod.client.ui.controls.baseUIControl import BaseUIControl, ImageUIControl
 
 import uuid
+from .basic import OptionGenericCore
 from ..base import (
     TRIGGER_TYPE_CLICK,
     TRIGGER_TYPE_RELEASE,
     KEY_PRESS_TYPE_DOWN,
     KEY_PRESS_TYPE_UP,
-    BaseComponent,
 )
 from ...utils import (
     point_is_in_rect,
@@ -49,7 +49,7 @@ class RadioWithLabel:
 
         Args:
             ui_node (ScreenNode): 子选项对应的屏幕节点
-            control (BaseUIControl): 子选项要挂接在哪个夫节点下
+            control (BaseUIControl): 子选项要挂接在哪个父节点下
             toggled (bool): 子选项当前是否已被选中
             label (str): 子选项所显示的文本内容
         """
@@ -157,65 +157,62 @@ class RadioWithLabel:
         return False
 
 
-class DropDown(BaseComponent):
+class DropDown(OptionGenericCore):
     """DropDown 是下拉框实现"""
 
-    dropdown = None  # type: BaseUIControl | None
+    parent = None  # type: BaseUIControl | None
     options = []  # type: list[RadioWithLabel]
-    _should_update_screen = False  # type: bool
+    _def_name = ""  # type: str
     _should_close_dropdown = False  # type: bool
     _last_click_pos = (0.0, 0.0)  # type: tuple[float, float]
     _last_select_index = 0  # type: int
-    _last_render_label = ""  # type: str
 
-    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+    def __init__(
+        self, ui_node, control, background, tooltip
+    ):  # type: (ScreenNode, BaseUIControl, BaseUIControl, str) -> None
         """初始化并返回一个新的 下拉框 实例
 
         Args:
             ui_node (ScreenNode): 该组件所在的屏幕结点
-            control (BaseUIControl): 要将下拉框挂接在哪个父节点下
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+            background (BaseUIControl): 该组件所在模态表单的背景控件
+            tooltip (str): 该组件的灯泡提示文本
         """
-        self.ui_node = ui_node
-        self.control = ui_node.CreateChildControl(
-            "modal_dropdown.custom_dropdown",
+        self._def_name = "modal_dropdown.custom_dropdown"
+        if len(tooltip) > 0:
+            self._def_name = "modal_dropdown.custom_tooltip_dropdown"
+
+        self.parent = ui_node.CreateChildControl(
+            self._def_name,
             "dropdown_root-" + str(uuid.uuid4()),
             control,
             False,
         )
-
-        child = self.control.GetChildByPath("/dropdown")
+        child = self.parent.GetChildByPath("/dropdown")
         if child is not None:
             _ = ui_node.RemoveChildControl(child)
-        self.dropdown = ui_node.CreateChildControl(
-            "modal_dropdown.custom_dropdown",
-            "dropdown-" + str(uuid.uuid4()),
-            self.control,
-            False,
+
+        OptionGenericCore.__init__(
+            self,
+            ui_node,
+            ui_node.CreateChildControl(
+                self._def_name,
+                "dropdown-" + str(uuid.uuid4()),
+                self.parent,
+                False,
+            ),
+            background,
+            "settings_common.option_dropdown_control",
+            "/dropdown",
+            "/dropdown",
         )
+        if len(tooltip) > 0:
+            _ = self.set_tooltip_text(tooltip)
 
         self.options = []
-        self._should_update_screen = False
         self._should_close_dropdown = False
         self._last_click_pos = (0.0, 0.0)
         self._last_select_index = 0
-        self._last_render_label = ""
-
-    def _get_dropdown_control(self):  # type: () -> BaseUIControl | None
-        """
-        _get_dropdown_control 获取该组件
-        所对应的下拉框 BaseUIControl 实例
-
-        Returns:
-            BaseUIControl | None: 如果获取成功，返回对应的 BaseUIControl 实例；
-                                  否则获取失败，那么返回 None
-        """
-        if self.dropdown is None:
-            return None
-        return self.dropdown.GetChildByPath(
-            "/dropdown/option_generic_core"
-            + "/two_line_layout/settings_common.option_dropdown_control"
-            + "/dropdown"
-        )
 
     def _get_mouse_box(self):  # type: () -> ImageUIControl | None
         """
@@ -231,11 +228,11 @@ class DropDown(BaseComponent):
         if self.ui_node is None:
             return None
 
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return None
 
-        mouse_box = dropdown.GetChildByPath(
+        mouse_box = control.GetChildByPath(
             "/dropdown_content/scroll"
             + "/scroll_mouse/scroll_view"
             + "/panel/bar_and_track"
@@ -261,11 +258,11 @@ class DropDown(BaseComponent):
         if self.ui_node is None:
             return None
 
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return None
 
-        bar_indent = dropdown.GetChildByPath(
+        bar_indent = control.GetChildByPath(
             "/dropdown_content/scroll"
             + "/scroll_mouse/scroll_view"
             + "/panel/bar_and_track"
@@ -289,13 +286,13 @@ class DropDown(BaseComponent):
         if self.ui_node is None:
             return None
 
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return None
 
         content = get_scroll_view_content(
             self.ui_node,
-            dropdown.GetPath() + "/dropdown_content",
+            control.GetPath() + "/dropdown_content",
         )
         if content is None:
             return None
@@ -312,13 +309,13 @@ class DropDown(BaseComponent):
         if self.ui_node is None:
             return None
 
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return None
 
         background = get_scorll_view_background(
             self.ui_node,
-            dropdown.GetPath() + "/dropdown_content",
+            control.GetPath() + "/dropdown_content",
         )
         if background is None:
             return None
@@ -334,11 +331,11 @@ class DropDown(BaseComponent):
         Returns:
             bool: 下拉框是否正处于展开状态
         """
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return False
 
-        control = dropdown.GetChildByPath("/custom_dropdown")
+        control = control.GetChildByPath("/custom_dropdown")
         if control is None:
             return False
 
@@ -359,33 +356,6 @@ class DropDown(BaseComponent):
                 return True
         return False
 
-    def _set_dropdown_label(self, label):  # type: (str) -> DropDown
-        """_set_dropdown_label 设置下拉框所使用的标题文本
-
-        Args:
-            label (str): 下拉框希望使用的标题文本
-
-        Returns:
-            DropDown: 返回 DropDown 本身
-        """
-        if self.dropdown is None:
-            return self
-
-        child = self.dropdown.GetChildByPath(
-            "/dropdown/option_generic_core"
-            + "/two_line_layout/option_label_panel"
-            + "/option_label"
-        )
-        if child is None:
-            return self
-
-        child = child.asLabel()
-        if child is None:
-            return self
-        child.SetText(label)
-
-        return self
-
     def _set_inside_label(self, label):  # type: (str) -> DropDown
         """
         _set_inside_label 设置下拉框在未展开时，
@@ -397,11 +367,11 @@ class DropDown(BaseComponent):
         Returns:
             DropDown: 返回 DropDown 本身
         """
-        dropdown = self._get_dropdown_control()
-        if dropdown is None:
+        control = self.get_current_control()
+        if control is None:
             return self
 
-        control = dropdown.GetChildByPath("/custom_dropdown")
+        control = control.GetChildByPath("/custom_dropdown")
         if control is None:
             return self
 
@@ -495,45 +465,62 @@ class DropDown(BaseComponent):
         Returns:
             bool: 指示是否需要刷新屏幕
         """
-        if self.ui_node is None or self.control is None or self.dropdown is None:
+        if self.ui_node is None:
+            return False
+        if self.control is None:
+            return False
+        if self.background is None:
+            return False
+        if self.parent is None:
             return False
 
-        should_update = self._should_update_screen
-        if self._should_update_screen:
-            self._should_update_screen = False
+        should_update = False
+        if OptionGenericCore.on_update_screen(self):
+            should_update = True
 
         selected_index = self.get_selected_option()
         if selected_index != self._last_select_index:
+            self._set_selected_option(selected_index)
             self._last_select_index = selected_index
             should_update = True
 
         if self._should_close_dropdown:
             self._should_close_dropdown = False
+
             option_names = []
+            title_label = self.get_title_label()
+            tooltip_text = self.get_tooltip_text()
 
             for i in self.options:
                 if i.control is None:
                     continue
                 option_names.append(i.get_radio_label())
                 _ = self.ui_node.RemoveChildControl(i.control)
+            _ = self.ui_node.RemoveChildControl(self.control)
 
-            _ = self.ui_node.RemoveChildControl(self.dropdown)
-            self.dropdown = self.ui_node.CreateChildControl(
-                "modal_dropdown.custom_dropdown",
-                "dropdown-" + str(uuid.uuid4()),
-                self.control,
-                False,
+            OptionGenericCore.__init__(
+                self,
+                self.ui_node,
+                self.ui_node.CreateChildControl(
+                    self._def_name,
+                    "dropdown-" + str(uuid.uuid4()),
+                    self.parent,
+                    False,
+                ),
+                self.background,
+                "settings_common.option_dropdown_control",
+                "/dropdown",
+                "/dropdown",
             )
-
-            self._last_render_label = self.get_dropdown_label()
-            self._set_dropdown_label(self._last_render_label)
+            if title_label is not None:
+                _ = self.set_title_label(title_label)
+            if len(tooltip_text) > 0:
+                _ = self.set_tooltip_text(tooltip_text)
             self._add_options_on_batch(option_names, selected_index)
+
+            self._should_update_screen = False
             return True
 
-        if should_update:
-            self._last_render_label = self.get_dropdown_label()
-            self._set_dropdown_label(self._last_render_label)
-            self._set_selected_option(selected_index)
         return should_update
 
     def on_trigger_screen(
@@ -556,6 +543,7 @@ class DropDown(BaseComponent):
             bool:
                 指示是否需要刷新屏幕
         """
+        _ = OptionGenericCore.on_trigger_screen(self, is_touch, trigger_type, touch_pos)
         if not self._is_showing_dropdown_content():
             return False
 
@@ -636,18 +624,10 @@ class DropDown(BaseComponent):
                 continue
             _ = self.ui_node.RemoveChildControl(i.control)
 
-        if self.dropdown is not None:
-            _ = self.ui_node.RemoveChildControl(self.dropdown)
         if self.control is not None:
             _ = self.ui_node.RemoveChildControl(self.control)
-
-    def get_dropdown_label(self):  # type: () -> str
-        """get_dropdown_label 返回下拉框当前所使用的标题文本
-
-        Returns:
-            str: 下拉框当前所使用的标题文本
-        """
-        return self._last_render_label
+        if self.parent is not None:
+            _ = self.ui_node.RemoveChildControl(self.parent)
 
     def get_selected_option(self):  # type: () -> int
         """
@@ -669,23 +649,6 @@ class DropDown(BaseComponent):
                 return index
         return 0
 
-    def set_dropdown_label(self, label):  # type: (str) -> DropDown
-        """set_dropdown_label 设置下拉框所使用的标题文本
-
-        Args:
-            label (str): 欲设置的标题文本
-
-        Returns:
-            DropDown: 返回 DropDown 本身
-        """
-        if self.dropdown is None:
-            return self
-        if label != self._last_render_label:
-            self._set_dropdown_label(label)
-            self._last_render_label = label
-            self._should_update_screen = True
-        return self
-
     def set_selected_option(self, index):  # type: (int) -> DropDown
         """
         set_selected_option 设置下拉框已选中的选项。
@@ -697,7 +660,7 @@ class DropDown(BaseComponent):
         Returns:
             DropDown: 返回 DropDown 本身
         """
-        self._set_selected_option(index)
+        _ = self._set_selected_option(index)
         self._should_update_screen = True
         return self
 
@@ -707,7 +670,7 @@ class DropDown(BaseComponent):
         特别地，如果这是首个子选项，那么它将被选中
 
         Args:
-            option_name (int): 要追加的子选项的文本内容
+            option_name (str): 要追加的子选项的文本内容
 
         Returns:
             DropDown: 返回 DropDown 本身

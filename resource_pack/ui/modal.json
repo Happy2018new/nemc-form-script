@@ -2,9 +2,13 @@
     "custom_form@common_dialogs.main_panel_no_buttons": {
         "$child_control": "modal.custom_form_panel",
         "$text_name": "#title_text",
+        "$title_max_size": [
+            "100% - 15px",
+            10
+        ],
         "$title_panel": "common_dialogs.standard_title_label",
         "$title_size": [
-            "100% - 14px",
+            "100% - 15px",
             10
         ],
         "$title_text_binding_type": "none",
@@ -92,10 +96,12 @@
             "control_ids": {
                 "slider": "@modal_component.custom_slider",
                 "dropdown": "@modal_dropdown.custom_dropdown",
-                "label": "@modal_component.custom_label",
                 "step_slider": "@modal_component.custom_step_slider",
+                "label": "@modal_component.custom_label",
+                "header": "@modal_component.custom_header",
                 "toggle": "@modal_component.custom_toggle",
-                "input": "@modal_component.custom_input"
+                "input": "@modal_component.custom_input",
+                "divider": "@future.option_group_section_divider"
             },
             "name": "buttons"
         },
