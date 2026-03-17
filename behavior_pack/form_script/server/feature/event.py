@@ -217,11 +217,12 @@ class EventFeature:
         assert self._locker is not None
 
         with self.storage.get_locker():
-            if self.storage.event_name(func_name) is not None:
+            resp = self.storage.event_name(func_name)
+            if resp is not None:
                 raise Exception(
                     "listen: Function {} is already registered under event {}".format(
                         json.dumps(func_name, ensure_ascii=False),
-                        json.dumps(event_name, ensure_ascii=False),
+                        json.dumps(resp, ensure_ascii=False),
                     )
                 )
 
