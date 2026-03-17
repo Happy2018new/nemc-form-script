@@ -165,20 +165,23 @@ class FormSystem(ServerSystem):
         player_id = args["playerId"]  # type: str
         message = args["message"]  # type: str
 
-        game_comp, level_id = GetEngineCompFactory(), GetLevelId()
-        abilities = game_comp.CreatePlayer(player_id).GetPlayerAbilities()
+        engine_comp, level_id = GetEngineCompFactory(), GetLevelId()
+        abilities = engine_comp.CreatePlayer(player_id).GetPlayerAbilities()
         if not abilities["op"] and GetHostPlayerId() != player_id:
             return
         if message != DEFAULT_TRIGGER_MESSAGE:
             return
 
-        _ = game_comp.CreateCommand(level_id).SetCommand(
-            "structure load custom_form_samples ~ ~ ~", player_id, False
+        _ = engine_comp.CreateGame(level_id).PlaceStructure(
+            None,
+            engine_comp.CreatePos(player_id).GetFootPos(),
+            "custom_form:samples",
+            engine_comp.CreateDimension(player_id).GetEntityDimensionId(),
         )
-        _ = game_comp.CreateCommand(level_id).SetCommand(
+        _ = engine_comp.CreateCommand(level_id).SetCommand(
             "playsound random.toast @s ~ ~ ~ 1.00 1.00 1.00", player_id, False
         )
-        game_comp.CreateMsg(player_id).NotifyOneMessage(
+        engine_comp.CreateMsg(player_id).NotifyOneMessage(
             player_id, "§r§a已尝试生成自定义菜单示例"
         )
 
