@@ -1,6 +1,6 @@
 {
-    "namespace": "command_block",
     "command_block_text_edit_box@command_block.command_block_multiline_text_edit_box": {
         "enabled_newline": true
-    }
+    },
+    "namespace": "command_block"
 }

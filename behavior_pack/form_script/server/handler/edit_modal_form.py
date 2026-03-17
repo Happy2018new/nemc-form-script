@@ -8,6 +8,8 @@ if TYPE_CHECKING:
 import json
 from ..feature.form import (
     MODAL_FORM_ELEMENT_TYPE_LABEL,
+    MODAL_FORM_ELEMENT_TYPE_HEADER,
+    MODAL_FORM_ELEMENT_TYPE_DIVIDER,
     MODAL_FORM_ELEMENT_TYPE_INPUT,
     MODAL_FORM_ELEMENT_TYPE_TOGGLE,
     MODAL_FORM_ELEMENT_TYPE_DROPDOWN,
@@ -21,6 +23,8 @@ from ..storage.form_struct.modal import (
     ModalForm as ModalStorageForm,
     ModalFormElement as ModalStorageFormElement,
     ModalFormElementLabel as ModalStorageFormElementLabel,
+    ModalFormElementHeader as ModalStorageFormElementHeader,
+    ModalFormElementDivider as ModalStorageFormElementDivider,
     ModalFormElementInput as ModalStorageFormElementInput,
     ModalFormElementToggle as ModalStorageFormElementToggle,
     ModalFormElementDropdown as ModalStorageFormElementDropdown,
@@ -36,6 +40,8 @@ SUB_COMMAND_TYPE_SUB = 5
 SUB_COMMAND_TYPE_TITLE = 6
 
 ELEMENT_RAW_TYPE_LABEL = "label"
+ELEMENT_RAW_TYPE_HEADER = "header"
+ELEMENT_RAW_TYPE_DIVIDER = "divider"
 ELEMENT_RAW_TYPE_INPUT = "input"
 ELEMENT_RAW_TYPE_TOGGLE = "toggle"
 ELEMENT_RAW_TYPE_DROPDOWN = "dropdown"
@@ -116,19 +122,29 @@ class EditModalFormHandler:
         """
         if element_raw_type == ELEMENT_RAW_TYPE_LABEL:
             return ModalStorageFormElementLabel(StringWithHash("return ''"))
+        elif element_raw_type == ELEMENT_RAW_TYPE_HEADER:
+            return ModalStorageFormElementHeader(StringWithHash("return ''"))
+        elif element_raw_type == ELEMENT_RAW_TYPE_DIVIDER:
+            return ModalStorageFormElementDivider()
         elif element_raw_type == ELEMENT_RAW_TYPE_INPUT:
             return ModalStorageFormElementInput(
+                StringWithHash("return ''"),
                 StringWithHash("return ''"),
                 StringWithHash("return ''"),
                 StringWithHash("return ''"),
             )
         elif element_raw_type == ELEMENT_RAW_TYPE_TOGGLE:
             return ModalStorageFormElementToggle(
-                StringWithHash("return ''"), StringWithHash("return False")
+                StringWithHash("return ''"),
+                StringWithHash("return False"),
+                StringWithHash("return ''"),
             )
         elif element_raw_type == ELEMENT_RAW_TYPE_DROPDOWN:
             return ModalStorageFormElementDropdown(
-                StringWithHash("return ''"), [], StringWithHash("return 0")
+                StringWithHash("return ''"),
+                [],
+                StringWithHash("return 0"),
+                StringWithHash("return ''"),
             )
         elif element_raw_type == ELEMENT_RAW_TYPE_SLIDER:
             return ModalStorageFormElementSlider(
@@ -137,10 +153,14 @@ class EditModalFormHandler:
                 StringWithHash("return 1.0"),
                 StringWithHash("return 1.0"),
                 StringWithHash("return 0.0"),
+                StringWithHash("return ''"),
             )
         elif element_raw_type == ELEMENT_RAW_TYPE_STEP_SLIDER:
             return ModalStorageFormElementStepSlider(
-                StringWithHash("return ''"), [], StringWithHash("return 0")
+                StringWithHash("return ''"),
+                [],
+                StringWithHash("return 0"),
+                StringWithHash("return ''"),
             )
         raise Exception("unreachable")
 
@@ -158,6 +178,10 @@ class EditModalFormHandler:
         """
         if element_raw_type == ELEMENT_RAW_TYPE_LABEL:
             return "普通文本"
+        elif element_raw_type == ELEMENT_RAW_TYPE_HEADER:
+            return "大字文本"
+        elif element_raw_type == ELEMENT_RAW_TYPE_DIVIDER:
+            return "分割线"
         elif element_raw_type == ELEMENT_RAW_TYPE_INPUT:
             return "输入框"
         elif element_raw_type == ELEMENT_RAW_TYPE_TOGGLE:
@@ -283,6 +307,10 @@ class EditModalFormHandler:
         for i in resp:
             if i == MODAL_FORM_ELEMENT_TYPE_LABEL:
                 result += "\n  - 普通文本"
+            elif i == MODAL_FORM_ELEMENT_TYPE_HEADER:
+                result += "\n  - 大字文本"
+            elif i == MODAL_FORM_ELEMENT_TYPE_DIVIDER:
+                result += "\n  - 分割线"
             elif i == MODAL_FORM_ELEMENT_TYPE_INPUT:
                 result += "\n  - 输入框"
             elif i == MODAL_FORM_ELEMENT_TYPE_TOGGLE:

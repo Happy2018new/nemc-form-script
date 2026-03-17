@@ -253,7 +253,7 @@ class ClientFormSystem:
             _ (dict[str, Any]):
                 SetButtonTouchUpCallback 传入的字典参数
             index (int):
-                玩家点击的按钮的索引
+                在只保留长表单的按钮后，玩家所点击的按钮的索引
         """
         if self.base is None:
             return

@@ -19,6 +19,7 @@ SUB_COMMAND_TYPE_MIN = 2
 SUB_COMMAND_TYPE_MAX = 3
 SUB_COMMAND_TYPE_STEP = 4
 SUB_COMMAND_TYPE_TEXT = 5
+SUB_COMMAND_TYPE_TOOLTIP = 6
 
 
 class EditSliderHandler:
@@ -64,6 +65,8 @@ class EditSliderHandler:
                 args["return_msg_key"] = self.handle_step(cmdargs)
             elif variant == SUB_COMMAND_TYPE_TEXT:
                 args["return_msg_key"] = self.handle_text(cmdargs)
+            elif variant == SUB_COMMAND_TYPE_TOOLTIP:
+                args["return_msg_key"] = self.handle_tooltip(cmdargs)
         except Exception as e:
             args["return_failed"] = True
             args["return_msg_key"] = str(e)
@@ -307,3 +310,54 @@ class EditSliderHandler:
             element.text = real_text_code
 
             return "commands.editslidertext.success"
+
+    def handle_tooltip(self, args):  # type: (list[dict[str, Any]]) -> str
+        """handle_tooltip 处理 tooltip 子命令
+
+        Args:
+            args (list[dict[str, Any]]):
+                用户通过命令行提供的参数列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            str: 命令执行输出
+        """
+        assert self.storage is not None
+        assert self.feature is not None
+        assert self.feature.executor is not None
+        assert self.feature.executor.compile_cache is not None
+
+        form_name = args[0]["value"]  # type: str
+        index = args[1]["value"]  # type: int
+        tooltip_code = args[3]["value"]  # type: str
+
+        with self.storage.get_locker():
+            form = self.storage.get_form(form_name)
+            if form is None:
+                raise Exception(
+                    "名为 {} 的模态表单不存在".format(
+                        json.dumps(form_name, ensure_ascii=False)
+                    )
+                )
+            if not isinstance(form, ModalStorageForm):
+                raise Exception("commands.editslider.formnotmatch")
+
+            if index < 0 or index >= len(form.content):
+                raise Exception(
+                    "给出的索引 {} 超出长度 {}".format(index, len(form.content))
+                )
+            element = form.content[index]
+            if not isinstance(element, ModalStorageFormElementSlider):
+                raise Exception("commands.editslider.elementnotmatch")
+
+            if len(tooltip_code) == 0:
+                element.tooltip = StringWithHash("return ''")
+            else:
+                real_tooltip_code = StringWithHash(tooltip_code)
+                _ = self.feature.executor.compile_cache.get_runner(real_tooltip_code)
+                element.tooltip = real_tooltip_code
+
+            return "commands.editslidertooltip.success"

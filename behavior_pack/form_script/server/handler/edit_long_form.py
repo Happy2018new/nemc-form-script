@@ -7,15 +7,23 @@ if TYPE_CHECKING:
 
 import json
 from ..feature.form import (
-    LONG_FORM_ICON_TYPE_NONE,
-    LONG_FORM_ICON_TYPE_PATH_IMAGE,
+    LONG_FORM_ELEMENT_TYPE_BUTTON,
+    LONG_FORM_ELEMENT_TYPE_LABEL,
+    LONG_FORM_ELEMENT_TYPE_HEADER,
+    LONG_FORM_ELEMENT_TYPE_DIVIDER,
+    LONG_FORM_BUTTON_ICON_TYPE_NONE,
+    LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE,
     FormFeature,
 )
 from ..storage.base import StringWithHash
 from ..storage.form import FormStorage
 from ..storage.form_struct.long import (
-    LongForm as LongStorageForm,
     LongFormElement as LongStorageFormElement,
+    LongFormButton as LongStorageFormButton,
+    LongFormLabel as LongStorageFormLabel,
+    LongFormHeader as LongStorageFormHeader,
+    LongFormDivider as LongStorageFormDivider,
+    LongForm as LongStorageForm,
 )
 
 SUB_COMMAND_TYPE_APPEND = 1
@@ -25,6 +33,11 @@ SUB_COMMAND_TYPE_LIST = 4
 SUB_COMMAND_TYPE_POP = 5
 SUB_COMMAND_TYPE_SUB = 6
 SUB_COMMAND_TYPE_TITLE = 7
+
+ELEMENT_RAW_TYPE_BUTTON = "button"
+ELEMENT_RAW_TYPE_LABEL = "label"
+ELEMENT_RAW_TYPE_HEADER = "header"
+ELEMENT_RAW_TYPE_DIVIDER = "divider"
 
 POP_RAW_ACTION_LEFT = "left"
 POP_RAW_ACTION_RIGHT = "right"
@@ -84,6 +97,54 @@ class EditLongFormHandler:
             args["return_failed"] = True
             args["return_msg_key"] = str(e)
 
+    def _default_long_form_element(
+        self, element_raw_type
+    ):  # type: (str) -> LongStorageFormElement
+        """
+        _default_long_form_element
+        根据命令中对长表单元素的类型枚举，
+        返回其对应的长表单元素的默认形式
+
+        Args:
+            element_raw_type (str):
+                命令中对长表单元素的类型枚举
+
+        Returns:
+            LongStorageFormElement:
+                对应长表单元素的默认形式
+        """
+        if element_raw_type == ELEMENT_RAW_TYPE_BUTTON:
+            return LongStorageFormButton(StringWithHash("return ''"))
+        elif element_raw_type == ELEMENT_RAW_TYPE_LABEL:
+            return LongStorageFormLabel(StringWithHash("return ''"))
+        elif element_raw_type == ELEMENT_RAW_TYPE_HEADER:
+            return LongStorageFormHeader(StringWithHash("return ''"))
+        elif element_raw_type == ELEMENT_RAW_TYPE_DIVIDER:
+            return LongStorageFormDivider()
+        raise Exception("unreachable")
+
+    def _long_form_element_name(self, element_raw_type):  # type: (str) -> str
+        """
+        _long_form_element_name 根据命令中对长
+        表单元素的类型枚举，返回该元素对应的名称
+
+        Args:
+            element_raw_type (str):
+                命令中对长表单元素的类型枚举
+
+        Returns:
+            str: 该长表单元素的名称
+        """
+        if element_raw_type == ELEMENT_RAW_TYPE_BUTTON:
+            return "按钮"
+        elif element_raw_type == ELEMENT_RAW_TYPE_LABEL:
+            return "普通文本"
+        elif element_raw_type == ELEMENT_RAW_TYPE_HEADER:
+            return "大字文本"
+        elif element_raw_type == ELEMENT_RAW_TYPE_DIVIDER:
+            return "分割线"
+        raise Exception("unreachable")
+
     def handle_append(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_append 处理 append 子命令
 
@@ -99,7 +160,9 @@ class EditLongFormHandler:
             str: 命令执行输出
         """
         assert self.storage is not None
+
         form_name = args[0]["value"]  # type: str
+        element_type = args[2]["value"]  # type: str
 
         with self.storage.get_locker():
             form = self.storage.get_form(form_name)
@@ -111,9 +174,14 @@ class EditLongFormHandler:
                 )
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editlongform.formnotmatch")
-            form.buttons.append(LongStorageFormElement(StringWithHash("return ''")))
-            return "已成功向长表单 {} 追加一个按钮".format(
-                json.dumps(form_name, ensure_ascii=False)
+            form.elements.append(
+                self._default_long_form_element(
+                    element_type,
+                )
+            )
+            return "已成功向长表单 {} 追加一个{}".format(
+                json.dumps(form_name, ensure_ascii=False),
+                self._long_form_element_name(element_type),
             )
 
     def handle_content(self, args):  # type: (list[dict[str, Any]]) -> str
@@ -175,6 +243,7 @@ class EditLongFormHandler:
 
         form_name = args[0]["value"]  # type: str
         index = args[2]["value"]  # type: int
+        element_type = args[3]["value"]  # type: str
 
         with self.storage.get_locker():
             form = self.storage.get_form(form_name)
@@ -187,16 +256,18 @@ class EditLongFormHandler:
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editlongform.formnotmatch")
 
-            if index < 0 or index > len(form.buttons):
+            if index < 0 or index > len(form.elements):
                 raise Exception(
-                    "给出的索引 {} 超出长度 {}".format(index, len(form.buttons))
+                    "给出的索引 {} 超出长度 {}".format(index, len(form.elements))
                 )
-            form.buttons.insert(
-                index, LongStorageFormElement(StringWithHash("return ''"))
+            form.elements.insert(
+                index,
+                self._default_long_form_element(element_type),
             )
 
-            return "已成功向长表单 {} 插入按钮".format(
-                json.dumps(form_name, ensure_ascii=False)
+            return "已成功向长表单 {} 插入一个{}".format(
+                json.dumps(form_name, ensure_ascii=False),
+                self._long_form_element_name(element_type),
             )
 
     def handle_list(self, args):  # type: (list[dict[str, Any]]) -> str
@@ -214,23 +285,35 @@ class EditLongFormHandler:
             str: 命令执行输出
         """
         assert self.feature is not None
+        assert self.storage is not None
         form_name = args[0]["value"]  # type: str
 
-        resp = self.feature.list_long_form_icon_type(form_name)
-        if len(resp) == 0:
-            return "长表单 {} 目前没有任何按钮".format(
-                json.dumps(form_name, ensure_ascii=False)
+        with self.storage.get_locker():
+            long_form_length = self.feature.long_form_length(form_name)
+            if long_form_length == 0:
+                return "长表单 {} 目前没有任何元素".format(
+                    json.dumps(form_name, ensure_ascii=False)
+                )
+
+            resp = self.feature.list_long_form_element_type(form_name)
+            extra = self.feature.list_long_form_button_icon_type(form_name)
+            result = "长表单 {} 目前已存在 {} 个元素: ".format(
+                json.dumps(form_name, ensure_ascii=False), long_form_length
             )
 
-        result = "长表单 {} 目前已存在 {} 个按钮: ".format(
-            json.dumps(form_name, ensure_ascii=False), len(resp)
-        )
-        for i in resp:
-            if i == LONG_FORM_ICON_TYPE_NONE:
-                result += "\n  - 无图标"
-            elif i == LONG_FORM_ICON_TYPE_PATH_IMAGE:
-                result += "\n  - 使用材质贴图"
-        return result
+            for index, value in enumerate(resp):
+                if value == LONG_FORM_ELEMENT_TYPE_BUTTON:
+                    if extra[index] == LONG_FORM_BUTTON_ICON_TYPE_NONE:
+                        result += "\n  - 按钮 (无图标)"
+                    elif extra[index] == LONG_FORM_BUTTON_ICON_TYPE_PATH_IMAGE:
+                        result += "\n  - 按钮 (使用材质贴图)"
+                elif value == LONG_FORM_ELEMENT_TYPE_LABEL:
+                    result += "\n  - 普通文本"
+                elif value == LONG_FORM_ELEMENT_TYPE_HEADER:
+                    result += "\n  - 大字文本"
+                elif value == LONG_FORM_ELEMENT_TYPE_DIVIDER:
+                    result += "\n  - 分割线"
+            return result
 
     def handle_pop(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_pop 处理 pop 子命令
@@ -262,18 +345,18 @@ class EditLongFormHandler:
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editlongform.formnotmatch")
 
-            if len(form.buttons) == 0:
+            if len(form.elements) == 0:
                 raise Exception(
-                    "长表单 {} 没有任何按钮可供移除".format(
+                    "长表单 {} 没有任何元素可供移除".format(
                         json.dumps(form_name, ensure_ascii=False)
                     )
                 )
             if pop_action == POP_RAW_ACTION_LEFT:
-                _ = form.buttons.pop(0)
+                _ = form.elements.pop(0)
             elif pop_action == POP_RAW_ACTION_RIGHT:
-                _ = form.buttons.pop(-1)
+                _ = form.elements.pop(-1)
 
-            return "已成功移除长表单 {} 中的一个按钮".format(
+            return "已成功移除长表单 {} 中的一个元素".format(
                 json.dumps(form_name, ensure_ascii=False)
             )
 
@@ -309,15 +392,17 @@ class EditLongFormHandler:
             if not isinstance(form, LongStorageForm):
                 raise Exception("commands.editlongform.formnotmatch")
 
-            if start_index < 0 or start_index > len(form.buttons):
+            if start_index < 0 or start_index > len(form.elements):
                 raise Exception(
                     "给出的起始索引 {} 超出长度 {}".format(
-                        start_index, len(form.buttons)
+                        start_index, len(form.elements)
                     )
                 )
-            if end_index < 0 or end_index > len(form.buttons):
+            if end_index < 0 or end_index > len(form.elements):
                 raise Exception(
-                    "给出的结束索引 {} 超出长度 {}".format(end_index, len(form.buttons))
+                    "给出的结束索引 {} 超出长度 {}".format(
+                        end_index, len(form.elements)
+                    )
                 )
             if end_index < start_index:
                 raise Exception(
@@ -325,13 +410,13 @@ class EditLongFormHandler:
                 )
 
             if sub_action == SUB_RAW_ACTION_KEEP:
-                form.buttons = form.buttons[start_index:end_index]
-                return "已成功为长表单 {} 的按钮列表执行保留的截取操作".format(
+                form.elements = form.elements[start_index:end_index]
+                return "已成功为长表单 {} 的元素列表执行保留的截取操作".format(
                     json.dumps(form_name, ensure_ascii=False)
                 )
             elif sub_action == SUB_RAW_ACTION_DISCARD:
-                form.buttons = form.buttons[:start_index] + form.buttons[end_index:]
-                return "已成功为长表单 {} 的按钮列表执行丢弃的截取操作".format(
+                form.elements = form.elements[:start_index] + form.elements[end_index:]
+                return "已成功为长表单 {} 的元素列表执行丢弃的截取操作".format(
                     json.dumps(form_name, ensure_ascii=False)
                 )
 

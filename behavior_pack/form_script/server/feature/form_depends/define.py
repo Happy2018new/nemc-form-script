@@ -5,11 +5,16 @@ import json
 from ...storage.base import StringWithHash
 from ....packet.packet import ModalFormResponse
 from ....formal.base import BaseForm as BaseFormalForm
-from ....formal.long import LongForm as LongFormalForm
+from ....formal.long import (
+    LongFormButton as LongFormalFormButton,
+    LongForm as LongFormalForm,
+)
 from ....formal.popup import PopupForm as PopupFormalForm
 from ....formal.modal import (
     ModalForm as ModalFormalForm,
     ModalFormElementLabel as ModalFormalFormElementLabel,
+    ModalFormElementHeader as ModalFormalFormElementHeader,
+    ModalFormElementDivider as ModalFormalFormElementDivider,
     ModalFormElementInput as ModalFormalFormElementInput,
     ModalFormElementToggle as ModalFormalFormElementToggle,
     ModalFormElementDropdown as ModalFormalFormElementDropdown,
@@ -94,13 +99,19 @@ class FormalWithCallback:
         if isinstance(self.formal, LongFormalForm):
             if isinstance(resp, bool) or not isinstance(resp, int):
                 return None
-            if resp < 0 or resp >= len(self.formal.buttons):
+            count = 0
+            for i in self.formal.elements:
+                if isinstance(i, LongFormalFormButton):
+                    count += 1
+            if resp < 0 or resp >= count:
                 return None
             return resp
+
         if isinstance(self.formal, PopupFormalForm):
             if not isinstance(resp, bool):
                 return None
             return resp
+
         if isinstance(self.formal, ModalFormalForm):
             if not isinstance(resp, list):
                 return None
@@ -108,6 +119,12 @@ class FormalWithCallback:
                 return None
             for index, value in enumerate(self.formal.content):
                 if isinstance(value, ModalFormalFormElementLabel):
+                    if resp[index] is not None:
+                        return None
+                elif isinstance(value, ModalFormalFormElementHeader):
+                    if resp[index] is not None:
+                        return None
+                elif isinstance(value, ModalFormalFormElementDivider):
                     if resp[index] is not None:
                         return None
                 elif isinstance(value, ModalFormalFormElementInput):

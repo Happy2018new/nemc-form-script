@@ -4,6 +4,7 @@ page_split/handle_select(
   title: str,
   content: str,
   options: ptr@slice[str | tuple[button_name: str, identifier: str]],
+  extra: ptr@map,
   page: int,
   page_mark: int,
   page_buttons: int,
@@ -12,7 +13,8 @@ page_split/handle_select(
 
 callback(
   submit_type: int,
-  options: ptr@slice[str | tuple[button_name: str, identifier: str]],
+  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  extra: ptr@map
   selected: int,
 ) -> int | bool | float | str
 
@@ -20,7 +22,6 @@ SUBMIT_TYPE_SUBMIT = 1
 SUBMIT_TYPE_BACK = 2
 SUBMIT_TYPE_CANCEL = 3
 
-PAGE_MARK_UNDEFINED = 0
 PAGE_MARK_ONLY_NAXT_PAGE = 1
 PAGE_MARK_ONLY_LAST_PAGE = 2
 PAGE_MARK_BOTH_HAVE = 3
@@ -39,10 +40,11 @@ is_submit = {func, tuple.get(args, 0)}
 title = {func, tuple.get(args, 1)}
 content = {func, tuple.get(args, 2)}
 options = {func, tuple.get(args, 3)}
-page = {func, tuple.get(args, 4)}
-page_mark = {func, tuple.get(args, 5)}
-page_buttons = {func, tuple.get(args, 6)}
-callback = {func, tuple.get(args, 7)}
+extra = {func, tuple.get(args, 4)}
+page = {func, tuple.get(args, 5)}
+page_mark = {func, tuple.get(args, 6)}
+page_buttons = {func, tuple.get(args, 7)}
+callback = {func, tuple.get(args, 8)}
 
 
 
@@ -71,20 +73,21 @@ fi
 
 if action == 1:
   ind = 5*(page-1) + {ref, int, -1}
-  _ = {func, function.try(callback, 1, options, ind)}
+  _ = {func, function.try(callback, 1, options, extra, ind)}
 elif action == 2:
-  _ = {func, function.call('page_split/select_panel', title, content, options, page+1, callback)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, extra, page+1, callback)}
 elif action == 3:
-  _ = {func, function.call('page_split/select_panel', title, content, options, page-1, callback)}
+  _ = {func, function.call('page_split/select_panel', title, content, options, extra, page-1, callback)}
 elif action == 4:
-  _ = {func, function.call('page_split/jump_panel', title, content, options, page, callback)}
+  _ = {func, function.call('page_split/jump_panel', title, content, options, extra, page, callback)}
 elif action == 5:
-  _ = {func, function.try(callback, 2, options, -1)}
+  _ = {func, function.try(callback, 2, options, extra, -1)}
 elif action == 6:
-  _ = {func, function.try(callback, 3, options, -1)}
+  _ = {func, function.try(callback, 3, options, extra, -1)}
 fi
 
 
 
 _ = {func, object.finalise(options)}
+_ = {func, object.finalise(extra)}
 return True

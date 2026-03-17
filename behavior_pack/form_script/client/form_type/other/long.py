@@ -169,7 +169,7 @@ class DynamicButton(BaseComponent):
         child = self.control.GetChildByPath("/panel_name")
         if child is None:
             return self
-        child.SetVisible(visible)
+        child.SetVisible(visible, False)
 
         self._last_image_view_state = visible
         self._should_update_screen = True
@@ -194,7 +194,7 @@ class DynamicButton(BaseComponent):
         child = self.control.GetChildByPath("/panel_name/progress")
         if child is None:
             return self
-        child.SetVisible(loading)
+        child.SetVisible(loading, False)
 
         self._last_image_load_state = loading
         self._should_update_screen = True
@@ -231,6 +231,209 @@ class DynamicButton(BaseComponent):
         return self
 
 
+class DynamicLabel(BaseComponent):
+    """DynamicLabel 是长表单中的普通纯文本"""
+
+    _should_update_screen = False
+    _last_render_label = ""
+
+    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+        """初始化并返回一个新的，可以附加在长表单中的普通纯文本
+
+        Args:
+            ui_node (ScreenNode): 该组件所在的屏幕结点
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+        """
+        self.ui_node = ui_node
+        self.control = ui_node.CreateChildControl(
+            "long.dynamic_label",
+            "dynamic_label-" + str(uuid.uuid4()),
+            control,
+            False,
+        )
+        self._should_update_screen = False
+        self._last_render_label = ""
+
+    def _get_label_control(self):  # type: () -> LabelUIControl | None
+        """
+        _get_label_control 获取该组件对应的 Label 控件
+
+        Returns:
+            LabelUIControl | None:
+                如果成功，则返回对应的 Label 控件；
+                否则失败，那么返回 None
+        """
+        if self.control is None:
+            return None
+        child = self.control.GetChildByPath("/text/text")
+        if child is None:
+            return None
+        return child.asLabel()
+
+    def on_update_screen(self):  # type: () -> bool
+        """
+        on_update_screen 在游戏每次刷新屏幕时调用。
+        通常情况下，1 秒钟内游戏会调用 30 次
+
+        Returns:
+            bool: 指示是否需要刷新屏幕
+        """
+        should_update = self._should_update_screen
+        if self._should_update_screen:
+            self._should_update_screen = False
+        return should_update
+
+    def on_destroy(self):  # type: () -> None
+        """on_destroy 在该组件被销毁时调用"""
+        if self.ui_node is None or self.control is None:
+            return
+        _ = self.ui_node.RemoveChildControl(self.control)
+
+    def get_label_text(self):  # type: () -> str
+        """
+        get_label_text 获取该组件正显示的文本内容
+
+        Returns:
+            str: 该组件正显示的文本内容
+        """
+        return self._last_render_label
+
+    def set_label_text(self, text):  # type: (str) -> DynamicLabel
+        """
+        set_label_text 设置该组件显示的文本内容
+
+        Args:
+            text (str): 欲显示的文本内容
+
+        Returns:
+            DynamicLabel: 返回 DynamicLabel 本身
+        """
+        if text == self._last_render_label:
+            return self
+
+        control = self._get_label_control()
+        if control is not None:
+            control.SetText(text)
+
+        self._last_render_label = text
+        self._should_update_screen = True
+        return self
+
+
+class DynamicHeader(BaseComponent):
+    """DynamicHeader 是长表单中的大字纯文本"""
+
+    _should_update_screen = False
+    _last_render_label = ""
+
+    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+        """初始化并返回一个新的，可以附加在长表单中的大字纯文本
+
+        Args:
+            ui_node (ScreenNode): 该组件所在的屏幕结点
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+        """
+        self.ui_node = ui_node
+        self.control = ui_node.CreateChildControl(
+            "long.dynamic_header",
+            "dynamic_header-" + str(uuid.uuid4()),
+            control,
+            False,
+        )
+        self._should_update_screen = False
+        self._last_render_label = ""
+
+    def _get_label_control(self):  # type: () -> LabelUIControl | None
+        """
+        _get_label_control 获取该组件对应的 Label 控件
+
+        Returns:
+            LabelUIControl | None:
+                如果成功，则返回对应的 Label 控件；
+                否则失败，那么返回 None
+        """
+        if self.control is None:
+            return None
+        child = self.control.GetChildByPath("/text/text")
+        if child is None:
+            return None
+        return child.asLabel()
+
+    def on_update_screen(self):  # type: () -> bool
+        """
+        on_update_screen 在游戏每次刷新屏幕时调用。
+        通常情况下，1 秒钟内游戏会调用 30 次
+
+        Returns:
+            bool: 指示是否需要刷新屏幕
+        """
+        should_update = self._should_update_screen
+        if self._should_update_screen:
+            self._should_update_screen = False
+        return should_update
+
+    def on_destroy(self):  # type: () -> None
+        """on_destroy 在该组件被销毁时调用"""
+        if self.ui_node is None or self.control is None:
+            return
+        _ = self.ui_node.RemoveChildControl(self.control)
+
+    def get_header_text(self):  # type: () -> str
+        """
+        get_header_text 获取该组件正显示的文本内容
+
+        Returns:
+            str: 该组件正显示的文本内容
+        """
+        return self._last_render_label
+
+    def set_header_text(self, text):  # type: (str) -> DynamicHeader
+        """
+        set_header_text 设置该组件显示的文本内容
+
+        Args:
+            text (str): 欲显示的文本内容
+
+        Returns:
+            DynamicHeader: 返回 DynamicHeader 本身
+        """
+        if text == self._last_render_label:
+            return self
+
+        control = self._get_label_control()
+        if control is not None:
+            control.SetText(text)
+
+        self._last_render_label = text
+        self._should_update_screen = True
+        return self
+
+
+class DynamicDivider(BaseComponent):
+    """DynamicDivider 是长表单中的分割线"""
+
+    def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
+        """初始化并返回一个新的，可以附加在长表单中的分割线
+
+        Args:
+            ui_node (ScreenNode): 该组件所在的屏幕结点
+            control (BaseUIControl): 要将该组件挂接在哪个父节点下
+        """
+        self.ui_node = ui_node
+        self.control = ui_node.CreateChildControl(
+            "future.option_group_section_divider",
+            "dynamic_divider-" + str(uuid.uuid4()),
+            control,
+            False,
+        )
+
+    def on_destroy(self):  # type: () -> None
+        """on_destroy 在该组件被销毁时调用"""
+        if self.ui_node is None or self.control is None:
+            return
+        _ = self.ui_node.RemoveChildControl(self.control)
+
+
 class LongForm(BaseForm):
     """LongForm 是长表单实现"""
 
@@ -246,7 +449,7 @@ class LongForm(BaseForm):
 
         另，对于 callback 参数：
             - 该函数的第一个参数是事件 SetButtonTouchUpCallback 的参数
-            - 该函数的第二个参数，也即 int 参数，用于指示按钮的索引
+            - 该函数的第二个参数指示在只保留长表单的按钮后，玩家所点击的按钮的索引
 
         Args:
             ui_node (ScreenNode): 该表单所在的屏幕结点
@@ -347,7 +550,11 @@ class LongForm(BaseForm):
         control = button.get_button_control()
         if control is None:
             return
-        index = len(self.childs)
+
+        index = 0
+        for i in self.childs:
+            if isinstance(i, DynamicButton):
+                index += 1
 
         def _on_button_trigger(args):  # type: (dict[str, Any]) -> None
             """
@@ -476,3 +683,77 @@ class LongForm(BaseForm):
         self.childs.append(button)
         self._should_update_screen = True
         return button
+
+    def push_label(self, label):  # type: (str) -> DynamicLabel | None
+        """
+        push_label 向长表单追加一个新的普通纯文本
+
+        Args:
+            label (str): 欲该纯文本所显示的内容
+
+        Returns:
+            DynamicLabel | None:
+                如果成功，则返回追加的文本；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_buttons_control()
+        if control is None:
+            return None
+
+        result = DynamicLabel(self.ui_node, control)
+        _ = result.set_label_text(label)
+
+        self.childs.append(result)
+        self._should_update_screen = True
+        return result
+
+    def push_header(self, label):  # type: (str) -> DynamicHeader | None
+        """
+        push_header 向长表单追加一个新的大字纯文本
+
+        Args:
+            label (str): 欲该纯文本所显示的内容
+
+        Returns:
+            DynamicHeader | None:
+                如果成功，则返回追加的文本；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_buttons_control()
+        if control is None:
+            return None
+
+        header = DynamicHeader(self.ui_node, control)
+        _ = header.set_header_text(label)
+
+        self.childs.append(header)
+        self._should_update_screen = True
+        return header
+
+    def push_divider(self):  # type: () -> DynamicDivider | None
+        """
+        push_divider 向长表单追加一个新的分割线
+
+        Returns:
+            DynamicDivider | None:
+                如果成功，则返回追加的分割线；
+                否则失败，那么返回 None
+        """
+        if self.ui_node is None:
+            return None
+
+        control = self._get_buttons_control()
+        if control is None:
+            return None
+
+        divider = DynamicDivider(self.ui_node, control)
+        self.childs.append(divider)
+        self._should_update_screen = True
+
+        return divider

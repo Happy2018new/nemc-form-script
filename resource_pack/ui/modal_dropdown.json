@@ -1,14 +1,16 @@
 {
     "custom_dropdown": {
         "type": "panel",
+        "$tooltip_visible|default": false,
         "size": [
             "100%",
             "100%c"
         ],
+        "layer": 2,
         "controls": [
             {
-                "dropdown@settings_common.option_dropdown": {
-                    "$dropdown_area": "generated_form",
+                "dropdown@future.option_dropdown": {
+                    "$dropdown_area": "inside_header_panel",
                     "$dropdown_content": "modal_dropdown.custom_dropdown_content",
                     "$dropdown_name": "custom_dropdown",
                     "$dropdown_scroll_content_size": [
@@ -27,7 +29,8 @@
                     "$options_dropdown_toggle_label_binding_collection_name": "custom_form",
                     "$options_dropdown_toggle_label_binding_type": "collection",
                     "$toggle_binding_type": "collection",
-                    "$toggle_grid_collection_name": "custom_form"
+                    "$toggle_grid_collection_name": "custom_form",
+                    "$tooltip_visible": "$tooltip_visible"
                 }
             }
         ]
@@ -46,7 +49,10 @@
         "$radio_factory": {
             "control_name": "modal_dropdown.custom_dropdown_radio",
             "name": "buttons"
-        }
+        },
+        "$toggle_focus_id_binding_name": "#custom_toggle_focus_id",
+        "$toggle_focus_id_binding_type": "collection",
+        "$toggle_focus_id_collection_name": "custom_form"
     },
     "custom_dropdown_radio@settings_common.radio_with_label": {
         "$option_enabled_binding_name": "#option_enabled_binding_name",
@@ -67,11 +73,14 @@
         "$toggle_name": "custom_dropdown_radio_toggle",
         "$toggle_state_binding_name": "#custom_radio_toggled"
     },
-    "namespace": "modal_dropdown",
+    "custom_tooltip_dropdown@modal_dropdown.custom_dropdown": {
+        "$tooltip_visible": true
+    },
     "radio_toggled@settings_common.radio_with_label": {
         "$option_enabled_binding_name": "#option_enabled_binding_name",
         "$radio_label_text": "#radio_label_text",
         "$toggle_name": "radio_toggled_toggle",
         "$toggle_state_binding_name": "#toggle_state_binding_name"
-    }
+    },
+    "namespace": "modal_dropdown"
 }
