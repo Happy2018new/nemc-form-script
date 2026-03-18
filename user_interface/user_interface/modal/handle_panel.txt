@@ -1,0 +1,41 @@
+/*
+user_interface/modal/handle_panel(
+  is_cancel: bool,
+  form: str
+) -> bool
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form = {func, tuple.get(args, 1)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    // back to main panel
+  fi
+  return True
+fi
+
+
+
+index = {ref, int, -1}
+if index == 0:
+  // review modal form
+elif index == 1:
+  // add elements
+elif index == 2:
+  // insert elements
+elif index == 3:
+  // edit elements
+elif index == 4:
+  // remove elements
+elif index == 5:
+  // back to main panel
+fi
+
+
+
+return True

@@ -1,0 +1,46 @@
+/*
+user_interface/handle_add(
+  is_cancel: bool,
+  form_type: int,
+  back_form: str
+) -> bool
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_type = {func, tuple.get(args, 1)}
+back_form = {func, tuple.get(args, 2)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    _ = {func, function.call(back_form)}
+  fi
+  return True
+else:
+  form_name = {ref, str, 1}
+fi
+
+
+
+if form_type == 0:
+  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' long'}
+elif form_type == 1:
+  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' popup'}
+elif form_type == 2:
+  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' modal'}
+else:
+  err = 'user_interface/handle_add: Unsupported form type; form_type = ' + str(form_type)
+  _ = {func, function.panic(err)}
+fi
+
+
+
+_ = {func, function.call('user_interface/add_after', count != 0, form_type, form_name, back_form)}
+return True
