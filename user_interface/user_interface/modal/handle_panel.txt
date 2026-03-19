@@ -1,7 +1,7 @@
 /*
 user_interface/modal/handle_panel(
   is_cancel: bool,
-  form: str
+  form: str,
 ) -> bool
 */
 

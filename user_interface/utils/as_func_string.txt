@@ -1,7 +1,7 @@
 /*
 utils/as_func_string(
   func_name: str, 
-  func_args: ptr@slice[int | bool | float | str]
+  func_args: ptr@slice[int | bool | float | str],
 ) -> str
 */
 

@@ -3,7 +3,7 @@ user_interface/add_after(
   success: bool,
   form_type: str,
   form_name: str,
-  back_form: str
+  back_form: str,
 ) -> bool
 
 FORM_TYPE_LONG = 0

@@ -2,7 +2,7 @@
 utils/get_score_private(
   target: str,
   scoreboard: str,
-  as_str: bool
+  as_str: bool,
 ) -> int | str
 */
 

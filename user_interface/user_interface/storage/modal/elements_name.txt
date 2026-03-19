@@ -1,6 +1,6 @@
 /*
 user_interface/storage/modal/elements_name(
-  form: str
+  form: str,
 ) -> ptr@slice[button_name: str] | int
 */
 

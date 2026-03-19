@@ -2,7 +2,7 @@
 user_interface/handle_add(
   is_cancel: bool,
   form_type: int,
-  back_form: str
+  back_form: str,
 ) -> bool
 
 FORM_TYPE_LONG = 0
