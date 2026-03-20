@@ -1,0 +1,58 @@
+/*
+user_interface/storage/modal/add_element(
+  form: str,
+  element_type: int,
+) -> int
+
+ELEMENT_TYPE_LABEL = 0
+ELEMENT_TYPE_HEADER = 1
+ELEMENT_TYPE_DIVIDER = 2
+ELEMENT_TYPE_INPUT = 3
+ELEMENT_TYPE_TOGGLE = 4
+ELEMENT_TYPE_DROPDOWN = 5
+ELEMENT_TYPE_SLIDER = 6
+ELEMENT_TYPE_STEP_SLIDER = 7
+*/
+
+
+
+form = {func, tuple.get(args, 0)}
+element_type = {func, tuple.get(args, 1)}
+
+
+
+level_id = {func, world.GetLevelId()}
+level_id = {func, object.deref(level_id)}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+if {func, object.is_none(form_ui_storage)}:
+  storage = {func, maps.new()}
+fi
+
+key_ptr = {func, object.ref('modal')}
+if not {func, maps.ptr_exist(storage, key_ptr)}:
+  _ = {func, maps.ptr_set(storage, key_ptr, {func, maps.new()})}
+fi
+modal = {func, maps.get(storage, key_ptr)}
+
+key_ptr = {func, object.ref(form)}
+if not {func, maps.ptr_exist(modal, key_ptr)}:
+  _ = {func, maps.ptr_set(modal, key_ptr, {func, maps.new()})}
+fi
+form_data = {func, maps.ptr_get(modal, key_ptr)}
+
+key_ptr = {func, object.ref('content')}
+if not {func, maps.ptr_exist(form_data, key_ptr)}:
+  _ = {func, maps.ptr_set(modal, form_data, {func, slices.new()})}
+fi
+content = {func, maps.ptr_get(form_data, key_ptr)}
+
+
+
+map_ptr = {func, function.call('user_interface/storage/modal/default_element', element_type)}
+_ = {func, object.finalise(map_ptr)}
+_ = {func, slices.ptr_append(content, map_ptr)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
+
+
+
+return {func, slices.length(content)} - 1

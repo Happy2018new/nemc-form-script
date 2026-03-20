@@ -18,7 +18,7 @@ temp = {func, slices.new(True, form)}
 code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_panel', temp)}
 _ = {command, {func, strings.format('customform oncancel "user_interface/modal/panel" "{}"', code)}}
 
-
+{score, 1 or 2 and str({func, base64.b16decode()}), 'coin'}
 
 _ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/panel"'}
 return True
