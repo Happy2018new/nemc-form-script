@@ -19,28 +19,26 @@ element_type = {func, tuple.get(args, 0)}
 
 
 
-result = {func, maps.new()}
-
 if element_type == 0:
-  result = {func, maps.new('type', 'label', 'text', '')}
+  result = {func, maps.new(False, 'type', 'label', 'text', '')}
 elif element_type == 1:
-  result = {func, maps.new('type', 'header', 'text', '')}
+  result = {func, maps.new(False, 'type', 'header', 'text', '')}
 elif element_type == 2:
-  result = {func, maps.new('type', 'divider')}
+  result = {func, maps.new(False, 'type', 'divider')}
 elif element_type == 3:
-  result = {func, maps.new('type', 'input', 'text', '', 'onsubmit', '')}
-  temp = {func, maps.new('condition', '', 'payload', '')}
+  result = {func, maps.new(False, 'type', 'input', 'text', '', 'onsubmit', '')}
+  temp = {func, maps.new(False, 'condition', '', 'payload', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_default')}, temp)}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_place_holder')}, temp)}
 elif element_type == 4:
-  result = {func, maps.new('type', 'toggle', 'text', '', 'default', '', 'onsubmit', '')}
+  result = {func, maps.new(False, 'type', 'toggle', 'text', '', 'default', '', 'onsubmit', '')}
 elif element_type == 5:
-  result = {func, maps.new('type', 'dropdown', 'text', '', 'default', '', 'onsubmit', '')}
+  result = {func, maps.new(False, 'type', 'dropdown', 'text', '', 'default', '', 'onsubmit', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('options')}, {func, slices.new()})}
 elif element_type == 6:
-  result = {func, maps.new('type', 'slider', 'text', '', 'min', '0', 'max', '1', 'step', '1', 'default', '', 'onsubmit', '')}
+  result = {func, maps.new(False, 'type', 'slider', 'text', '', 'min', '0', 'max', '1', 'step', '1', 'default', '', 'onsubmit', '')}
 elif element_type == 7:
-  result = {func, maps.new('type', 'step_slider', 'text', '', 'default', '', 'onsubmit', '')}
+  result = {func, maps.new(False, 'type', 'step_slider', 'text', '', 'default', '', 'onsubmit', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('steps')}, {func, slices.new()})}
 else:
   err = 'user_interface/storage/modal/default_element: Unsupported modal form element type; element_type = ' + str(element_type)
@@ -48,7 +46,7 @@ else:
 fi
 
 if element_type >= 3 and element_type <= 7:
-  temp = {func, maps.new('condition', '', 'payload', '')}
+  temp = {func, maps.new(False, 'condition', '', 'payload', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_tooltip')}, temp)}
 fi
 
