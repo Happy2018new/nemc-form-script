@@ -52,6 +52,5 @@ if element_type >= 3 and element_type <= 7:
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_tooltip')}, temp)}
 fi
 
-
 _ = {func, object.pin(result)}
 return result
