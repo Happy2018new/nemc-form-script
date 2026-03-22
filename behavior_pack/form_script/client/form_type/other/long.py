@@ -13,23 +13,27 @@ if TYPE_CHECKING:
 
 import uuid
 from ..base import BaseComponent, BaseForm
-from ...utils import get_scroll_view_content
-from mod.client.extraClientApi import PopScreen
+from ...utils import get_scroll_view_content, input_mode_is_touch, point_is_in_rect
+from mod.client.extraClientApi import PopScreen, GetTouchPos
 
 
 DYNAMIC_BUTTON_IMAGE_TYPE_TEXTURE = 0
 DYNAMIC_BUTTON_IMAGE_TYPE_URL = 1
 
+BUTTON_TOUCH_EVENT_TYPE_UP = 0
+BUTTON_TOUCH_EVENT_TYPE_DOWN = 1
+
 
 class DynamicButton(BaseComponent):
     """DynamicButton 是长表单中的单个按钮"""
 
-    button_image_type = 0
-    _should_update_screen = False
-    _last_render_label = ""
-    _last_image_view_state = False
-    _last_image_load_state = False
-    _last_render_image_path = ""
+    button_image_type = 0  # type: int
+    _should_update_screen = False  # type: bool
+    _last_render_label = ""  # type: str
+    _last_image_view_state = False  # type: bool
+    _last_image_load_state = False  # type: bool
+    _last_render_image_path = ""  # type: str
+    _last_click_pos = (0.0, 0.0)  # type: tuple[float, float]
 
     def __init__(self, ui_node, control):  # type: (ScreenNode, BaseUIControl) -> None
         """初始化并返回一个新的，可以附加在长表单中的按钮
@@ -51,6 +55,7 @@ class DynamicButton(BaseComponent):
         self._last_image_view_state = True
         self._last_image_load_state = True
         self._last_render_image_path = ""
+        self._last_click_pos = (0.0, 0.0)
 
     def on_update_screen(self):  # type: () -> bool
         """
@@ -70,6 +75,65 @@ class DynamicButton(BaseComponent):
         if self.ui_node is None or self.control is None:
             return
         self.ui_node.RemoveChildControl(self.control)
+
+    def on_touch_event(self, args):  # type: (dict[str, Any]) -> bool
+        """on_touch_event 在该按钮被按下或弹起时调用
+
+        Args:
+            args (dict[str, Any]):
+                SetButtonTouchUpCallback 传入的字典参数
+
+        Returns:
+            bool:
+                指示是否应执行该按钮对应的回调函数
+        """
+        # Get button control
+        control = self.get_button_control()
+        if control is None:
+            return False
+
+        # Get touch event and touch pos
+        touch_event = args["TouchEvent"]  # type: int
+        touch_pos = GetTouchPos()
+
+        # Handle when the user using mouse to click the button
+        if not input_mode_is_touch():
+            if touch_event == BUTTON_TOUCH_EVENT_TYPE_UP:
+                return True
+            else:
+                return False
+
+        # In touch mode, the first click just record the touch pos
+        if touch_event == BUTTON_TOUCH_EVENT_TYPE_DOWN:
+            self._last_click_pos = touch_pos
+            return False
+
+        # In touch mode, now the user release, and we can start processing
+        for i in ["default", "hover", "pressed", "locked"]:
+            child = control.GetChildByPath("/" + i)
+            if child is None:
+                continue
+            if not child.GetVisible():
+                continue
+
+            child = child.GetChildByPath("/border")
+            if child is None:
+                continue
+            child = child.asImage()
+            if child is None:
+                continue
+
+            border_rect = child.GetRotateRect()
+            if not point_is_in_rect(border_rect, self._last_click_pos):
+                return False
+            if not point_is_in_rect(border_rect, touch_pos):
+                return False
+            if abs(touch_pos[1] - self._last_click_pos[1]) > 5.25:
+                return False
+            return True
+
+        # Just a ensure, and should never happened
+        raise Exception("unreachable")
 
     def get_button_control(self):  # type: () -> ButtonUIControl | None
         """get_button_control 获取按钮所对应的控件
@@ -561,13 +625,15 @@ class LongForm(BaseForm):
             _on_button_trigger 是底层的回调函数。
             该函数会在 button 被点击然后弹起后调用。
 
-            index 是所引用的闭包变量之一，
-            外围调用者需要保证它是正确的
+            index 和 button 是所引用的闭包变量，
+            外围调用者应保证对它们的引用的正确性
 
             Args:
                 args (dict[str, Any]):
                     SetButtonTouchUpCallback 传入的字典参数
             """
+            if not button.on_touch_event(args):
+                return
             if self._callback is not None:
                 try:
                     self._callback(args, index)
@@ -577,6 +643,7 @@ class LongForm(BaseForm):
 
         control.AddTouchEventParams({"isSwallow": True})
         control.SetButtonTouchUpCallback(_on_button_trigger)  # type: ignore
+        control.SetButtonTouchDownCallback(_on_button_trigger)  # type: ignore
 
     def get_title_label(self):  # type: () -> str
         """get_title_label 获取该长表单的标题文本
