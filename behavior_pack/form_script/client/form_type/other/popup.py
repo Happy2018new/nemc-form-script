@@ -82,8 +82,8 @@ class PopupForm(BaseForm):
             _on_button_trigger 是底层的回调函数。
             该函数会在代表“确定”或“取消”的按钮被点击后调用。
 
-            is_left_button 是所引用的闭包变量之一，
-            外围调用者有义务确保给出的这一参数是正确的
+            is_left_button 是所引用的闭包变量，
+            外围调用者应保证对它的引用的正确性
 
             Args:
                 args (dict[str, Any]):
