@@ -244,8 +244,8 @@ class BuiltInFunction:
 
     def __init__(
         self,
-        static={},  # type: dict[str, Callable[..., int | bool | float | str]]
-        dynamic={},  # type: dict[str, Callable[..., int | bool | float | str]]
+        static=None,  # type: dict[str, Callable[..., int | bool | float | str]] | None
+        dynamic=None,  # type: dict[str, Callable[..., int | bool | float | str]] | None
     ):  # type: (...) -> None
         """初始化并返回一个新的 BuiltInFunction
 
@@ -259,8 +259,8 @@ class BuiltInFunction:
                 任何不位于 static 中的函数，都应置于本字典中。
                 默认值为空字典
         """
-        self.static = static if len(static) > 0 else {}
-        self.dynamic = dynamic if len(dynamic) > 0 else {}
+        self.static = static if static is not None else {}
+        self.dynamic = dynamic if dynamic is not None else {}
 
     def _int(self, value):  # type: (Any) -> int
         """_int 将 value 转换为整数

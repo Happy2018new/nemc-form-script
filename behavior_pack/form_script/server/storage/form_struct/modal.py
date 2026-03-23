@@ -296,7 +296,7 @@ class ModalFormElementDropdown(ModalFormElement):
     def __init__(
         self,
         text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
-        options=[],  # type: list[StringWithHash]
+        options=None,  # type: list[StringWithHash] | None
         default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
     ):  # type: (...) -> None
@@ -307,9 +307,9 @@ class ModalFormElementDropdown(ModalFormElement):
             text (StringWithHash, optional):
                 下拉框的标题文本。
                 默认值为 EMPTY_STRING_WITH_HASH
-            options (list[StringWithHash], optional):
+            options (list[StringWithHash] | None, optional):
                 下拉框的选项列表。
-                默认值为空列表
+                默认值为 None
             default (StringWithHash, optional):
                 下拉框在初始状态下，
                 所选中选项的索引。
@@ -319,7 +319,7 @@ class ModalFormElementDropdown(ModalFormElement):
                 默认值为 EMPTY_STRING_WITH_HASH
         """
         self.text = text
-        self.options = options if len(options) > 0 else []
+        self.options = options if options is not None else []
         self.default = default
         self.tooltip = tooltip
 
@@ -469,7 +469,7 @@ class ModalFormElementStepSlider(ModalFormElement):
     def __init__(
         self,
         text=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
-        steps=[],  # type: list[StringWithHash]
+        steps=None,  # type: list[StringWithHash] | None
         default=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         tooltip=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
     ):  # type: (...) -> None
@@ -480,9 +480,9 @@ class ModalFormElementStepSlider(ModalFormElement):
             text (StringWithHash, optional):
                 滑块的标题文本。
                 默认值为 StringWithHash
-            steps (list[StringWithHash], optional):
+            steps (list[StringWithHash] | None, optional):
                 滑块的内容列表。
-                默认值为空列表
+                默认值为 None
             default (StringWithHash, optional):
                 滑块在初始状态下，
                 所显示内容的索引。
@@ -492,7 +492,7 @@ class ModalFormElementStepSlider(ModalFormElement):
                 默认值为 StringWithHash
         """
         self.text = text
-        self.steps = steps if len(steps) > 0 else []
+        self.steps = steps if steps is not None else []
         self.default = default
         self.tooltip = tooltip
 
@@ -549,7 +549,7 @@ class ModalForm(BaseForm):
     def __init__(
         self,
         title=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
-        content=[],  # type: list[ModalFormElement]
+        content=None,  # type: list[ModalFormElement] | None
         onsubmit=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         oncancel=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         onsuberr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
@@ -561,9 +561,9 @@ class ModalForm(BaseForm):
             title (StringWithHash, optional):
                 模态表单的标题文本。
                 默认值为 EMPTY_STRING_WITH_HASH
-            content (list[ModalFormElement], optional):
+            content (list[ModalFormElement] | None, optional):
                 模态表单的内容。
-                默认值为空列表
+                默认值为 None
             onsubmit (StringWithHash, optional):
                 当表单被用户提交时调用的代码。
                 默认值为 EMPTY_STRING_WITH_HASH
@@ -580,7 +580,7 @@ class ModalForm(BaseForm):
                 默认值为 EMPTY_STRING_WITH_HASH
         """
         self.title = title
-        self.content = content if len(content) > 0 else []
+        self.content = content if content is not None else []
         self.onsubmit = onsubmit
         self.oncancel = oncancel
         self.onsuberr = onsuberr

@@ -22,16 +22,16 @@ class ExpressionOperator(ExpressionElement):
     element_id = 0  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
-    def __init__(self, element_payload=[]):  # type: (list[ExpressionElement]) -> None
+    def __init__(self, element_payload=None):  # type: (list[ExpressionElement] | None) -> None
         """初始化并返回一个新的比较运算符
 
         Args:
-            element_payload (list[ExpressionElement], optional):
+            element_payload (list[ExpressionElement] | None, optional):
                 多个表达式元素组成的列表。
-                默认值为空列表
+                默认值为 None
         """
         self.element_id = 0
-        self.element_payload = element_payload if len(element_payload) > 0 else []
+        self.element_payload = element_payload if element_payload is not None else []
 
 
 class ExpressionGreaterThan(ExpressionOperator):
@@ -214,7 +214,7 @@ class ExpressionAnd(ExpressionOperator):
     element_id = 0  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
-    def __init__(self, element_payload=[]):  # type: (list[ExpressionElement]) -> None
+    def __init__(self, element_payload=None):  # type: (list[ExpressionElement] | None) -> None
         """
         初始化并返回一个新的 ExpressionAnd。
 
@@ -239,7 +239,7 @@ class ExpressionOr(ExpressionOperator):
     element_id = 0  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
-    def __init__(self, element_payload=[]):  # type: (list[ExpressionElement]) -> None
+    def __init__(self, element_payload=None):  # type: (list[ExpressionElement] | None) -> None
         """
         初始化并返回一个新的 ExpressionOr。
 

@@ -281,7 +281,7 @@ class LongForm(BaseForm):
         self,
         title=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         content=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
-        elements=[],  # type: list[LongFormElement]
+        elements=None,  # type: list[LongFormElement] | None
         onsubmit=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         oncancel=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
         onsuberr=EMPTY_STRING_WITH_HASH,  # type: StringWithHash
@@ -296,9 +296,9 @@ class LongForm(BaseForm):
             content (StringWithHash, optional):
                 长表单的内容文本。
                 默认值为 EMPTY_STRING_WITH_HASH
-            elements (list[LongFormElement], optional):
+            elements (list[LongFormElement] | None, optional):
                 长表单中的按钮。
-                默认值为空列表
+                默认值为 None
             onsubmit (StringWithHash, optional):
                 当表单被用户提交时调用的代码。
                 默认值为 EMPTY_STRING_WITH_HASH
@@ -316,7 +316,7 @@ class LongForm(BaseForm):
         """
         self.title = title
         self.content = content
-        self.elements = elements if len(elements) > 0 else []
+        self.elements = elements if elements is not None else []
         self.onsubmit = onsubmit
         self.oncancel = oncancel
         self.onsuberr = onsuberr

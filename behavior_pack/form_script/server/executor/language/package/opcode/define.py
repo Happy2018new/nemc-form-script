@@ -48,8 +48,8 @@ class ConditionCodeBlock:
     code_block = []  # type: list[OpcodeBase]
 
     def __init__(
-        self, condition, state_line, code_block=[]
-    ):  # type: (ExpressionCombine | None, str, list[OpcodeBase]) -> None
+        self, condition, state_line, code_block=None
+    ):  # type: (ExpressionCombine | None, str, list[OpcodeBase] | None) -> None
         """初始化并返回一个新的条件代码块
 
         Args:
@@ -65,7 +65,7 @@ class ConditionCodeBlock:
         """
         self.condition = condition
         self.state_line = state_line
-        self.code_block = code_block if len(code_block) > 0 else []
+        self.code_block = code_block if code_block is not None else []
 
     def __repr__(self):  # type: () -> str
         """返回该条件代码块的字符串表示
@@ -93,8 +93,8 @@ class ForLoopCodeBlock:
     code_block = []  # type: list[OpcodeBase]
 
     def __init__(
-        self, variable, repeat_times, state_line, code_block=[]
-    ):  # type: (str, ExpressionCombine, str, list[OpcodeBase]) -> None
+        self, variable, repeat_times, state_line, code_block=None
+    ):  # type: (str, ExpressionCombine, str, list[OpcodeBase] | None) -> None
         """初始化并返回一个新的循环代码块
 
         Args:
@@ -113,7 +113,7 @@ class ForLoopCodeBlock:
         self.variable = variable
         self.repeat_times = repeat_times
         self.state_line = state_line
-        self.code_block = code_block if len(code_block) > 0 else []
+        self.code_block = code_block if code_block is not None else []
 
     def __repr__(self):  # type: () -> str
         """返回该循环代码块的字符串表示

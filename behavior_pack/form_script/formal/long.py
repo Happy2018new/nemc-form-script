@@ -355,8 +355,8 @@ class LongForm(BaseForm):
     elements = []  # type: list[LongFormElement]
 
     def __init__(
-        self, title="", content="", elements=[]
-    ):  # type: (str, str, list[LongFormElement]) -> None
+        self, title="", content="", elements=None
+    ):  # type: (str, str, list[LongFormElement] | None) -> None
         """初始化并返回一个新的形式化的长表单
 
         Args:
@@ -366,13 +366,13 @@ class LongForm(BaseForm):
             content (str, optional):
                 长表单的内容文本。
                 默认值为空字符串
-            elements (list[LongFormElement], optional):
+            elements (list[LongFormElement] | None, optional):
                 长表单中的元素。
-                默认值为空列表
+                默认值为 None
         """
         self.title = title
         self.content = content
-        self.elements = elements if len(elements) > 0 else []
+        self.elements = elements if elements is not None else []
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将形式化的长表单编码为对应的 JSON 表示

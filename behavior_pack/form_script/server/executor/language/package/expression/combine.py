@@ -134,16 +134,16 @@ class ExpressionCombine(ExpressionElement):
     element_id = ELEMENT_ID_EXPR  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
-    def __init__(self, payload=[]):  # type: (list[ExpressionElement]) -> None
+    def __init__(self, payload=None):  # type: (list[ExpressionElement] | None) -> None
         """初始化并返回一个新的 ExpressionCombine
 
         Args:
-            payload (list[ExpressionElement], optional):
+            payload (list[ExpressionElement] | None, optional):
                 多个表达式元素组成的列表。
-                默认值为空列表
+                默认值为 None
         """
         self.element_id = ELEMENT_ID_EXPR
-        self.element_payload = payload if len(payload) > 0 else []
+        self.element_payload = payload if payload is not None else []
 
     def try_parse_float(self, token):  # type: (Token) -> bool
         """

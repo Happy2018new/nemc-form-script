@@ -95,7 +95,7 @@ class CodeRunner:
 
     def __init__(
         self,
-        code_block=[],  # type: list[OpcodeBase]
+        code_block=None,  # type: list[OpcodeBase] | None
     ):  # type: (...) -> None
         """初始化并返回一个新的解释器
 
@@ -104,7 +104,7 @@ class CodeRunner:
                 CodeParser 的编译结果。
                 默认值为空列表
         """
-        self.code_block = code_block if len(code_block) > 0 else []
+        self.code_block = code_block if code_block is not None else []
         self._interact = EMPTY_GAME_INTERACT
         self._builtins = EMPTY_BUILTIN_FUNCTION
         self._variables = EMPTY_VARIABLES

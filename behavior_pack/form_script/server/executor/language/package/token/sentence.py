@@ -131,19 +131,19 @@ class SentenceReader(AnyReader):
     _contents = []  # type: list[Token]
     _pointer = 0  # type: int
 
-    def __init__(self, tokens=[], pointer=0):  # type: (list[Token], int) -> None
+    def __init__(self, tokens=None, pointer=0):  # type: (list[Token] | None, int) -> None
         """初始化并返回一个新的 SentenceReader
 
         Args:
-            tokens (list[Token], optional):
+            tokens (list[Token] | None, optional):
                 词法分词器的分词结果列表。
-                默认值为空列表
+                默认值为 None
             pointer (int, optional):
                 该阅读器的指针初始位置。
                 默认值为 0
         """
-        self._contents = tokens if len(tokens) > 0 else []
-        self._pointer = min(max(0, pointer), len(tokens) - 1)
+        self._contents = tokens if tokens is not None else []
+        self._pointer = min(max(0, pointer), len(self._contents) - 1) if len(self._contents) > 0 else 0
 
     def contents(self):  # type: () -> list[Token]
         """contents 返回阅读器的底层负载

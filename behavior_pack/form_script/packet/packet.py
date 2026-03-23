@@ -68,7 +68,7 @@ class ModalFormRequest(BasePacket):
     form_id = 0  # type: int
     form_data = {}  # type: dict[str, Any]
 
-    def __init__(self, form_id=0, form_data={}):  # type: (int, dict[str, Any]) -> None
+    def __init__(self, form_id=0, form_data=None):  # type: (int, dict[str, Any] | None) -> None
         """Returns a new ModalFormRequest packet.
 
         Args:
@@ -83,7 +83,7 @@ class ModalFormRequest(BasePacket):
                 Defaults to {}.
         """
         self.form_id = form_id
-        self.form_data = form_data if len(form_data) > 0 else {}
+        self.form_data = form_data if form_data is not None else {}
 
     def packet_name(self):  # type: () -> str
         """packet_name returns the name of current packet.
@@ -281,7 +281,7 @@ class CustomFunctionCall(BasePacket):
     func_name = ""  # type: str
     func_args = []  # type: list[Any]
 
-    def __init__(self, func_name="", func_args=[]):  # type: (str, list[Any]) -> None
+    def __init__(self, func_name="", func_args=None):  # type: (str, list[Any] | None) -> None
         """
         Returns a new CustomFunctionCall packet.
 
@@ -292,7 +292,7 @@ class CustomFunctionCall(BasePacket):
                 The arguments passed to the custom function.
         """
         self.func_name = func_name
-        self.func_args = func_args if len(func_args) > 0 else []
+        self.func_args = func_args if func_args is not None else []
 
     def packet_name(self):  # type: () -> str
         """packet_name returns the name of current packet.

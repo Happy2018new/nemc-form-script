@@ -164,16 +164,16 @@ class ExpressionReference(ExpressionElement):
     element_id = ELEMENT_ID_REF  # type: int
     element_payload = []  # type: list[Any]
 
-    def __init__(self, payload=[]):  # type: (list[Any]) -> None
+    def __init__(self, payload=None):  # type: (list[Any] | None) -> None
         """初始化并返回一个新的 ExpressionReference
 
         Args:
-            payload (list[Any], optional):
+            payload (list[Any] | None, optional):
                 该引用表达式元素的负载。
-                默认值为空列表
+                默认值为 None
         """
         self.element_id = ELEMENT_ID_REF
-        self.element_payload = payload if len(payload) > 0 else []
+        self.element_payload = payload if payload is not None else []
 
     def parse(self, reader):  # type: (SentenceReader) -> ExpressionReference
         """
@@ -295,16 +295,16 @@ class ExpressionScore(ExpressionElement):
     element_id = ELEMENT_ID_SCORE  # type: int
     element_payload = []  # type: list[ExpressionCombine]
 
-    def __init__(self, payload=[]):  # type: (list[ExpressionCombine]) -> None
+    def __init__(self, payload=None):  # type: (list[ExpressionCombine] | None) -> None
         """初始化并返回一个新的 ExpressionScore
 
         Args:
-            payload (list[ExpressionCombine], optional):
+            payload (list[ExpressionCombine] | None, optional):
                 该记分板分数表达式元素的负载。
-                默认值为空列表
+                默认值为 None
         """
         self.element_id = ELEMENT_ID_SCORE
-        self.element_payload = payload if len(payload) > 0 else []
+        self.element_payload = payload if payload is not None else []
 
     def parse(self, reader):  # type: (SentenceReader) -> ExpressionScore
         """
@@ -401,16 +401,16 @@ class ExpressionFunction(ExpressionElement):
     element_id = ELEMENT_ID_FUNC  # type: int
     element_payload = []  # type: list[Any]
 
-    def __init__(self, element_payload=[]):  # type: (list[Any]) -> None
+    def __init__(self, element_payload=None):  # type: (list[Any] | None) -> None
         """初始化并返回一个新的 ExpressionFunction
 
         Args:
-            element_payload (list[Any], optional):
+            element_payload (list[Any] | None, optional):
                 该函数表达式元素的负载。
-                默认值为空列表
+                默认值为 None
         """
         self.element_id = ELEMENT_ID_FUNC
-        self.element_payload = element_payload if len(element_payload) > 0 else []
+        self.element_payload = element_payload if element_payload is not None else []
 
     def parse(self, reader):  # type: (SentenceReader) -> ExpressionFunction
         """

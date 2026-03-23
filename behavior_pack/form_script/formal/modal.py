@@ -314,8 +314,8 @@ class ModalFormElementDropdown(ModalFormElement):
     tooltip = ""  # type: str
 
     def __init__(
-        self, text="", options=[], default=0, tooltip=""
-    ):  # type: (str, list[str], int, str) -> None
+        self, text="", options=None, default=0, tooltip=""
+    ):  # type: (str, list[str] | None, int, str) -> None
         """
         初始化并返回一个可放置在模态表单中的下拉框
 
@@ -323,9 +323,9 @@ class ModalFormElementDropdown(ModalFormElement):
             text (str, optional):
                 下拉框的标题文本。
                 默认值为空字符串
-            options (list[str], optional):
+            options (list[str] | None, optional):
                 下拉框的选项列表。
-                默认值为空列表
+                默认值为 None
             default (int, optional):
                 下拉框在初始状态下，
                 所选中选项的索引。
@@ -335,7 +335,7 @@ class ModalFormElementDropdown(ModalFormElement):
                 默认值为空字符串
         """
         self.text = text
-        self.options = options if len(options) > 0 else []
+        self.options = options if options is not None else []
         self.default = int(default)
         self.tooltip = tooltip
 
@@ -505,8 +505,8 @@ class ModalFormElementStepSlider(ModalFormElement):
     tooltip = ""  # type: str
 
     def __init__(
-        self, text="", steps=[], default=0, tooltip=""
-    ):  # type: (str, list[str], int, str) -> None
+        self, text="", steps=None, default=0, tooltip=""
+    ):  # type: (str, list[str] | None, int, str) -> None
         """
         初始化并返回一个可放置在模态表单中的显式步进滑块
 
@@ -514,9 +514,9 @@ class ModalFormElementStepSlider(ModalFormElement):
             text (str, optional):
                 滑块的标题文本。
                 默认值为空字符串
-            steps (list[str], optional):
+            steps (list[str] | None, optional):
                 滑块的内容列表。
-                默认值为空列表
+                默认值为 None
             default (int, optional):
                 滑块在初始状态下，
                 所显示内容的索引。
@@ -526,7 +526,7 @@ class ModalFormElementStepSlider(ModalFormElement):
                 默认值为空字符串
         """
         self.text = text
-        self.steps = steps if len(steps) > 0 else []
+        self.steps = steps if steps is not None else []
         self.default = int(default)
         self.tooltip = tooltip
 
@@ -587,20 +587,20 @@ class ModalForm(BaseForm):
     content = []  # type: list[ModalFormElement]
 
     def __init__(
-        self, title="", content=[]
-    ):  # type: (str, list[ModalFormElement]) -> None
+        self, title="", content=None
+    ):  # type: (str, list[ModalFormElement] | None) -> None
         """初始化并返回一个新的形式化的模态表单
 
         Args:
             title (str, optional):
                 模态表单的标题文本。
                 默认值为空字符串
-            content (list[ModalFormElement], optional):
+            content (list[ModalFormElement] | None, optional):
                 模态表单的内容。
-                默认值为空列表
+                默认值为 None
         """
         self.title = title
-        self.content = content if len(content) > 0 else []
+        self.content = content if content is not None else []
 
     def marshal(self):  # type: () -> dict[str, Any]
         """marshal 将形式化的模态表单编码为对应的 JSON 表示
