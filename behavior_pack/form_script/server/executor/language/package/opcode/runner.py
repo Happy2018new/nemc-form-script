@@ -70,6 +70,7 @@ STATES_CODE_RETURN = 3
 EMPTY_VARIABLES = {}
 EMPTY_GAME_INTERACT = GameInteract()
 EMPTY_BUILTIN_FUNCTION = BuiltInFunction()
+DEFAULT_MAX_STEPS = 100000
 
 
 class InternalException(Exception):
@@ -92,6 +93,8 @@ class CodeRunner:
     _builtins = EMPTY_BUILTIN_FUNCTION  # type: BuiltInFunction
     _variables = EMPTY_VARIABLES  # type: dict[str, int | bool | float | str]
     _return = None  # type: int | bool | float | str | None
+    _step_count = 0  # type: int
+    _max_steps = DEFAULT_MAX_STEPS  # type: int
 
     def __init__(
         self,
@@ -109,6 +112,8 @@ class CodeRunner:
         self._builtins = EMPTY_BUILTIN_FUNCTION
         self._variables = EMPTY_VARIABLES
         self._return = None
+        self._step_count = 0
+        self._max_steps = DEFAULT_MAX_STEPS
 
     def _fast_normal_panic(self, code_block, err):  # type: (OpcodeBase, str) -> None
         """_fast_normal_panic 抛出标准的运行时错误
@@ -528,6 +533,15 @@ class CodeRunner:
                     - STATES_LOOP_BREAK: 解释器终止循环体
                     - STATES_CODE_RETURN: 解释器返回值，然后终止
         """
+        self._step_count += 1
+        if self._step_count > self._max_steps:
+            raise InternalException(
+                "Execution step limit exceeded (max_steps={}). "
+                "This may indicate an infinite loop in the script.".format(
+                    self._max_steps
+                )
+            )
+
         if isinstance(code_block, OpcodeAssign):
             name = code_block.opcode_payload[0]
             value = self._process_element(code_block.opcode_payload[1])
@@ -669,6 +683,7 @@ class CodeRunner:
         variables=EMPTY_VARIABLES,  # type: dict[str, int | bool | float | str]
         interact=EMPTY_GAME_INTERACT,  # type: GameInteract
         builtins=EMPTY_BUILTIN_FUNCTION,  # type: BuiltInFunction
+        max_steps=DEFAULT_MAX_STEPS,  # type: int
     ):  # type: (...) -> int | bool | float | str | None
         """
         running 以解释方式的运行所有代码，
@@ -694,6 +709,11 @@ class CodeRunner:
             builtins (BuiltInFunction, optional):
                 外部函数提供者为用户定义的内建函数。
                 默认值为 EMPTY_BUILTIN_FUNCTION
+            max_steps (int, optional):
+                解释器允许的最大执行步数。
+                超过该步数后将抛出 InternalException，
+                以防止无限循环或死锁。
+                默认值为 DEFAULT_MAX_STEPS
 
         Returns:
             int | bool | float | str | None:
@@ -704,6 +724,8 @@ class CodeRunner:
 
         frame = self._variables
         self._variables = variables if variables is not EMPTY_VARIABLES else {}
+        self._max_steps = max_steps
+        self._step_count = 0
 
         try:
             return self._running(require_return)
