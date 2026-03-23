@@ -94,7 +94,7 @@ class DynamicButton(BaseComponent):
 
         # Get touch event and touch pos
         touch_event = args["TouchEvent"]  # type: int
-        touch_pos = GetTouchPos()
+        touch_pos = GetTouchPos()  # type: tuple[float, float]
 
         # Handle when the user using mouse to click the button
         if not input_mode_is_touch():
