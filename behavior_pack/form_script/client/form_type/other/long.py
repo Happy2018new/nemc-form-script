@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 import uuid
 from ..base import BaseComponent, BaseForm
-from ...utils import get_scroll_view_content, input_mode_is_touch, point_is_in_rect
-from mod.client.extraClientApi import PopScreen, GetTouchPos
+from ...utils import point_is_in_rect, input_mode_is_touch, get_scroll_view_content
+from mod.client.extraClientApi import GetTouchPos, PopScreen
 
 
 DYNAMIC_BUTTON_IMAGE_TYPE_TEXTURE = 0
