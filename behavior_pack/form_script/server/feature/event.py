@@ -66,14 +66,14 @@ class SingleEventProcesser:
                     try:
                         _ = self.executor.run_code(
                             code=func.get_func(),
-                            variables={"args": manager.ref(args)},
+                            var_maps={"args": manager.ref(args)},
                             require_return=False,
                         )
                     except Exception as e:
                         try:
                             _ = self.executor.run_code(
                                 code=func.get_on_error(),
-                                variables={
+                                var_maps={
                                     "error": str(e),
                                     "args": manager.ref(args),
                                 },
