@@ -12,7 +12,7 @@ from ..storage.function import FunctionStorage
 from ..storage.event import EventStorage
 from ..executor.executor import GameCodeExecutor
 from ..executor.cache import CompileCache
-from ..executor.language.package import CodeParser, CodeRunner
+from ..executor.language.package import CodeParser, CodeCompiler, CodeRunner
 
 
 try:
@@ -104,7 +104,9 @@ class DebugFeature:
 
         start_time = time.time()
         for _ in range(repeats):
-            _ = CodeRunner(CodeParser(code).parse().code_block)
+            parser = CodeParser(code).parse()
+            compiler = CodeCompiler(parser.code_block)
+            _ = CodeRunner(compiler.compile())
         return time.time() - start_time
 
     def test_function_call_time(

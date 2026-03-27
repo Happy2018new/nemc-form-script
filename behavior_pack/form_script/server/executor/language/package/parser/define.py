@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from typing import Any
 
 import json
-from ..expression.combine import ExpressionCombine
+from .expression.combine import ExpressionCombine
 
 OPCODE_ASSIGN = 0
 OPCODE_CONDITION = 1
