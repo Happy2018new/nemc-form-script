@@ -197,10 +197,16 @@ class CodeRunner:
                         pc += 3
                     else:
                         pc = byte_code[pc + 2]  # type: ignore
-                elif op == 4:  # LOOP_POP (4)
-                    _pop()
-                    _pop()
-                    pc += 1
+                elif op == 4:  # LOOP_CHECK (4, CHECK_TYPE)
+                    check_type = byte_code[pc + 1]
+                    if check_type == 0:  # DATA_TYPE
+                        temp = stack[-1]
+                        if isinstance(temp, bool) or not isinstance(temp, int):
+                            raise Exception("The repeat times of for loop must be int")
+                    elif check_type == 1:  # POP_STACK
+                        _pop()
+                        _pop()
+                    pc += 2
                 elif op == 5:  # DIRECT_JUMP (5, JUMP_TO)
                     pc = byte_code[pc + 1]  # type: ignore
                 elif op == 6:  # FALSE_JUMP (6, JUMP_TO)
