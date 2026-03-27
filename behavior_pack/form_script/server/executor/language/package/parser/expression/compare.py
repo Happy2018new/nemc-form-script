@@ -17,13 +17,16 @@ from .define import (
 
 
 class ExpressionOperator(ExpressionElement):
-    """ExpressionOperator 是所有比较运算符的基本实现"""
+    """
+    ExpressionOperator 是所有比较
+    运算符以及计算运算符的基本实现
+    """
 
     element_id = 0  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
     def __init__(self, element_payload=[]):  # type: (list[ExpressionElement]) -> None
-        """初始化并返回一个新的比较运算符
+        """初始化并返回一个新的运算符
 
         Args:
             element_payload (list[ExpressionElement], optional):
@@ -32,35 +35,6 @@ class ExpressionOperator(ExpressionElement):
         """
         self.element_id = 0
         self.element_payload = element_payload if len(element_payload) > 0 else []
-
-
-class ExpressionGreaterThan(ExpressionOperator):
-    """ExpressionGreaterThan 指示大于运算表示"""
-
-    element_id = 0  # type: int
-    element_payload = []  # type: list[ExpressionElement]
-
-    def __init__(self, element_payload):  # type: (list[ExpressionElement]) -> None
-        """初始化并返回一个新的 ExpressionGreaterThan
-
-        Args:
-            element_payload (list[ExpressionElement]):
-                由 2 个表达式元素 A 和 B 组成的列表。
-                运算 A > B 的结果即为 ExpressionGreaterThan 的值
-
-        Raises:
-            Exception:
-                element_payload 只接受长度为 2 的列表。
-                如果长度不满足，则将抛出相应的错误
-        """
-        if len(element_payload) != 2:
-            raise Exception(
-                'ExpressionGreaterThan/__init__: Only 2 parameters are accepted for operator ">"; element_payload={}'.format(
-                    element_payload
-                )
-            )
-        ExpressionOperator.__init__(self, element_payload)
-        self.element_id = ELEMENT_ID_GREATER_THAN
 
 
 class ExpressionLessThan(ExpressionOperator):
@@ -92,19 +66,19 @@ class ExpressionLessThan(ExpressionOperator):
         self.element_id = ELEMENT_ID_LESS_THAN
 
 
-class ExpressionGreaterEqual(ExpressionOperator):
-    """ExpressionGreaterEqual 指示大于等于运算表示"""
+class ExpressionGreaterThan(ExpressionOperator):
+    """ExpressionGreaterThan 指示大于运算表示"""
 
     element_id = 0  # type: int
     element_payload = []  # type: list[ExpressionElement]
 
     def __init__(self, element_payload):  # type: (list[ExpressionElement]) -> None
-        """初始化并返回一个新的 ExpressionGreaterEqual
+        """初始化并返回一个新的 ExpressionGreaterThan
 
         Args:
             element_payload (list[ExpressionElement]):
                 由 2 个表达式元素 A 和 B 组成的列表。
-                运算 A >= B 的结果即为 ExpressionGreaterEqual 的值
+                运算 A > B 的结果即为 ExpressionGreaterThan 的值
 
         Raises:
             Exception:
@@ -113,12 +87,12 @@ class ExpressionGreaterEqual(ExpressionOperator):
         """
         if len(element_payload) != 2:
             raise Exception(
-                'ExpressionGreaterEqual/__init__: Only 2 parameters are accepted for operator ">="; element_payload={}'.format(
+                'ExpressionGreaterThan/__init__: Only 2 parameters are accepted for operator ">"; element_payload={}'.format(
                     element_payload
                 )
             )
         ExpressionOperator.__init__(self, element_payload)
-        self.element_id = ELEMENT_ID_GREATER_EQUAL
+        self.element_id = ELEMENT_ID_GREATER_THAN
 
 
 class ExpressionLessEqual(ExpressionOperator):
@@ -148,6 +122,35 @@ class ExpressionLessEqual(ExpressionOperator):
             )
         ExpressionOperator.__init__(self, element_payload)
         self.element_id = ELEMENT_ID_LESS_EQUAL
+
+
+class ExpressionGreaterEqual(ExpressionOperator):
+    """ExpressionGreaterEqual 指示大于等于运算表示"""
+
+    element_id = 0  # type: int
+    element_payload = []  # type: list[ExpressionElement]
+
+    def __init__(self, element_payload):  # type: (list[ExpressionElement]) -> None
+        """初始化并返回一个新的 ExpressionGreaterEqual
+
+        Args:
+            element_payload (list[ExpressionElement]):
+                由 2 个表达式元素 A 和 B 组成的列表。
+                运算 A >= B 的结果即为 ExpressionGreaterEqual 的值
+
+        Raises:
+            Exception:
+                element_payload 只接受长度为 2 的列表。
+                如果长度不满足，则将抛出相应的错误
+        """
+        if len(element_payload) != 2:
+            raise Exception(
+                'ExpressionGreaterEqual/__init__: Only 2 parameters are accepted for operator ">="; element_payload={}'.format(
+                    element_payload
+                )
+            )
+        ExpressionOperator.__init__(self, element_payload)
+        self.element_id = ELEMENT_ID_GREATER_EQUAL
 
 
 class ExpressionEqual(ExpressionOperator):

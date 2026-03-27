@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from typing import Any, Callable
 
 import threading
-from .language.package import CodeParser, CodeRunner
+from .language.package import CodeParser, CodeCompiler, CodeRunner
 from ..storage.base import StringWithHash, StorageManager
 from ..storage.form import FormStorage
 from ..storage.function import FunctionStorage
@@ -102,7 +102,8 @@ class CompileCache:
             return self._cache[md5_hash]
 
         parser = CodeParser(code.string()).parse()
-        runner = CodeRunner(parser.code_block)
+        compiler = CodeCompiler(parser.code_block)
+        runner = CodeRunner(compiler.compile())
 
         self._cache[md5_hash] = runner
         self._sequence.append(md5_hash)
