@@ -49,24 +49,24 @@ from .basic import (
     ExpressionCommand,
     ExpressionFunction,
 )
-from .compute import (
-    ExpressionTimes,
-    ExpressionDivide,
-    ExpressionAdd,
-    ExpressionRemove,
-)
 from .compare import (
     ExpressionOperator,
-    ExpressionGreaterThan,
     ExpressionLessThan,
-    ExpressionGreaterEqual,
+    ExpressionGreaterThan,
     ExpressionLessEqual,
+    ExpressionGreaterEqual,
     ExpressionEqual,
     ExpressionNotEqual,
     ExpressionAnd,
     ExpressionOr,
     ExpressionIn,
     ExpressionInverse,
+)
+from .compute import (
+    ExpressionAdd,
+    ExpressionRemove,
+    ExpressionTimes,
+    ExpressionDivide,
 )
 from ..reader.any_reader import AnyReader
 from ..token.sentence import SentenceReader

@@ -12,7 +12,7 @@ import threading
 from mod.server.extraServerApi import GetEngineCompFactory, GetLevelId
 from .cache import CompileCache
 from .language.package import GameInteract, BuiltInFunction
-from .language.package.opcode.runner import (
+from .language.package.runner.runner import (
     EMPTY_VARIABLES,
     InternalException as RunnerInternalException,
 )
@@ -302,13 +302,18 @@ class GameCodeExecutor:
         executor="",  # type: str
         dimension=0,  # type: int
         position=(0.0, 0.0, 0.0),  # type: tuple[float, float, float]
-        variables=EMPTY_VARIABLES,  # type: dict[str, int | bool | float | str]
+        var_maps=EMPTY_VARIABLES,  # type: dict[str, int | bool | float | str]
         require_return=True,  # type: bool
     ):  # type: (...) -> str | int | float | bool | None
         """
         run_code 在给定的命令执行上下文中执行源代码。
-        您可以通过指定 variables 参数来预先设置变量，
-        并在 run_code 返回值后查看这些变量的最终状态
+        它启动了一个虚拟机，并通过解释的方式运行代码。
+
+        您可以选择预先指定 var_maps 参数，
+        这意味着您将可以预先初始化一些变量。
+
+        给出的 var_maps 在返回前不应修改，
+        但在该函数返回后进行修改是被允许的
 
         Args:
             code (str):
@@ -325,8 +330,8 @@ class GameCodeExecutor:
             position (tuple[float, float, float], optional):
                 命令执行点。
                 默认值为 (0.0, 0.0, 0.0)
-            variables (dict[str, int | bool | float | str], optional):
-                要预先设置的变量。
+            var_maps (dict[str, int | bool | float | str], optional):
+                运行代码前已经初始化的变量。
                 默认值为 EMPTY_VARIABLES
             require_return (bool, optional):
                 目标代码是否必须返回值。
@@ -359,7 +364,7 @@ class GameCodeExecutor:
             runner = self.compile_cache.get_runner(code)
             result = runner.running(
                 require_return=require_return,
-                variables=variables,
+                var_maps=var_maps,
                 interact=self._game_interact,
                 builtins=self._built_in_func,
             )

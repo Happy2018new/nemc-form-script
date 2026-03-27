@@ -340,7 +340,7 @@ class FormFeature:
                             executor=player_id,
                             dimension=dimension,
                             position=position,
-                            variables={"error": str(e)},
+                            var_maps={"error": str(e)},
                             require_return=False,
                         )
                     except Exception:
