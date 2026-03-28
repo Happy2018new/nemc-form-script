@@ -2,9 +2,6 @@ import sys
 import json
 from pathlib import Path
 
-path = "./"
-folder = Path(path)
-
 
 def collect_files(path: str) -> list[Path]:
     files: list[str] = []
@@ -16,7 +13,7 @@ def collect_files(path: str) -> list[Path]:
     return [Path(i) for i in sorted(files)]
 
 
-def remove_comments(code: str) -> str:
+def remove_comments(path: str, code: str) -> str:
     ptr = 0
     ret = ""
 
@@ -61,9 +58,9 @@ def remove_comments(code: str) -> str:
     return ret
 
 
-def process_codes(name: str, code: str) -> str:
+def process_codes(name: str, path: str, code: str) -> str:
     code = "\n".join(code.splitlines())
-    code = remove_comments(code)
+    code = remove_comments(path, code)
 
     temp = code.splitlines()
     temp = [i.strip() for i in temp]
@@ -85,7 +82,7 @@ def process_file(root: Path, path: Path) -> str:
     name = Path(*path.parts[prefix:])
     name = name.with_suffix("").as_posix()
 
-    return process_codes(name, code)
+    return process_codes(name, str(path), code)
 
 
 def main(path: str, out: str) -> None:
