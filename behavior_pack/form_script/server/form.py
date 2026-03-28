@@ -68,7 +68,7 @@ class FormSystem(ServerSystem):
             namespace (str):
                 该表单模组的命名空间
             system_name (str):
-                该表单模组在客户端侧的系统名称
+                该表单模组在服务端侧的系统名称
         """
         ServerSystem.__init__(self, namespace, system_name)
         self._start_init()
@@ -97,7 +97,7 @@ class FormSystem(ServerSystem):
 
     def _start_init(self):  # type: () -> None
         """
-        _start_init 开始初始化本模组在客户端上的各个类。
+        _start_init 开始初始化本模组在服务端上的各个类。
         _start_init 的调用者应确保此函数只会被调用一次
         """
         self.storage_manager = StorageManager()
