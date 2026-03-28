@@ -356,7 +356,7 @@ class Reflect:
             return 0
 
     def remove(self, ptr_a, ptr_b):  # type: (int, int) -> int
-        """rempove 计算 A-B 的值
+        """remove 计算 A-B 的值
 
         Args:
             ptr_a (int): 对象 A 的指针
