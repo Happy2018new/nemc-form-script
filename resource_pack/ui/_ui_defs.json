@@ -1,5 +1,6 @@
 {
     "ui_defs": [
+        "ui/animation.json",
         "ui/command_block_screen.json",
         "ui/form.json",
         "ui/future.json",

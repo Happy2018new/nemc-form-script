@@ -33,6 +33,7 @@ customform onsubmit <name: string> <code: string> [onCodeError: string]
 customform remove <name: string>
 customform save <name: string>
 customform show <executor: target> <position: x y z> <player: target> <name: string>
+customform style <player: target> [speed_40|speed_35|speed_30|speed_25|speed_20|speed_15|speed_10|speed_05|speed_00]
 customform close <player: target>
 ```
 
