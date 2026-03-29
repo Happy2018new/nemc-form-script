@@ -96,6 +96,9 @@ class CustomFunctionHandler:
         Args:
             args (list[dict[str, Any]]):
                 用户通过命令行提供的参数列表
+            dimension (int):
+                在执行自定义函数时需要指定命令执行上下文，
+                因此该字段的用途是指定相应的命令执行维度
 
         Raises:
             Exception:
