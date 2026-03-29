@@ -40,14 +40,14 @@ commandblockoutput <commandBlockPosition: x y z>
 
 
 # 示例及效果
-以[概述](#概述)中的情形为例，我们可以站在命令方块的上方执行下面的指令。<br/>
-然后，您便可以在聊天栏观察到该命令方块的完整输出。
+以[概述](#概述)中的情形为例，我们可以站在命令方块上执行以下指令。<br/>
+然后，您便可以通过打开的表单观察到该命令方块的完整输出。
 
 ```mcfunction
 commandblockoutput ~ ~-1 ~
 ```
 
-<img width="910" height="362" alt="Image" src="../../images/command_block_output_2.png" />
+<img width="450" height="400" alt="Image" src="../../images/command_block_output_2.png" />
 
 这意味着这一行的代码存在错误。
 ```python
