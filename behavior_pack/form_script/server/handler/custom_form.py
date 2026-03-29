@@ -17,6 +17,17 @@ from ..storage.form import (
 from ..storage.form_struct.long import LongForm as LongStorageForm
 from ..storage.form_struct.popup import PopupForm as PopupStorageForm
 from ..storage.form_struct.modal import ModalForm as ModalStorageForm
+from ...packet.packet import (
+    FORM_STYLE_SPEED_40 as FORM_STYLE_ENUM_TYPE_SPEED_40,
+    FORM_STYLE_SPEED_35 as FORM_STYLE_ENUM_TYPE_SPEED_35,
+    FORM_STYLE_SPEED_30 as FORM_STYLE_ENUM_TYPE_SPEED_30,
+    FORM_STYLE_SPEED_25 as FORM_STYLE_ENUM_TYPE_SPEED_25,
+    FORM_STYLE_SPEED_20 as FORM_STYLE_ENUM_TYPE_SPEED_20,
+    FORM_STYLE_SPEED_15 as FORM_STYLE_ENUM_TYPE_SPEED_15,
+    FORM_STYLE_SPEED_10 as FORM_STYLE_ENUM_TYPE_SPEED_10,
+    FORM_STYLE_SPEED_05 as FORM_STYLE_ENUM_TYPE_SPEED_05,
+    FORM_STYLE_SPEED_00 as FORM_STYLE_ENUM_TYPE_SPEED_00,
+)
 
 SUB_COMMAND_TYPE_ADD = 1
 SUB_COMMAND_TYPE_LIST = 2
@@ -25,11 +36,22 @@ SUB_COMMAND_TYPE_ONSUBMIT = 4
 SUB_COMMAND_TYPE_REMOVE = 5
 SUB_COMMAND_TYPE_SAVE = 6
 SUB_COMMAND_TYPE_SHOW = 7
-SUB_COMMAND_TYPE_CLOSE = 8
+SUB_COMMAND_TYPE_STYLE = 8
+SUB_COMMAND_TYPE_CLOSE = 9
 
 FORM_RAW_TYPE_LONG = "long"
 FORM_RAW_TYPE_POPUP = "popup"
 FORM_RAW_TYPE_MODAL = "modal"
+
+FORM_STYLE_RAW_TYPE_SPEED_40 = "speed_40"
+FORM_STYLE_RAW_TYPE_SPEED_35 = "speed_35"
+FORM_STYLE_RAW_TYPE_SPEED_30 = "speed_30"
+FORM_STYLE_RAW_TYPE_SPEED_25 = "speed_25"
+FORM_STYLE_RAW_TYPE_SPEED_20 = "speed_20"
+FORM_STYLE_RAW_TYPE_SPEED_15 = "speed_15"
+FORM_STYLE_RAW_TYPE_SPEED_10 = "speed_10"
+FORM_STYLE_RAW_TYPE_SPEED_05 = "speed_05"
+FORM_STYLE_RAW_TYPE_SPEED_00 = "speed_00"
 
 
 class CustomFormHandler:
@@ -80,6 +102,8 @@ class CustomFormHandler:
                 args["return_msg_key"] = self.handle_save(cmdargs)
             elif variant == SUB_COMMAND_TYPE_SHOW:
                 args["return_msg_key"] = self.handle_show(cmdargs, dimension)
+            elif variant == SUB_COMMAND_TYPE_STYLE:
+                args["return_msg_key"] = self.handle_style(cmdargs)
             elif variant == SUB_COMMAND_TYPE_CLOSE:
                 args["return_msg_key"] = self.handle_close(cmdargs)
         except Exception as e:
@@ -390,6 +414,66 @@ class CustomFormHandler:
         )
 
         return "commands.customformshow.success"
+
+    def handle_style(self, args):  # type: (list[dict[str, Any]]) -> str
+        """handle_style 处理 style 子命令
+
+        Args:
+            args (list[dict[str, Any]]):
+                用户通过命令行提供的参数列表
+
+        Raises:
+            Exception:
+                如果出现错误，则将抛出
+
+        Returns:
+            str: 命令执行输出
+        """
+        assert self.feature is not None
+
+        player = args[1]["value"]  # type: tuple[str, ...] | None
+        form_style = args[2]["value"]  # type: str
+
+        if player is None:
+            raise Exception("commands.generic.noTargetMatch")
+        if form_style == FORM_STYLE_RAW_TYPE_SPEED_40:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_40
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_35:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_35
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_30:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_30
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_25:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_25
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_20:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_20
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_15:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_15
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_10:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_10
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_05:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_05
+            )
+        elif form_style == FORM_STYLE_RAW_TYPE_SPEED_00:
+            _ = self.feature.request_update_form_style(
+                list(player), FORM_STYLE_ENUM_TYPE_SPEED_00
+            )
+
+        return "commands.customformstyle.success"
 
     def handle_close(self, args):  # type: (list[dict[str, Any]]) -> str
         """handle_close 处理 close 子命令

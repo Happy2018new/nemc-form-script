@@ -137,6 +137,35 @@
     ],
     "args8": [
         {
+            "name": "style",
+            "type": "enum",
+            "options": [
+                "style"
+            ]
+        },
+        {
+            "name": "player",
+            "type": "target"
+        },
+        {
+            "name": "formStyle",
+            "type": "enum_short",
+            "options": [
+                "speed_40",
+                "speed_35",
+                "speed_30",
+                "speed_25",
+                "speed_20",
+                "speed_15",
+                "speed_10",
+                "speed_05",
+                "speed_00"
+            ],
+            "default": "speed_40"
+        }
+    ],
+    "args9": [
+        {
             "name": "close",
             "type": "enum",
             "options": [

@@ -5,6 +5,7 @@ from .form_system.base import BaseFormSystem
 from .form_system.client import ClientFormSystem
 from .form_system.engine import EngineFormSystem
 from ..packet.packet import (
+    PACKET_NAME_UPDATE_FORM_STYLE,
     PACKET_NAME_MODAL_FORM_REQUEST,
     PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
 )
@@ -65,6 +66,11 @@ class FormSystem(BaseFormSystem):
             self.engine_form_system.on_pop_screen,
         )
 
+        self.listen_form_event(
+            PACKET_NAME_UPDATE_FORM_STYLE,
+            self.client_form_system,
+            self.client_form_system.on_update_form_style,
+        )
         self.listen_form_event(
             PACKET_NAME_MODAL_FORM_REQUEST,
             self.client_form_system,

@@ -20,12 +20,22 @@ from ..form_type.other.popup import PopupForm
 from ..form_type.modal.modal import ModalForm
 from ...packet.option import OptionInt, OptionString
 from ...packet.packet import (
+    PACKET_NAME_MODAL_FORM_RESPONSE,
+    FORM_STYLE_SPEED_40,
+    FORM_STYLE_SPEED_35,
+    FORM_STYLE_SPEED_30,
+    FORM_STYLE_SPEED_25,
+    FORM_STYLE_SPEED_20,
+    FORM_STYLE_SPEED_15,
+    FORM_STYLE_SPEED_10,
+    FORM_STYLE_SPEED_05,
+    FORM_STYLE_SPEED_00,
+    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
+    MODAL_FORM_CANCEL_REASON_USER_BUSY,
+    UpdateFormStyle,
     ModalFormRequest,
     ModalFormResponse,
     ClientBoundCloseForm,
-    PACKET_NAME_MODAL_FORM_RESPONSE,
-    MODAL_FORM_CANCEL_REASON_USER_CLOSED,
-    MODAL_FORM_CANCEL_REASON_USER_BUSY,
 )
 from mod.client.extraClientApi import (
     GetEngineCompFactory,
@@ -58,6 +68,48 @@ class ClientFormSystem:
         self.base = base
         game_comp = GetEngineCompFactory().CreateGame(GetLevelId())
         game_comp.AddRepeatedTimer(0.05, self._pending_request_poller)  # type: ignore
+
+    def _ui_name_by_style(self, style):  # type: (int) -> str
+        """
+        _ui_name_by_style 通过表单的
+        样式获取该表单对应的屏幕定义名
+
+        Args:
+            style (int):
+                表单的样式枚举值。应只可能是以下几种之一。
+                    - FORM_STYLE_SPEED_40
+                    - FORM_STYLE_SPEED_35
+                    - FORM_STYLE_SPEED_30
+                    - FORM_STYLE_SPEED_25
+                    - FORM_STYLE_SPEED_20
+                    - FORM_STYLE_SPEED_15
+                    - FORM_STYLE_SPEED_10
+                    - FORM_STYLE_SPEED_05
+                    - FORM_STYLE_SPEED_00
+
+        Returns:
+            str: 目标样式对应的屏幕定义名
+        """
+        if style == FORM_STYLE_SPEED_40:
+            return "form_40"
+        elif style == FORM_STYLE_SPEED_35:
+            return "form_35"
+        elif style == FORM_STYLE_SPEED_30:
+            return "form_30"
+        elif style == FORM_STYLE_SPEED_25:
+            return "form_25"
+        elif style == FORM_STYLE_SPEED_20:
+            return "form_20"
+        elif style == FORM_STYLE_SPEED_15:
+            return "form_15"
+        elif style == FORM_STYLE_SPEED_10:
+            return "form_10"
+        elif style == FORM_STYLE_SPEED_05:
+            return "form_05"
+        elif style == FORM_STYLE_SPEED_00:
+            return "form_00"
+        else:
+            return "form_40"
 
     def _check_is_popping(self):  # type: () -> bool
         """_check_is_popping 检查表单 UI 是否正在被弹出
@@ -112,7 +164,7 @@ class ClientFormSystem:
         top_screen_name = top_ui_node.GetScreenName()
         if top_screen_name == "hud.hud_screen":
             return BUSY_STATES_USER_AVAILABLE
-        if top_screen_name == "form.form_main_screen" and pending:
+        if top_screen_name.startswith("form.form_main_screen") and pending:
             return BUSY_STATES_NEED_WAITING
         return BUSY_STATES_USER_BUSY
 
@@ -145,7 +197,9 @@ class ClientFormSystem:
             if busy_states == BUSY_STATES_USER_AVAILABLE:
                 self.base.states = STATES_SCREEN_IS_PUSHING
                 self.base.server_pk, self.base.pending_pk = self.base.pending_pk, None
-                self.base.ui_node = PushScreen("FormScript", "form", {"isHud": 1})
+                self.base.ui_node = PushScreen(
+                    "FormScript", self._ui_name_by_style(self.base.style), {"isHud": 1}
+                )
                 return
 
             resp = ModalFormResponse(
@@ -157,6 +211,26 @@ class ClientFormSystem:
                 resp.marshal(),
             )
             self.base.pending_pk = None
+
+    def on_update_form_style(self, args):  # type: (dict[str, Any]) -> None
+        """
+        on_update_form_style 处理
+        来自服务器的表单样式更新请求
+
+        Args:
+            args (dict[str, Any]):
+                数据包 UpdateFormStyle 的负载
+        """
+        if self.base is None:
+            return
+        if self.base.locker is None:
+            return
+
+        pk = UpdateFormStyle()
+        pk.unmarshal(args)
+
+        with self.base.locker:
+            self.base.style = pk.form_style
 
     def on_modal_form_request(self, args):  # type: (dict[str, Any]) -> None
         """
@@ -190,7 +264,9 @@ class ClientFormSystem:
                     pk, self.base.pending_pk = self.base.pending_pk, pk
                 self.base.states = STATES_SCREEN_IS_PUSHING
                 self.base.server_pk = pk
-                self.base.ui_node = PushScreen("FormScript", "form", {"isHud": 1})
+                self.base.ui_node = PushScreen(
+                    "FormScript", self._ui_name_by_style(self.base.style), {"isHud": 1}
+                )
                 return
 
             resp = ModalFormResponse(
@@ -222,20 +298,19 @@ class ClientFormSystem:
 
         with self.base.locker:
             forms_id = []  # type: list[int]
+            top_ui_name = GetTopUI()  # type: str | None
 
             if self.base.pending_pk is not None:
                 forms_id.append(self.base.pending_pk.form_id)
                 self.base.pending_pk = None
 
-            if (
-                GetTopUI() == "form_main_screen"
-                and self.base.states == STATES_SCREEN_IS_SHOWING
-            ):
-                if self.base.server_pk is not None:
-                    forms_id.append(self.base.server_pk.form_id)
-                    self.base.server_pk = None
-                self.base.states = STATES_SCREEN_FORCE_POPPING
-                PopScreen()
+            if self.base.states == STATES_SCREEN_IS_SHOWING and top_ui_name is not None:
+                if top_ui_name.startswith("form_main_screen"):
+                    if self.base.server_pk is not None:
+                        forms_id.append(self.base.server_pk.form_id)
+                        self.base.server_pk = None
+                    self.base.states = STATES_SCREEN_FORCE_POPPING
+                    PopScreen()
 
             for form_id in forms_id:
                 self.base.NotifyToServer(

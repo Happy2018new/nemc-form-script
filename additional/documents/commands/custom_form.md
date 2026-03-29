@@ -34,10 +34,14 @@
   - [备注](#备注-4)
   - [特别注意](#特别注意)
   - [示例](#示例-6)
-- [强制关闭表单](#强制关闭表单)
+- [更新表单样式](#更新表单样式)
   - [语法](#语法-7)
   - [备注](#备注-5)
   - [示例](#示例-7)
+- [强制关闭表单](#强制关闭表单)
+  - [语法](#语法-8)
+  - [备注](#备注-6)
+  - [示例](#示例-8)
 
 
 
@@ -52,6 +56,7 @@ customform onsubmit <name: string> <code: string> [onCodeError: string]
 customform remove <name: string>
 customform save <name: string>
 customform show <executor: target> <position: x y z> <player: target> <name: string>
+customform style <player: target> [speed_40|speed_35|speed_30|speed_25|speed_20|speed_15|speed_10|speed_05|speed_00]
 customform close <player: target>
 ```
 
@@ -387,6 +392,61 @@ customform show <executor: target> <position: x y z> <player: target> <name: str
 
 ```mcfunction
 customform show @e[tag=abc] ~ ~ ~ @a[tag=ppt] a0
+```
+
+
+
+
+
+# 更新表单样式
+## 语法
+更新一个或多个玩家的表单样式。
+```mcfunction
+customform style <player: target> [speed_40|speed_35|speed_30|speed_25|speed_20|speed_15|speed_10|speed_05|speed_00]
+```
+
+| 参数                                        | 数据类型   | 备注 | 解释                     |
+| ------------------------------------------- | ---------- | ---- | ------------------------ |
+| <player: target>                            | 目标选择器 | 必填 | 指示要更新表单样式的玩家 |
+| [speed_40        \| ...        \| speed_00] | 枚举值     | 选填 | 要设置的表单样式         |
+
+
+| 枚举值   | 含义                                   |
+| -------- | -------------------------------------- |
+| speed_40 | 设置表单的动画速度为 0.40 秒（默认值） |
+| speed_35 | 设置表单的动画速度为 0.35 秒           |
+| speed_30 | 设置表单的动画速度为 0.30 秒           |
+| speed_25 | 设置表单的动画速度为 0.25 秒           |
+| speed_20 | 设置表单的动画速度为 0.20 秒           |
+| speed_15 | 设置表单的动画速度为 0.15 秒           |
+| speed_10 | 设置表单的动画速度为 0.10 秒           |
+| speed_05 | 设置表单的动画速度为 0.05 秒           |
+| speed_00 | 设置表单的动画速度为 0.00 秒           |
+
+
+
+## 备注
+- 如果不填写 `枚举值`，则会重置表单样式为默认值
+- 该指令的设置是一次性的，玩家重进游戏后恢复为默认值
+
+
+
+## 示例
+```mcfunction
+# 将所有在线玩家的表单动画速度设置为 0.15 秒
+customform style @a speed_15
+
+# 将 Steve 的表单动画速度设置为 0.40 秒
+customform style Steve speed_40
+
+# 将 Alexis 的表单动画速度设置为 0.05 秒
+customform style Alexis speed_05
+
+# 将最近一个玩家的表单动画速度设置为 0.00 秒
+customform style @p speed_00
+
+# 重置所有在线玩家的表单样式为默认值
+customform style @a
 ```
 
 

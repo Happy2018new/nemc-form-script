@@ -14,6 +14,7 @@ commands.systemevent.description=监听游戏事件。
 commands.compilecache.description=管理编译缓冲区。
 commands.commandblockoutput.description=查询命令方块的完整输出。
 commands.customformshow.success=已向目标玩家发送表单请求
+commands.customformstyle.success=已向目标玩家发送表单样式更新请求
 commands.customformclose.success=已试图清除目标玩家已打开的所有表单
 commands.editlongform.formnotmatch=目标表单不是长表单
 commands.editlabel.elementnotheader=目标元素不是大字文本
