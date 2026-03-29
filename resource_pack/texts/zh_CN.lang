@@ -72,3 +72,5 @@ commands.editstepslidertext.success=已成功设置显式步进滑块的标题�
 commands.editstepslidertooltip.success=已成功设置显式步进滑块的灯泡提示文本
 commands.compilecachecompile.success=已成功预编译目标代码
 commands.compilecacheset.success=已更新预编译缓冲区的最大容量
+commands.commandblockoutput.executorisblock=请确保命令执行者是一个玩家
+commands.commandblockoutput.success=已成功向目标玩家打开表单以显示命令方块的输出
