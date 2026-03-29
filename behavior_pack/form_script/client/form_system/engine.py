@@ -29,10 +29,10 @@ from ..form_type.base import (
 )
 from ...packet.option import OptionInt
 from ...packet.packet import (
-    ModalFormResponse,
     PACKET_NAME_MODAL_FORM_RESPONSE,
     MODAL_FORM_CANCEL_REASON_USER_CLOSED,
     MODAL_FORM_CANCEL_REASON_USER_BUSY,
+    ModalFormResponse,
 )
 from mod.client.extraClientApi import (
     GetClientSystemCls,
@@ -121,10 +121,14 @@ class EngineFormSystem:
             bool:
                 args 所对应的屏幕是否是由表单系统产生
         """
-        if "screenDef" in args and args["screenDef"] != "form.form_main_screen":
-            return False
-        if "screenName" in args and args["screenName"] != "form_main_screen":
-            return False
+        if "screenDef" in args:
+            screen_def = args["screenDef"]  # type: str
+            if not screen_def.startswith("form.form_main_screen"):
+                return False
+        if "screenName" in args:
+            screen_name = args["screenName"]  # type: str
+            if not screen_name.startswith("form_main_screen"):
+                return False
         return True
 
     def on_ui_init_finished(self, _):  # type: (dict[str, Any]) -> None
@@ -143,12 +147,13 @@ class EngineFormSystem:
             return
 
         with base.locker:
-            RegisterUI(
-                "FormScript",
-                "form",
-                "form_script.client.node.FormScreenNode",
-                "form.form_main_screen",
-            )
+            for i in ["40", "35", "30", "25", "20", "15", "10", "05", "00"]:
+                RegisterUI(
+                    "FormScript",
+                    "form" + "_" + i,
+                    "form_script.client.node.FormScreenNode",
+                    "form.form_main_screen" + "_" + i,
+                )
 
             if base.server_pk is not None:
                 if (

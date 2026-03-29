@@ -1,14 +1,4 @@
 {
-    "form_main_screen@common.base_screen": {
-        "$screen_content": "form.main_screen_content",
-        "button_mappings": [
-            {
-                "from_button_id": "button.menu_cancel",
-                "mapping_type": "global",
-                "to_button_id": "button.menu_exit"
-            }
-        ]
-    },
     "main_screen_content": {
         "type": "panel",
         "size": [
@@ -26,6 +16,147 @@
                 }
             }
         ]
+    },
+    "form_main_screen@common.base_screen": {
+        "$screen_content": "form.main_screen_content",
+        "button_mappings": [
+            {
+                "from_button_id": "button.menu_cancel",
+                "mapping_type": "global",
+                "to_button_id": "button.menu_exit"
+            }
+        ]
+    },
+    "form_main_screen_40@form.form_main_screen": {},
+    "form_main_screen_35@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_35",
+            "@animation.form_aim_1_35",
+            "@animation.form_aim_2_35",
+            "@animation.form_aim_3_35",
+            "@animation.form_aim_4_35",
+            "@animation.form_aim_5_35",
+            "@animation.form_aim_6_35",
+            "@animation.form_aim_7_35"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_35",
+            "@animation.form_aim_9_35",
+            "@animation.form_aim_10_35",
+            "@animation.form_aim_11_35"
+        ]
+    },
+    "form_main_screen_30@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_30",
+            "@animation.form_aim_1_30",
+            "@animation.form_aim_2_30",
+            "@animation.form_aim_3_30",
+            "@animation.form_aim_4_30",
+            "@animation.form_aim_5_30",
+            "@animation.form_aim_6_30",
+            "@animation.form_aim_7_30"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_30",
+            "@animation.form_aim_9_30",
+            "@animation.form_aim_10_30",
+            "@animation.form_aim_11_30"
+        ]
+    },
+    "form_main_screen_25@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_25",
+            "@animation.form_aim_1_25",
+            "@animation.form_aim_2_25",
+            "@animation.form_aim_3_25",
+            "@animation.form_aim_4_25",
+            "@animation.form_aim_5_25",
+            "@animation.form_aim_6_25",
+            "@animation.form_aim_7_25"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_25",
+            "@animation.form_aim_9_25",
+            "@animation.form_aim_10_25",
+            "@animation.form_aim_11_25"
+        ]
+    },
+    "form_main_screen_20@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_20",
+            "@animation.form_aim_1_20",
+            "@animation.form_aim_2_20",
+            "@animation.form_aim_3_20",
+            "@animation.form_aim_4_20",
+            "@animation.form_aim_5_20",
+            "@animation.form_aim_6_20",
+            "@animation.form_aim_7_20"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_20",
+            "@animation.form_aim_9_20",
+            "@animation.form_aim_10_20",
+            "@animation.form_aim_11_20"
+        ]
+    },
+    "form_main_screen_15@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_15",
+            "@animation.form_aim_1_15",
+            "@animation.form_aim_2_15",
+            "@animation.form_aim_3_15",
+            "@animation.form_aim_4_15",
+            "@animation.form_aim_5_15",
+            "@animation.form_aim_6_15",
+            "@animation.form_aim_7_15"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_15",
+            "@animation.form_aim_9_15",
+            "@animation.form_aim_10_15",
+            "@animation.form_aim_11_15"
+        ]
+    },
+    "form_main_screen_10@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_10",
+            "@animation.form_aim_1_10",
+            "@animation.form_aim_2_10",
+            "@animation.form_aim_3_10",
+            "@animation.form_aim_4_10",
+            "@animation.form_aim_5_10",
+            "@animation.form_aim_6_10",
+            "@animation.form_aim_7_10"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_10",
+            "@animation.form_aim_9_10",
+            "@animation.form_aim_10_10",
+            "@animation.form_aim_11_10"
+        ]
+    },
+    "form_main_screen_05@form.form_main_screen": {
+        "$screen_animations": [
+            "@animation.form_aim_0_05",
+            "@animation.form_aim_1_05",
+            "@animation.form_aim_2_05",
+            "@animation.form_aim_3_05",
+            "@animation.form_aim_4_05",
+            "@animation.form_aim_5_05",
+            "@animation.form_aim_6_05",
+            "@animation.form_aim_7_05"
+        ],
+        "$background_animations": [
+            "@animation.form_aim_8_05",
+            "@animation.form_aim_9_05",
+            "@animation.form_aim_10_05",
+            "@animation.form_aim_11_05"
+        ]
+    },
+    "form_main_screen_00@form.form_main_screen": {
+        "$screen_animations": [],
+        "$background_animations": []
     },
     "namespace": "form"
 }

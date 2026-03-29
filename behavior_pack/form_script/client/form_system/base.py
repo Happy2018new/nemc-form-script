@@ -8,7 +8,10 @@ if TYPE_CHECKING:
 
 import threading
 from ..form_type.base import BaseForm
-from ...packet.packet import ModalFormRequest
+from ...packet.packet import (
+    FORM_STYLE_SPEED_40,
+    ModalFormRequest,
+)
 from mod.client.extraClientApi import (
     GetEngineNamespace,
     GetEngineSystemName,
@@ -31,6 +34,7 @@ class BaseFormSystem(ClientSystem):
     BaseFormSystem 是表单系统在客户端侧的基本实现
     """
 
+    style = 0  # type: int
     states = 0  # type: int
     locker = None  # type: threading.Lock | None
     ui_node = None  # type: ScreenNode | None
@@ -48,6 +52,7 @@ class BaseFormSystem(ClientSystem):
                 该表单模组在客户端侧的系统名称
         """
         ClientSystem.__init__(self, namespace, system_name)
+        self.style = FORM_STYLE_SPEED_40
         self.states = STATES_SYSTEM_INITIALIZING
         self.locker = threading.Lock()
         self.ui_node = None

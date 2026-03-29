@@ -1,0 +1,255 @@
+{
+    "form_aim_0_35@common.screen_exit_animation_push_offset": {
+        "duration": 0.35
+    },
+    "form_aim_1_35@common.screen_exit_animation_pop_offset": {
+        "duration": 0.35
+    },
+    "form_aim_2_35@common.screen_entrance_animation_push_offset": {
+        "duration": 0.35
+    },
+    "form_aim_3_35@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.35
+    },
+    "form_aim_4_35@common.screen_exit_animation_push_fade": {
+        "duration": 0.35
+    },
+    "form_aim_5_35@common.screen_exit_animation_pop_fade": {
+        "duration": 0.35
+    },
+    "form_aim_6_35@common.screen_entrance_animation_push_fade": {
+        "duration": 0.35
+    },
+    "form_aim_7_35@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.35
+    },
+    "form_aim_8_35@common.screen_exit_animation_push_alpha": {
+        "duration": 0.35
+    },
+    "form_aim_9_35@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.35
+    },
+    "form_aim_10_35@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.35
+    },
+    "form_aim_11_35@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.35
+    },
+    "form_aim_0_30@common.screen_exit_animation_push_offset": {
+        "duration": 0.3
+    },
+    "form_aim_1_30@common.screen_exit_animation_pop_offset": {
+        "duration": 0.3
+    },
+    "form_aim_2_30@common.screen_entrance_animation_push_offset": {
+        "duration": 0.3
+    },
+    "form_aim_3_30@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.3
+    },
+    "form_aim_4_30@common.screen_exit_animation_push_fade": {
+        "duration": 0.3
+    },
+    "form_aim_5_30@common.screen_exit_animation_pop_fade": {
+        "duration": 0.3
+    },
+    "form_aim_6_30@common.screen_entrance_animation_push_fade": {
+        "duration": 0.3
+    },
+    "form_aim_7_30@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.3
+    },
+    "form_aim_8_30@common.screen_exit_animation_push_alpha": {
+        "duration": 0.3
+    },
+    "form_aim_9_30@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.3
+    },
+    "form_aim_10_30@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.3
+    },
+    "form_aim_11_30@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.3
+    },
+    "form_aim_0_25@common.screen_exit_animation_push_offset": {
+        "duration": 0.25
+    },
+    "form_aim_1_25@common.screen_exit_animation_pop_offset": {
+        "duration": 0.25
+    },
+    "form_aim_2_25@common.screen_entrance_animation_push_offset": {
+        "duration": 0.25
+    },
+    "form_aim_3_25@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.25
+    },
+    "form_aim_4_25@common.screen_exit_animation_push_fade": {
+        "duration": 0.25
+    },
+    "form_aim_5_25@common.screen_exit_animation_pop_fade": {
+        "duration": 0.25
+    },
+    "form_aim_6_25@common.screen_entrance_animation_push_fade": {
+        "duration": 0.25
+    },
+    "form_aim_7_25@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.25
+    },
+    "form_aim_8_25@common.screen_exit_animation_push_alpha": {
+        "duration": 0.25
+    },
+    "form_aim_9_25@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.25
+    },
+    "form_aim_10_25@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.25
+    },
+    "form_aim_11_25@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.25
+    },
+    "form_aim_0_20@common.screen_exit_animation_push_offset": {
+        "duration": 0.2
+    },
+    "form_aim_1_20@common.screen_exit_animation_pop_offset": {
+        "duration": 0.2
+    },
+    "form_aim_2_20@common.screen_entrance_animation_push_offset": {
+        "duration": 0.2
+    },
+    "form_aim_3_20@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.2
+    },
+    "form_aim_4_20@common.screen_exit_animation_push_fade": {
+        "duration": 0.2
+    },
+    "form_aim_5_20@common.screen_exit_animation_pop_fade": {
+        "duration": 0.2
+    },
+    "form_aim_6_20@common.screen_entrance_animation_push_fade": {
+        "duration": 0.2
+    },
+    "form_aim_7_20@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.2
+    },
+    "form_aim_8_20@common.screen_exit_animation_push_alpha": {
+        "duration": 0.2
+    },
+    "form_aim_9_20@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.2
+    },
+    "form_aim_10_20@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.2
+    },
+    "form_aim_11_20@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.2
+    },
+    "form_aim_0_15@common.screen_exit_animation_push_offset": {
+        "duration": 0.15
+    },
+    "form_aim_1_15@common.screen_exit_animation_pop_offset": {
+        "duration": 0.15
+    },
+    "form_aim_2_15@common.screen_entrance_animation_push_offset": {
+        "duration": 0.15
+    },
+    "form_aim_3_15@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.15
+    },
+    "form_aim_4_15@common.screen_exit_animation_push_fade": {
+        "duration": 0.15
+    },
+    "form_aim_5_15@common.screen_exit_animation_pop_fade": {
+        "duration": 0.15
+    },
+    "form_aim_6_15@common.screen_entrance_animation_push_fade": {
+        "duration": 0.15
+    },
+    "form_aim_7_15@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.15
+    },
+    "form_aim_8_15@common.screen_exit_animation_push_alpha": {
+        "duration": 0.15
+    },
+    "form_aim_9_15@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.15
+    },
+    "form_aim_10_15@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.15
+    },
+    "form_aim_11_15@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.15
+    },
+    "form_aim_0_10@common.screen_exit_animation_push_offset": {
+        "duration": 0.1
+    },
+    "form_aim_1_10@common.screen_exit_animation_pop_offset": {
+        "duration": 0.1
+    },
+    "form_aim_2_10@common.screen_entrance_animation_push_offset": {
+        "duration": 0.1
+    },
+    "form_aim_3_10@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.1
+    },
+    "form_aim_4_10@common.screen_exit_animation_push_fade": {
+        "duration": 0.1
+    },
+    "form_aim_5_10@common.screen_exit_animation_pop_fade": {
+        "duration": 0.1
+    },
+    "form_aim_6_10@common.screen_entrance_animation_push_fade": {
+        "duration": 0.1
+    },
+    "form_aim_7_10@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.1
+    },
+    "form_aim_8_10@common.screen_exit_animation_push_alpha": {
+        "duration": 0.1
+    },
+    "form_aim_9_10@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.1
+    },
+    "form_aim_10_10@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.1
+    },
+    "form_aim_11_10@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.1
+    },
+    "form_aim_0_05@common.screen_exit_animation_push_offset": {
+        "duration": 0.05
+    },
+    "form_aim_1_05@common.screen_exit_animation_pop_offset": {
+        "duration": 0.05
+    },
+    "form_aim_2_05@common.screen_entrance_animation_push_offset": {
+        "duration": 0.05
+    },
+    "form_aim_3_05@common.screen_entrance_animation_pop_offset": {
+        "duration": 0.05
+    },
+    "form_aim_4_05@common.screen_exit_animation_push_fade": {
+        "duration": 0.05
+    },
+    "form_aim_5_05@common.screen_exit_animation_pop_fade": {
+        "duration": 0.05
+    },
+    "form_aim_6_05@common.screen_entrance_animation_push_fade": {
+        "duration": 0.05
+    },
+    "form_aim_7_05@common.screen_entrance_animation_pop_fade": {
+        "duration": 0.05
+    },
+    "form_aim_8_05@common.screen_exit_animation_push_alpha": {
+        "duration": 0.05
+    },
+    "form_aim_9_05@common.screen_exit_animation_pop_alpha": {
+        "duration": 0.05
+    },
+    "form_aim_10_05@common.screen_entrance_animation_push_alpha": {
+        "duration": 0.05
+    },
+    "form_aim_11_05@common.screen_entrance_animation_pop_alpha": {
+        "duration": 0.05
+    },
+    "namespace": "animation"
+}

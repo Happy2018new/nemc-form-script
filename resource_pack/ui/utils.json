@@ -1,5 +1,4 @@
 {
-    "namespace": "utils",
     "slider_step": {
         "type": "image",
         "size": [
@@ -17,5 +16,6 @@
     },
     "slider_step_progress_hover@utils.slider_step": {
         "texture": "textures/ui/slider_step_progress_hover"
-    }
+    },
+    "namespace": "utils"
 }
