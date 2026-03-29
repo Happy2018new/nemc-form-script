@@ -7,10 +7,21 @@ if TYPE_CHECKING:
 
 from .option import OptionString, OptionInt
 
+PACKET_NAME_UPDATE_FORM_STYLE = "packet.UpdateFormStyle"
 PACKET_NAME_MODAL_FORM_REQUEST = "packet.ModalFormRequest"
 PACKET_NAME_MODAL_FORM_RESPONSE = "packet.ModalFormResponse"
 PACKET_NAME_CLIENT_BOUND_CLOSE_FORM = "packet.ClientBoundCloseForm"
 PACKET_NAME_CUSTOM_FUNCTION_CALL = "packet.CustomFunctionCall"
+
+FORM_STYLE_SPEED_40 = 0
+FORM_STYLE_SPEED_35 = 1
+FORM_STYLE_SPEED_30 = 2
+FORM_STYLE_SPEED_25 = 3
+FORM_STYLE_SPEED_20 = 4
+FORM_STYLE_SPEED_15 = 5
+FORM_STYLE_SPEED_10 = 6
+FORM_STYLE_SPEED_05 = 7
+FORM_STYLE_SPEED_00 = 8
 
 MODAL_FORM_CANCEL_REASON_USER_CLOSED = 0
 MODAL_FORM_CANCEL_REASON_USER_BUSY = 1
@@ -55,6 +66,65 @@ class BasePacket:
             BasePacket: The packet itself.
         """
         _ = data
+        return self
+
+
+class UpdateFormStyle(BasePacket):
+    """
+    UpdateFormStyle is sent by the server to
+    update the form style in the client side.
+    """
+
+    form_style = 0  # type: int
+
+    def __init__(self, form_style=0):  # type: (int) -> None
+        """Returns a new UpdateFormStyle packet.
+
+        Args:
+            form_style (int, optional):
+                The new style the form should be.
+                It is one of the constants above.
+                Defaults to 0.
+        """
+        self.form_style = form_style
+
+    def packet_name(self):  # type: () -> str
+        """packet_name returns the name of current packet.
+
+        Returns:
+            str: The name of current packet.
+        """
+        return PACKET_NAME_UPDATE_FORM_STYLE
+
+    def marshal(self):  # type: () -> dict[str, Any]
+        """
+        marshal encode current packet
+        to its JSON representation.
+
+        Returns:
+            dict[str, Any]: The JSON representation of current packet.
+        """
+        return {"FormStyle": self.form_style}
+
+    def unmarshal(self, data):  # type: (Any) -> UpdateFormStyle
+        """
+        unmarshal decodes current packet
+        from its JSON representation.
+
+        Args:
+            data (Any): The given data to decode.
+                        Should be a dict.
+
+        Returns:
+            UpdateFormStyle: The packet itself.
+        """
+        self.form_style = 0
+        if not isinstance(data, dict):
+            return self
+
+        form_style = data.get("FormStyle", 0)
+        if not isinstance(form_style, bool) and isinstance(form_style, int):
+            self.form_style = form_style
         return self
 
 
@@ -274,7 +344,7 @@ class ClientBoundCloseForm(BasePacket):
 
 class CustomFunctionCall(BasePacket):
     """
-    CustomFunctionCall is a custom packet that send by the client to
+    CustomFunctionCall is a custom packet that sent by the client to
     calling a custom function which already registered in server side.
     """
 
