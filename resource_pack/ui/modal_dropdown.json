@@ -6,7 +6,6 @@
             "100%",
             "100%c"
         ],
-        "layer": 2,
         "controls": [
             {
                 "dropdown@future.option_dropdown": {
