@@ -20,7 +20,7 @@ from .parser import (
     parse_json_to_popup_form,
     parse_json_to_modal_form,
 )
-from ..utils import get_base_path, input_mode_is_touch
+from ..utils import input_mode_is_touch, get_base_path
 from ..form_type.base import (
     TRIGGER_TYPE_CLICK,
     TRIGGER_TYPE_RELEASE,

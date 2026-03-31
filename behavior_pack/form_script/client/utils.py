@@ -4,7 +4,7 @@ from __future__ import division
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from mod.client.extraClientApi import ScreenNode
-    from mod.client.ui.controls.baseUIControl import BaseUIControl
+    from mod.client.ui.controls.baseUIControl import BaseUIControl, ScrollViewUIControl
 
 from mod.client.extraClientApi import (
     GetEngineCompFactory,
@@ -119,23 +119,24 @@ def get_base_path():  # type: () -> str
     )
 
 
-def get_scroll_view_background(
+def get_scroll_view_ui_control(
     node, path
-):  # type: (ScreenNode, str) -> BaseUIControl | None
+):  # type: (ScreenNode, str) -> ScrollViewUIControl | None
     """
-    get_scroll_view_background 预期 path 所指示的控件
-    下包含 scroll_touch 或 scroll_mouse 子节点，并获取
-    该子节点下相应 Scroll View 的 Content 节点。
+    get_scroll_view_ui_control 预期 path 所指示的控件下
+    包含 scroll_touch 或 scroll_mouse 子节点，
+    并获取该子节点下相应 Scroll View 的滚动控制控件。
 
-    如果给定的 path 不满足预期，或相应的 Content 节点未找到，
-    那么 get_scroll_view_background 视作失败，那么返回 None
+    如果给定的 path 不满足预期，或相应的滚动控制控件未找到，
+    那么 get_scroll_view_ui_control 视作失败，那么返回 None
 
     Args:
         node (ScreenNode): 顶层 UI 的 ScreenNode 实例
         path (str): 被预期的控件的绝对路径
 
     Returns:
-        BaseUIControl | None: 相应 Scroll View 的 Content 节点
+        ScrollViewUIControl | None:
+            相应 Scroll View 的 Scroll Control 实例
     """
     parent = node.GetBaseUIControl(path)
     if parent is None:
@@ -150,6 +151,32 @@ def get_scroll_view_background(
     child = parent.GetChildByPath("/scrolling_panel")
     if child is not None:
         parent = child
+
+    return parent.asScrollView()
+
+
+def get_scroll_view_background(
+    node, path
+):  # type: (ScreenNode, str) -> BaseUIControl | None
+    """
+    get_scroll_view_background 预期 path 所指示的控件下
+    包含 scroll_touch 或 scroll_mouse 子节点，
+    并获取该子节点下相应 Scroll View 的 Background 节点。
+
+    如果给定的 path 不满足预期，或相应的 Background 节点未找到，
+    那么 get_scroll_view_background 视作失败，那么返回 None
+
+    Args:
+        node (ScreenNode): 顶层 UI 的 ScreenNode 实例
+        path (str): 被预期的控件的绝对路径
+
+    Returns:
+        BaseUIControl | None:
+            相应 Scroll View 的 Background 节点
+    """
+    parent = get_scroll_view_ui_control(node, path)
+    if parent is None:
+        return None
 
     child = parent.GetChildByPath("/scroll_touch")
     if child is None:
@@ -170,8 +197,8 @@ def get_scroll_view_content(
     node, path
 ):  # type: (ScreenNode, str) -> BaseUIControl | None
     """
-    get_scroll_view_content 预期 path 所指示的
-    控件下包含 scroll_touch 或 scroll_mouse 子节点，
+    get_scroll_view_content 预期 path 所指示的控件下
+    包含 scroll_touch 或 scroll_mouse 子节点，
     并获取该子节点下相应 Scroll View 的 Content 节点。
 
     如果给定的 path 不满足预期，或相应的 Content 节点未找到，
@@ -182,7 +209,8 @@ def get_scroll_view_content(
         path (str): 被预期的控件的绝对路径
 
     Returns:
-        BaseUIControl | None: 相应 Scroll View 的 Content 节点
+        BaseUIControl | None:
+            相应 Scroll View 的 Content 节点
     """
     control = get_scroll_view_background(node, path)
     if control is None:
