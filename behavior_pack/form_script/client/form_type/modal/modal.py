@@ -13,14 +13,19 @@ from .input import Input
 from .dropdown import DropDown
 from .slider import Slider, StepSlider
 from ..base import BaseForm
-from ...utils import get_scroll_view_background, get_scroll_view_content
+from ...utils import (
+    get_scroll_view_ui_control,
+    get_scroll_view_background,
+    get_scroll_view_content,
+)
 from mod.client.extraClientApi import PopScreen
 
 
 class ModalForm(BaseForm):
     """ModalForm 表示一个模态表单"""
 
-    _submit_button_inited = False  # type: bool
+    _modal_form_init_tick = 0  # type: int
+    _modal_form_init_states = False  # type: bool
     _submit_button_callback = None  # type: Callable[[dict[str, Any]], None] | None
     _last_render_label = ""  # type: str
     _last_render_submit_button = ""  # type: str
@@ -56,9 +61,41 @@ class ModalForm(BaseForm):
         self._last_render_label = ""
         self._last_render_submit_button = ""
 
-        self._submit_button_inited = False
+        self._modal_form_init_tick = 0
+        self._modal_form_init_states = False
         self._submit_button_callback = callback
         self._init_submit_callback()
+
+    def _init_modal_form(self):  # type: () -> None
+        """
+        _init_modal_form 用于重置模态表单的滚动进度和提交按钮的选中状态。
+        它主要用于解决模态表单的滚动进度和提交按钮的初始状态不合预期的问题
+        """
+        if self._modal_form_init_states:
+            return
+
+        if self._modal_form_init_tick == 0:
+            button = self._get_submit_button_control()
+            if button is not None:
+                for i in ["default", "hover", "pressed", "locked"]:
+                    child = button.GetChildByPath("/" + i)
+                    if child is None:
+                        continue
+                    child.SetVisible(i == "default", True)
+
+        if (
+            self._modal_form_init_tick != 0
+            and self.ui_node is not None
+            and self.control is not None
+        ):
+            control = get_scroll_view_ui_control(self.ui_node, self.control.GetPath())
+            if control is not None:
+                if control.GetScrollViewPercentValue() != 0:
+                    control.SetScrollViewPercentValue(0)
+                else:
+                    self._modal_form_init_states = True
+
+        self._modal_form_init_tick += 1
 
     def _get_submit_button_control(self):  # type: () -> ButtonUIControl | None
         """_get_submit_button_control 获取提交按钮对应的控件
@@ -79,20 +116,6 @@ class ModalForm(BaseForm):
             return None
 
         return button.asButton()
-
-    def _init_submit_visual(self):  # type: () -> None
-        """
-        _init_submit_visual 将提交按钮的显示状态设置为默认状态。
-        这用于解决在模态表单被创建后，提交按钮默认为绿色的问题
-        """
-        button = self._get_submit_button_control()
-        if button is None:
-            return
-        for i in ["default", "hover", "pressed", "locked"]:
-            child = button.GetChildByPath("/" + i)
-            if child is None:
-                continue
-            child.SetVisible(i == "default", False)
 
     def _init_submit_callback(self):  # type: () -> None
         """
@@ -165,10 +188,7 @@ class ModalForm(BaseForm):
             bool: 指示是否需要刷新屏幕
         """
         should_update = BaseForm.on_update_screen(self)
-        if not self._submit_button_inited:
-            self._submit_button_inited = True
-            self._init_submit_visual()
-            should_update = True
+        self._init_modal_form()
         return should_update
 
     def set_modal_label(self, label):  # type: (str) -> ModalForm

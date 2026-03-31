@@ -13,7 +13,12 @@ if TYPE_CHECKING:
 
 import uuid
 from ..base import BaseComponent, BaseForm
-from ...utils import point_is_in_rect, input_mode_is_touch, get_scroll_view_content
+from ...utils import (
+    point_is_in_rect,
+    input_mode_is_touch,
+    get_scroll_view_ui_control,
+    get_scroll_view_content,
+)
 from mod.client.extraClientApi import GetTouchPos, PopScreen
 
 
@@ -501,6 +506,8 @@ class DynamicDivider(BaseComponent):
 class LongForm(BaseForm):
     """LongForm 是长表单实现"""
 
+    _long_form_init_tick = 0  # type: int
+    _long_form_init_states = False  # type: bool
     _last_render_title_label = ""  # type: str
     _last_render_inside_label = ""  # type: str
     _callback = None  # type: Callable[[dict[str, Any], int], None] | None
@@ -536,9 +543,33 @@ class LongForm(BaseForm):
             "long.long_form", "long_form", control, False
         )
 
+        self._long_form_init_tick = 0
+        self._long_form_init_states = False
         self._last_render_title_label = ""
         self._last_render_inside_label = ""
         self._callback = callback
+
+    def _init_long_form(self):  # type: () -> None
+        """
+        _init_long_form 用于重置长表单的滚动进度。
+        它主要用于解决长表单的滚动进度不正常的问题
+        """
+        if self._long_form_init_states:
+            return
+
+        if (
+            self._long_form_init_tick != 0
+            and self.ui_node is not None
+            and self.control is not None
+        ):
+            control = get_scroll_view_ui_control(self.ui_node, self.control.GetPath())
+            if control is not None:
+                if control.GetScrollViewPercentValue() != 0:
+                    control.SetScrollViewPercentValue(0)
+                else:
+                    self._long_form_init_states = True
+
+        self._long_form_init_tick += 1
 
     def _get_title_label_control(self):  # type: () -> LabelUIControl | None
         """_get_title_label_control 获取该长表单的标题文本所对应的控件
@@ -644,6 +675,18 @@ class LongForm(BaseForm):
         control.AddTouchEventParams({"isSwallow": True})
         control.SetButtonTouchUpCallback(_on_button_trigger)  # type: ignore
         control.SetButtonTouchDownCallback(_on_button_trigger)  # type: ignore
+
+    def on_update_screen(self):  # type: () -> bool
+        """
+        on_update_screen 在游戏每次刷新屏幕时调用。
+        通常情况下，1 秒钟内游戏会调用 30 次
+
+        Returns:
+            bool: 指示是否需要刷新屏幕
+        """
+        should_update = BaseForm.on_update_screen(self)
+        self._init_long_form()
+        return should_update
 
     def get_title_label(self):  # type: () -> str
         """get_title_label 获取该长表单的标题文本
