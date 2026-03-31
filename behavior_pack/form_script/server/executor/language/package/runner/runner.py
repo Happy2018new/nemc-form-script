@@ -122,9 +122,8 @@ class CodeRunner:
         builtins=EMPTY_BUILTIN_FUNCTION,  # type: BuiltInFunction
     ):  # type: (...) -> int | bool | float | str | None
         """
-        running 通过启动了一个虚拟机，
-        它以解释方式的运行所有代码，
-        并返回它们在运行时的返回值。
+        running 启动了一个虚拟机，
+        并通过解释的方式运行代码。
 
         您可以选择预先指定 var_maps 参数，
         这意味着您将可以预先初始化一些变量。
