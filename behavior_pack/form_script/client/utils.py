@@ -119,16 +119,16 @@ def get_base_path():  # type: () -> str
     )
 
 
-def get_scorll_view_background(
+def get_scroll_view_background(
     node, path
 ):  # type: (ScreenNode, str) -> BaseUIControl | None
     """
-    get_scorll_view_background 预期 path 所指示的控件
+    get_scroll_view_background 预期 path 所指示的控件
     下包含 scroll_touch 或 scroll_mouse 子节点，并获取
     该子节点下相应 Scroll View 的 Content 节点。
 
     如果给定的 path 不满足预期，或相应的 Content 节点未找到，
-    那么 get_scorll_view_background 视作失败，那么返回 None
+    那么 get_scroll_view_background 视作失败，那么返回 None
 
     Args:
         node (ScreenNode): 顶层 UI 的 ScreenNode 实例
@@ -184,7 +184,7 @@ def get_scroll_view_content(
     Returns:
         BaseUIControl | None: 相应 Scroll View 的 Content 节点
     """
-    control = get_scorll_view_background(node, path)
+    control = get_scroll_view_background(node, path)
     if control is None:
         return None
     return control.GetChildByPath("/scrolling_view_port/scrolling_content")
