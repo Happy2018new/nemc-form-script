@@ -13,7 +13,7 @@ from .input import Input
 from .dropdown import DropDown
 from .slider import Slider, StepSlider
 from ..base import BaseForm
-from ...utils import get_scorll_view_background, get_scroll_view_content
+from ...utils import get_scroll_view_background, get_scroll_view_content
 from mod.client.extraClientApi import PopScreen
 
 
@@ -132,7 +132,7 @@ class ModalForm(BaseForm):
         """
         if self.ui_node is None or self.control is None:
             return None
-        return get_scorll_view_background(
+        return get_scroll_view_background(
             self.ui_node,
             self.control.GetPath(),
         )

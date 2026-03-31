@@ -19,7 +19,7 @@ from ...utils import (
     point_is_in_rect,
     input_mode_is_touch,
     check_esc_key,
-    get_scorll_view_background,
+    get_scroll_view_background,
     get_scroll_view_content,
 )
 
@@ -313,7 +313,7 @@ class DropDown(OptionGenericCore):
         if control is None:
             return None
 
-        background = get_scorll_view_background(
+        background = get_scroll_view_background(
             self.ui_node,
             control.GetPath() + "/dropdown_content",
         )
