@@ -2,7 +2,7 @@
 page_split/select_panel(
   title: str,
   content: str,
-  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  options: ptr@slice[text: str | tuple[text: str, icon: str, ...]],
   extra: ptr@map,
   page: int,
   callback: str,
@@ -10,7 +10,7 @@ page_split/select_panel(
 
 callback(
   submit_type: int,
-  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  options: ptr@slice[text: str | tuple[text: str, icon: str, ...]],
   extra: ptr@map
   selected: int,
 ) -> int | bool | float | str
@@ -66,13 +66,17 @@ for offset, end-start+1:
 
   if {func, object.ref_type(ptr)} == 3:
     text = {func, object.deref(ptr)}
+    icon = ''
   else:
     text = {func, tuple.get(ptr, 0)}
+    icon = {func, tuple.get(ptr, 1)}
   fi
-
   text = {func, function.call('utils/as_code_string', text)}
+  icon = {func, function.call('utils/as_code_string', icon)}
+
   _ = {command, 'editlongform page_split_select append button'}
   _ = {command, {func, strings.format('editbutton page_split_select {} text "return {}"', offset, text)}}
+  _ = {command, {func, strings.format('editbutton page_split_select {} icon "return {}"', offset, icon)}}
 rof
 
 

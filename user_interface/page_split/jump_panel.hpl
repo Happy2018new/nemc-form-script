@@ -2,7 +2,7 @@
 page_split/jump_panel(
   title: str,
   content: str,
-  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  options: ptr@slice[text: str | tuple[text: str, icon: str, ...]],
   extra: ptr@map,
   last_page: int,
   callback: str,
@@ -10,7 +10,7 @@ page_split/jump_panel(
 
 callback(
   submit_type: int,
-  options: ptr@slice[button_name: str | tuple[button_name: str, identifier: str]],
+  options: ptr@slice[text: str | tuple[text: str, icon: str, ...]],
   extra: ptr@map
   selected: int,
 ) -> int | bool | float | str
