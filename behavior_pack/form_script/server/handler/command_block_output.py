@@ -112,23 +112,23 @@ class CommandBlockOutputHandler:
 
         # Generate commands
         commands = [
-            "customform remove command_block_output_panel",
-            "customform add command_block_output_panel long",
-            "editlongform command_block_output_panel title \"return '查询命令方块的输出'\"",
-            "editlongform command_block_output_panel content \"return '{}'\"".format(
+            "customform remove command_block_output",
+            "customform add command_block_output long",
+            "editlongform command_block_output title \"return '查询命令方块的输出'\"",
+            "editlongform command_block_output content \"return '{}'\"".format(
                 "({}, {}, {}) 处的命令方块的输出如下。".format(
                     block_pos[0], block_pos[1], block_pos[2]
                 )
             ),
-            "editlongform command_block_output_panel append divider",
-            "editlongform command_block_output_panel append label",
-            "editlabel command_block_output_panel 1 label \"return '{}'\"".format(
+            "editlongform command_block_output append divider",
+            "editlongform command_block_output append label",
+            "editlabel command_block_output 1 label \"return '{}'\"".format(
                 final_output
             ),
-            "editlongform command_block_output_panel append button",
-            "editbutton command_block_output_panel 2 text \"return '关闭'\"",
-            "customform show @s ~ ~ ~ @s command_block_output_panel",
-            "customform remove command_block_output_panel",
+            "editlongform command_block_output append button",
+            "editbutton command_block_output 2 text \"return '关闭'\"",
+            "customform show @s ~ ~ ~ @s command_block_output",
+            "customform remove command_block_output",
         ]
 
         # Wrap show function that can show the panel
