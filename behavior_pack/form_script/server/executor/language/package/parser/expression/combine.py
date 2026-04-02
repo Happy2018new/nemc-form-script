@@ -789,6 +789,6 @@ class ExpressionCombine(ExpressionElement):
         if len(self.element_payload) != 1:
             self.element_payload = []
             raise Exception(
-                "parse: Syntax error: Invalid compression (failed to compact the compression)"
+                "parse: Syntax error: Invalid expression (failed to compact the expression)"
             )
         return self
