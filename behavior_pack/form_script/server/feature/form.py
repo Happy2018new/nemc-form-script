@@ -319,12 +319,7 @@ class FormFeature:
                 disconnect_player(player_id, "破损的数据包 (标记 0)")
                 return self
 
-            # Consume this form
-            del player_forms[pk.form_id]
-            if len(player_forms) == 0:
-                del self._pending[player_id]
-
-            # Handle cancel or submit
+            # Validate response and init callback and respone data
             cancel = pk.cancel_reason.value()
             if cancel is not None:
                 if not internal and cancel == MODAL_FORM_CANCEL_REASON_EXIT_GAME:
@@ -348,6 +343,11 @@ class FormFeature:
                 func_to_run = formal_with_cb.onsubmit
                 when_meet_err = formal_with_cb.onsuberr
                 self._ref.response = response
+
+            # Consume this form
+            del player_forms[pk.form_id]
+            if len(player_forms) == 0:
+                del self._pending[player_id]
 
             # Running corresponding codes
             position = GetEngineCompFactory().CreatePos(player_id).GetFootPos()
