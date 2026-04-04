@@ -76,6 +76,8 @@ _ = {command, cmd}
 
 
 
+
+
 length = {func, form.modal_form_length('user_interface/modal/edit_input')}
 _ = {command, 'editmodalform "user_interface/modal/edit_input" sub discard 19 ' + str(length)}
 
