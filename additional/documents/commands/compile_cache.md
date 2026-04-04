@@ -45,7 +45,7 @@ compilecache set [size: int]
 # 编译代码
 ## 语法
 解析和翻译 `<code: string>` 所指示的源代码，并将处理结果储存到代码缓存系统。<br/>
-从学术上讲，这个过程将给定的源代码处理为对应的 **AST** 语法树表示，并将其放入缓存中。
+从学术上讲，这个过程先将源代码处理为抽象语法树，然后编译为字节码，最后放入缓存中。
 
 ```mcfunction
 compilecache compile <code: string>
