@@ -30,7 +30,7 @@ elif element_type == 3:
   temp = {func, maps.new(False, 'condition', '', 'payload', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_default')}, temp)}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_place_holder')}, temp)}
-  _ = {func, maps.ptr_set(result, {func, object.ref('onsubmit')}, {func, slices.new('', '', '')})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('onsubmit')}, {func, slices.new()})}
 elif element_type == 4:
   result = {func, maps.new(False, 'type', 'toggle', 'text', '', 'default', '', 'onsubmit', '')}
 elif element_type == 5:
