@@ -82,7 +82,11 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            "COMMAND: FinalString",
+                            "COMMAND: FinalString",
+                            "COMMAND: FinalString"
+                        ]
                     },
                     {
                         "type": "toggle",

@@ -24,7 +24,7 @@ element_type = {func, tuple.get(args, 1)}
 level_id = {func, world.GetLevelId()}
 level_id = {func, object.deref(level_id)}
 storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
-if {func, object.is_none(form_ui_storage)}:
+if {func, object.is_none(storage)}:
   storage = {func, maps.new()}
 fi
 
@@ -32,7 +32,7 @@ key_ptr = {func, object.ref('modal')}
 if not {func, maps.ptr_exist(storage, key_ptr)}:
   _ = {func, maps.ptr_set(storage, key_ptr, {func, maps.new()})}
 fi
-modal = {func, maps.get(storage, key_ptr)}
+modal = {func, maps.ptr_get(storage, key_ptr)}
 
 key_ptr = {func, object.ref(form)}
 if not {func, maps.ptr_exist(modal, key_ptr)}:
@@ -42,7 +42,7 @@ form_data = {func, maps.ptr_get(modal, key_ptr)}
 
 key_ptr = {func, object.ref('content')}
 if not {func, maps.ptr_exist(form_data, key_ptr)}:
-  _ = {func, maps.ptr_set(modal, form_data, {func, slices.new()})}
+  _ = {func, maps.ptr_set(form_data, key_ptr, {func, slices.new()})}
 fi
 content = {func, maps.ptr_get(form_data, key_ptr)}
 
@@ -55,4 +55,32 @@ _ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 
 
-return {func, slices.length(content)} - 1
+format = {func, json.fast_dumps(form)}
+index = {func, slices.length(content)} - 1
+
+if element_type == 0:
+  _ = {command, {func, strings.format('editmodalform {} append label', format)}}
+elif element_type == 1:
+  _ = {command, {func, strings.format('editmodalform {} append header', format)}}
+elif element_type == 2:
+  _ = {command, {func, strings.format('editmodalform {} append divider', format)}}
+elif element_type == 3:
+  _ = {command, {func, strings.format('editmodalform {} append input', format)}}
+elif element_type == 4:
+  _ = {command, {func, strings.format('editmodalform {} append toggle', format)}}
+elif element_type == 5:
+  _ = {command, {func, strings.format('editmodalform {} append dropdown', format)}}
+  _ = {command, {func, strings.format('editdropdown {} {} append "return \'占位选项\'"', format, index)}}
+elif element_type == 6:
+  _ = {command, {func, strings.format('editmodalform {} append slider', format)}}
+elif element_type == 7:
+  _ = {command, {func, strings.format('editmodalform {} append stepslider', format)}}
+  _ = {command, {func, strings.format('editstepslider {} {} append "return \'占位选项 1\'"', format, index)}}
+  _ = {command, {func, strings.format('editstepslider {} {} append "return \'占位选项 2\'"', format, index)}}
+else:
+  err = 'user_interface/storage/modal/add_element: Unsupported modal form element type; element_type = ' + str(element_type)
+  _ = {func, function.panic(err)}
+fi
+
+_ = {command, 'customform save ' + format}
+return index

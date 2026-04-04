@@ -26,20 +26,21 @@ elif element_type == 1:
 elif element_type == 2:
   result = {func, maps.new(False, 'type', 'divider')}
 elif element_type == 3:
-  result = {func, maps.new(False, 'type', 'input', 'text', '', 'onsubmit', '')}
+  result = {func, maps.new(False, 'type', 'input', 'text', '')}
   temp = {func, maps.new(False, 'condition', '', 'payload', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_default')}, temp)}
   _ = {func, maps.ptr_set(result, {func, object.ref('optional_place_holder')}, temp)}
+  _ = {func, maps.ptr_set(result, {func, object.ref('onsubmit')}, {func, slices.new('', '', '')})}
 elif element_type == 4:
   result = {func, maps.new(False, 'type', 'toggle', 'text', '', 'default', '', 'onsubmit', '')}
 elif element_type == 5:
   result = {func, maps.new(False, 'type', 'dropdown', 'text', '', 'default', '', 'onsubmit', '')}
-  _ = {func, maps.ptr_set(result, {func, object.ref('options')}, {func, slices.new()})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('options')}, {func, slices.new('占位选项')})}
 elif element_type == 6:
   result = {func, maps.new(False, 'type', 'slider', 'text', '', 'min', '0', 'max', '1', 'step', '1', 'default', '', 'onsubmit', '')}
 elif element_type == 7:
   result = {func, maps.new(False, 'type', 'step_slider', 'text', '', 'default', '', 'onsubmit', '')}
-  _ = {func, maps.ptr_set(result, {func, object.ref('steps')}, {func, slices.new()})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('steps')}, {func, slices.new('占位选项 1', '占位选项 2')})}
 else:
   err = 'user_interface/storage/modal/default_element: Unsupported modal form element type; element_type = ' + str(element_type)
   _ = {func, function.panic(err)}
