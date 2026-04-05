@@ -10,7 +10,7 @@ editmodalform "user_interface/modal/edit_input" append divider
 editmodalform "user_interface/modal/edit_input" append input
 editinput "user_interface/modal/edit_input" 2 text "return '请输入要设置的标题文本'"
 editinput "user_interface/modal/edit_input" 2 placeholder "return '我叫 $-$@s$ 且我有 #-#@s#金币# 个金币'"
-editinput "user_interface/modal/edit_input" 2 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#分数#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
+editinput "user_interface/modal/edit_input" 2 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
 
 editmodalform "user_interface/modal/edit_input" append header
 editlabel "user_interface/modal/edit_input" 3 header "return '提示文本'"
@@ -22,7 +22,7 @@ editinput "user_interface/modal/edit_input" 5 tooltip "return '置空将视作�
 editmodalform "user_interface/modal/edit_input" append input
 editinput "user_interface/modal/edit_input" 6 text "return '要显示的提示文本'"
 editinput "user_interface/modal/edit_input" 6 placeholder "return '我叫 $-$@s$ 且我有 #-#@s#金币# 个金币'"
-editinput "user_interface/modal/edit_input" 6 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#分数#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
+editinput "user_interface/modal/edit_input" 6 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
 
 editmodalform "user_interface/modal/edit_input" append header
 editlabel "user_interface/modal/edit_input" 7 header "return '默认文本'"
@@ -34,7 +34,7 @@ editinput "user_interface/modal/edit_input" 9 tooltip "return '置空将视作�
 editmodalform "user_interface/modal/edit_input" append input
 editinput "user_interface/modal/edit_input" 10 text "return '要显示的默认文本'"
 editinput "user_interface/modal/edit_input" 10 placeholder "return '我叫 $-$@s$ 且我有 #-#@s#金币# 个金币'"
-editinput "user_interface/modal/edit_input" 10 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#分数#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
+editinput "user_interface/modal/edit_input" 10 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
 
 editmodalform "user_interface/modal/edit_input" append header
 editlabel "user_interface/modal/edit_input" 11 header "return '灯泡提示文本'"
@@ -46,7 +46,7 @@ editinput "user_interface/modal/edit_input" 13 tooltip "return '置空将视作�
 editmodalform "user_interface/modal/edit_input" append input
 editinput "user_interface/modal/edit_input" 14 text "return '灯泡提示文本'"
 editinput "user_interface/modal/edit_input" 14 placeholder "return '我叫 $-$@s$ 且我有 #-#@s#金币# 个金币'"
-editinput "user_interface/modal/edit_input" 14 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#分数#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
+editinput "user_interface/modal/edit_input" 14 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
 
 editmodalform "user_interface/modal/edit_input" append header
 editlabel "user_interface/modal/edit_input" 15 header "return '指令设置'"
