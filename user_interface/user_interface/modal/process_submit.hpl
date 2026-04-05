@@ -29,13 +29,19 @@ for index, {func, slices.length(content)}:
 
 
 
-  result = result + 'cond = False | '
   onsubmit = {func, maps.ptr_get(value, submit_ptr)}
   element_type = {func, maps.get(value, 'type')}
 
+  length = {func, slices.length(onsubmit)}
+  if length == 0:
+    continue
+  else:
+    result = result + 'cond = False | '
+  fi
 
 
-  for ind, {func, slices.length(onsubmit)}:
+
+  for ind, length:
     val = {func, slices.ptr_get(onsubmit, ind)}
     condition = {func, maps.get(val, 'condition')}
     payload = {func, maps.get(val, 'payload')}
