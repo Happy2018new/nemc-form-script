@@ -95,8 +95,8 @@ for i, final:
   _ = {command, 'editmodalform "user_interface/modal/edit_input" append toggle'}
 
   _ = {command, {func, strings.format('editinput "user_interface/modal/edit_input" {} text "return \'要执行的指令\'"', 19+2*i)}}
-  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_input" {} placeholder "return \'say 玩家输入了 [ref]\'"', 19+2*i)}}
-  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_input" {} tooltip "return \'§b[ref]§r 表示玩家输入的内容。\'"', 19+2*i)}}
+  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_input" {} placeholder "return \'say 玩家输入了 [ref] ([json-ref])\'"', 19+2*i)}}
+  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_input" {} tooltip "return \'§b[ref]§r\n  表示玩家输入的内容。\n§b[json-ref]§r\n  将玩家输入的内容转义并用双引号包裹。\'"', 19+2*i)}}
   _ = {command, {func, strings.format('edittoggle "user_interface/modal/edit_input" {} text "return \'条件制约\'"', 20+2*i)}}
   _ = {command, {func, strings.format('edittoggle "user_interface/modal/edit_input" {} tooltip "return \'要求该指令只会在上一个指令成功时才执行。\'"', 20+2*i)}}
 

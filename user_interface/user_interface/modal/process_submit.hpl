@@ -45,9 +45,9 @@ for index, {func, slices.length(content)}:
     temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
 
     if condition:
-      result = result + 'if cond: | ' + 'cond = ' + temp + ' | fi | '
+      result = result + {func, strings.format('if cond: | cond = {} | fi | ', temp)}
     else:
-      result = result + 'cond = ' + temp + ' | '
+      result = result + {func, strings.format('cond = {} | ', temp)}
     fi
   rof
 rof
