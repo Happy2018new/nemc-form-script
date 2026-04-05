@@ -1,0 +1,134 @@
+/*
+user_interface/modal/handle_edit_toggle(
+  is_cancel: bool,
+  form_name: str,
+  element_index: int,
+  command_length: int,
+) -> bool
+*/
+
+
+
+
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_name = {func, tuple.get(args, 1)}
+format = {func, json.fast_dumps(form_name)}
+element_index = {func, tuple.get(args, 2)}
+command_length = {func, tuple.get(args, 3)}
+
+
+
+
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    // back to a long form that can used to select element to edit
+  fi
+  return True
+fi
+
+
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form_name)})}
+content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
+element = {func, slices.ptr_get(content, element_index)}
+
+
+
+
+
+
+
+text = {ref, str, 2}
+_ = {func, maps.set(element, 'text', text)}
+
+result = {func, function.try('utils/compile_code', text)}
+code = {func, tuple.get(result, 0)}
+err = {func, tuple.get(result, 1)}
+if {func, strings.length(err)} > 0:
+  code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
+fi
+
+cmd = {func, strings.format('edittoggle {} {} text "return {}"', format, element_index, code)}
+_ = {command, cmd}
+
+
+
+
+
+default = {ref, str, 5}
+_ = {func, maps.set(element, 'default', default)}
+
+temp = {func, function.call('utils/as_code_string', default)}
+temp = '{command, ' + temp + '} > 0'
+cmd = {func, strings.format('edittoggle {} {} default "return {}"', format, element_index, temp)}
+
+_ = {command, cmd}
+
+
+
+
+
+condition = {ref, str, 8}
+payload = {ref, str, 9}
+
+key_ptr = {func, object.ref('optional_tooltip')}
+_ = {func, maps.ptr_set(element, key_ptr, {func, maps.new(False, 'condition', condition, 'payload', payload)})}
+
+result = {func, function.try('utils/compile_code', payload)}
+code = {func, tuple.get(result, 0)}
+err = {func, tuple.get(result, 1)}
+if {func, strings.length(err)} > 0:
+  code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
+fi
+
+temp = {func, function.call('utils/as_code_string', condition)}
+temp = temp + '== \'\' or ' + '{command, ' + temp + '} > 0:'
+cmd = {func, strings.format('edittoggle {} {} tooltip "if {} | return {} | else: | return \'\' | fi"', format, element_index, temp, code)}
+_ = {command, cmd}
+
+
+
+
+
+
+
+commands = {func, slices.new()}
+
+for i, command_length:
+  payload = {ref, str, 14+2*i}
+  condition = {ref, bool, 15+2*i}
+
+  if {func, strings.length(payload)} == 0:
+    continue
+  fi
+
+  ptr = {func, maps.new(False, 'condition', condition, 'payload', payload)}
+  _ = {func, slices.ptr_append(commands, ptr)}
+rof
+
+key_ptr = {func, object.ref('onsubmit')}
+_ = {func, maps.ptr_set(element, key_ptr, commands)}
+_ = {func, entity.SaveExtraData(level_id)}
+
+
+
+
+
+
+
+// back to a long form that can used to select element to edit
+_ = {func, function.call('user_interface/modal/process_submit', form_name, content)}
+return True

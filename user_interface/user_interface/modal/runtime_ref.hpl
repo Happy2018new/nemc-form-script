@@ -36,7 +36,7 @@ fi
 
 
 if element_type == 'toggle':
-  if {ref, bool, element_index}:
+  if not {ref, bool, element_index}:
     raw_command = {func, strings.replace(raw_command, '[ref]', '0')}
     return {command, raw_command} > 0
   else:
