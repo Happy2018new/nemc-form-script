@@ -1,0 +1,35 @@
+/*
+user_interface/modal/runtime_ref(
+  payload: str,
+  element_type: str,
+  element_index: int,
+) -> bool
+*/
+
+
+
+payload = {func, tuple.get(args, 0)}
+element_type = {func, tuple.get(args, 1)}
+element_index = {func, tuple.get(args, 2)}
+
+
+
+if element_type == 'input':
+  cmd = {func, strings.replace(payload, '[ref]', {ref, str, element_index})}
+elif element_type == 'toggle':
+  if {ref, bool, element_index}:
+    cmd = {func, strings.replace(payload, '[ref]', '0')}
+  else:
+    cmd = {func, strings.replace(payload, '[ref]', '1')}
+  fi
+elif element_type == 'dropdown' or element_type == 'slider' or element_type == 'step_slider':
+  temp = str({ref, int, element_index})
+  cmd = {func, strings.replace(payload, '[ref]', temp)}
+else:
+  err = 'user_interface/modal/runtime_ref: Unsupported element type; element_type = ' + element_type
+  _ = {func, function.panic(err)}
+fi
+
+
+
+return {command, cmd} > 0

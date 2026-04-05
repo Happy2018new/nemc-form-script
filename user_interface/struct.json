@@ -97,7 +97,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "dropdown",
@@ -112,7 +117,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "slider",
@@ -125,7 +135,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "step_slider",
@@ -140,7 +155,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     }
                 ],
                 "oncancel": {

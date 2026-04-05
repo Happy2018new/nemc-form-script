@@ -160,7 +160,6 @@ _ = {func, entity.SaveExtraData(level_id)}
 
 
 
-// compile commands to onsubmit ..
 // back to a long form that can used to select element to edit
-_ = {command, 'customform save ' + format}
+_ = {func, function.call('user_interface/modal/process_submit', form_name, content)}
 return True
