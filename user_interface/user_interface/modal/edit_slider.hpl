@@ -1,0 +1,130 @@
+/*
+user_interface/modal/edit_slider(
+  form_name: str,
+  element_index: int,
+) -> bool
+*/
+
+
+
+
+
+form_name = {func, tuple.get(args, 0)}
+element_index = {func, tuple.get(args, 1)}
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form_name)})}
+content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
+element = {func, slices.ptr_get(content, element_index)}
+
+
+
+
+
+text = {func, maps.get(element, 'text')}
+text = {func, function.call('utils/as_code_string', text)}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 2 default "return {}"', text)}
+_ = {command, cmd}
+
+
+
+min = {func, maps.get(element, 'min')}
+min = {func, function.call('utils/as_code_string', str(min))}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 6 default "return {}"', min)}
+_ = {command, cmd}
+
+max = {func, maps.get(element, 'max')}
+max = {func, function.call('utils/as_code_string', str(max))}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 7 default "return {}"', max)}
+_ = {command, cmd}
+
+step = {func, maps.get(element, 'step')}
+step = {func, function.call('utils/as_code_string', str(step))}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 8 default "return {}"', step)}
+_ = {command, cmd}
+
+
+
+default = {func, maps.get(element, 'default')}
+default = {func, function.call('utils/as_code_string', default)}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 12 default "return {}"', default)}
+_ = {command, cmd}
+
+
+
+optional_tooltip = {func, maps.ptr_get(element, {func, object.ref('optional_tooltip')})}
+condition = {func, maps.get(optional_tooltip, 'condition')}
+payload = {func, maps.get(optional_tooltip, 'payload')}
+
+condition = {func, function.call('utils/as_code_string', condition)}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 15 default "return {}"', condition)}
+_ = {command, cmd}
+
+payload = {func, function.call('utils/as_code_string', payload)}
+cmd = {func, strings.format('editinput "user_interface/modal/edit_slider" 16 default "return {}"', payload)}
+_ = {command, cmd}
+
+
+
+
+
+length = {func, form.modal_form_length('user_interface/modal/edit_slider')}
+_ = {command, 'editmodalform "user_interface/modal/edit_slider" sub discard 21 ' + str(length)}
+
+onsubmit = {func, maps.ptr_get(element, {func, object.ref('onsubmit')})}
+length = {func, slices.length(onsubmit)}
+
+if {func, math.mod(length, 3)} == 0:
+  final = length + 3
+else:
+  final = 3*int(length/3) + 3
+fi
+
+for i, final:
+  _ = {command, 'editmodalform "user_interface/modal/edit_slider" append input'}
+  _ = {command, 'editmodalform "user_interface/modal/edit_slider" append toggle'}
+
+  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_slider" {} text "return \'要执行的指令\'"', 21+2*i)}}
+  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_slider" {} placeholder "return \'scoreboard players set @s result [ref]\'"', 21+2*i)}}
+  _ = {command, {func, strings.format('editinput "user_interface/modal/edit_slider" {} tooltip "return \'§b[ref]§r 表示滑块最终滑到的刻度值。\'"', 21+2*i)}}
+  _ = {command, {func, strings.format('edittoggle "user_interface/modal/edit_slider" {} text "return \'条件制约\'"', 22+2*i)}}
+  _ = {command, {func, strings.format('edittoggle "user_interface/modal/edit_slider" {} tooltip "return \'要求该指令只会在上一个指令成功时才执行。\'"', 22+2*i)}}
+
+  if i < length:
+    ptr = {func, slices.ptr_get(onsubmit, i)}
+
+    payload = {func, maps.get(ptr, 'payload')}
+    payload = {func, function.call('utils/as_code_string', payload)}
+    _ = {command, {func, strings.format('editinput "user_interface/modal/edit_slider" {} default "return {}"', 21+2*i, payload)}}
+
+    condition = {func, maps.get(ptr, 'condition')}
+    if condition:
+      _ = {command, {func, strings.format('edittoggle "user_interface/modal/edit_slider" {} default "return True"', 22+2*i)}}
+    fi
+  fi
+rof
+
+
+
+
+
+temp = {func, slices.new(False, form_name, element_index, final)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_edit_slider', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/modal/edit_slider" "{}"', code)}}
+
+temp = {func, slices.new(True, form_name, element_index, final)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_edit_slider', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/modal/edit_slider" "{}"', code)}}
+
+
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/edit_slider"'}
+return True

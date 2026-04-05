@@ -21,7 +21,10 @@ editlongform "user_interface/modal/panel" append button
 editbutton "user_interface/modal/panel" 4 text "return '移除已有元素'"
 
 editlongform "user_interface/modal/panel" append button
-editbutton "user_interface/modal/panel" 5 text "return '返回上一级'"
+editbutton "user_interface/modal/panel" 5 text "return '设置标题文本'"
+
+editlongform "user_interface/modal/panel" append button
+editbutton "user_interface/modal/panel" 6 text "return '返回上一级'"
 
 
 

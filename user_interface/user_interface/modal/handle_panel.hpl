@@ -33,6 +33,8 @@ elif index == 3:
 elif index == 4:
   // remove elements
 elif index == 5:
+  // set title
+elif index == 6:
   // back to main panel
 fi
 

@@ -43,8 +43,12 @@ if element_type == 'toggle':
     raw_command = {func, strings.replace(raw_command, '[ref]', '1')}
     return {command, raw_command} > 0
   fi
-elif element_type == 'dropdown' or element_type == 'slider' or element_type == 'step_slider':
+elif element_type == 'dropdown' or element_type == 'step_slider':
   temp = str({ref, int, element_index})
+  raw_command = {func, strings.replace(raw_command, '[ref]', temp)}
+  return {command, raw_command} > 0
+elif element_type == 'slider':
+  temp = str(int({ref, float, element_index}))
   raw_command = {func, strings.replace(raw_command, '[ref]', temp)}
   return {command, raw_command} > 0
 fi
