@@ -1,0 +1,43 @@
+/*
+utils/condition_string(
+  request_type: int,
+  condition: str,
+  target: int,
+  scoreboard: str,
+) -> str
+
+REQUEST_TYPE_SELECTOR = 0
+REQUEST_TYPE_SCOREBOARD = 1
+*/
+
+
+
+request_type = {func, tuple.get(args, 0)}
+condition = {func, tuple.get(args, 1)}
+target = {func, tuple.get(args, 2)}
+scoreboard = {func, tuple.get(args, 3)}
+
+
+
+if condition != '-':
+  cond = {selector, condition}
+  if {func, strings.length(cond)} == 0:
+    return ''
+  fi
+fi
+
+
+
+if request_type == 0:
+  result = {selector, target}
+  if {func, strings.length(result)} == 0:
+    return target
+  else:
+    return result
+  fi
+elif request_type == 1:
+  return {func, function.call('utils/get_score_public', target, scoreboard, True)}
+else:
+  err = 'utils/condition_string: Unsupported request type; request_type = ' + str(request_type)
+  _ = {func, function.panic(err)}
+fi

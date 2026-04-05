@@ -9,8 +9,8 @@ editlabel "user_interface/modal/edit_text" 0 label "return '您正在编辑模�
 
 editmodalform "user_interface/modal/edit_text" append input
 editinput "user_interface/modal/edit_text" 1 text "return '请输入要设置的文本内容'"
-editinput "user_interface/modal/edit_text" 1 placeholder "return '我叫 $@s$ 且我有 #@s#金币# 个金币'"
-editinput "user_interface/modal/edit_text" 1 tooltip "return '§b$选择器$§r 表示实体名 (如“§e$@s$§r”)。\\n§b#目标#分数#§r 表示分数 (如“§e#@s#金币#§r”)。\\n§b$$§r 表示 §e$§r。\\n§b##§r 表示 §e#§r。\\n§b\\\\n§r 表示换行。'"
+editinput "user_interface/modal/edit_text" 1 placeholder "return '我叫 $-$@s$ 且我有 #-#@s#金币# 个金币'"
+editinput "user_interface/modal/edit_text" 1 tooltip "return '§b$条件(选择器)$内容(选择器/纯文本)$§r\\n  表示实体名或纯文本(用“§e-§r”代表无需条件)。\\n§b#条件(选择器)#目标#记分板#分数#§r\\n  表示分数(用“§e-§r”代表无需条件)。\\n§b$$§r, §b##§r 和 §b\\\\n§r\\n  分别表示 §e$§r, §e#§r 和 §e换行§r。'"
 
 
 

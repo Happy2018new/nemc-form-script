@@ -3,6 +3,9 @@ utils/compile_code(code: str) -> str
 
 PROCESS_MODE_SCAN_SELECTOR = 1
 PROCESS_MODE_SCAN_SCORE = 2
+
+REQUEST_TYPE_SELECTOR = 0
+REQUEST_TYPE_SCOREBOARD = 1
 */
 
 
@@ -59,14 +62,22 @@ for _, 2048:
       temp = {func, function.call('utils/as_code_string', temp)}
       _ = {func, slices.append(result, temp)}
 
-      next = {func, strings.find(code, '$', select_mark+1)}
-      if next == -1:
+      first_next = {func, strings.find(code, '$', select_mark+1)}
+      if first_next == -1:
         _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
       fi
-      ptr = next + 1
+      second_next = {func, strings.find(code, '$', first_next+1)}
+      if second_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      ptr = second_next + 1
 
-      temp = {func, strings.sub(code, select_mark+1, next)}
-      temp = '{selector, ' + {func, function.call('utils/as_code_string', temp)} + '}'
+      condition = {func, strings.sub(code, select_mark+1, first_next)}
+      target = {func, strings.sub(code, first_next+1, second_next)}
+
+      temp = {func, slices.new(0, condition, target, '')}
+      temp = {func, function.call('utils/as_func_string', 'utils/condition_string', temp)}
+      temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
       _ = {func, slices.append(result, temp)}
     fi
   fi
@@ -92,13 +103,18 @@ for _, 2048:
       if second_next == -1:
         _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
       fi
-      ptr = second_next + 1
+      third_next = {func, strings.find(code, '#', second_next+1)}
+      if third_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      ptr = third_next + 1
 
-      target = {func, strings.sub(code, score_mark+1, first_next)}
-      scoreboard = {func, strings.sub(code, first_next+1, second_next)}
+      condition = {func, strings.sub(code, score_mark+1, first_next)}
+      target = {func, strings.sub(code, first_next+1, second_next)}
+      scoreboard = {func, strings.sub(code, second_next+1, third_next)}
 
-      temp = {func, slices.new(target, scoreboard, True)}
-      temp = {func, function.call('utils/as_func_string', 'utils/get_score_public', temp)}
+      temp = {func, slices.new(1, condition, target, scoreboard)}
+      temp = {func, function.call('utils/as_func_string', 'utils/condition_string', temp)}
       temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
       _ = {func, slices.append(result, temp)}
     fi
