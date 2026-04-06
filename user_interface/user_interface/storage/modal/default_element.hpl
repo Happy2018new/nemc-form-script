@@ -27,9 +27,8 @@ elif element_type == 2:
   result = {func, maps.new(False, 'type', 'divider')}
 elif element_type == 3:
   result = {func, maps.new(False, 'type', 'input', 'text', '')}
-  temp = {func, maps.new(False, 'condition', '', 'payload', '')}
-  _ = {func, maps.ptr_set(result, {func, object.ref('optional_default')}, temp)}
-  _ = {func, maps.ptr_set(result, {func, object.ref('optional_place_holder')}, temp)}
+  _ = {func, maps.ptr_set(result, {func, object.ref('optional_default')}, {func, maps.new(False, 'condition', '', 'payload', '')})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('optional_place_holder')}, {func, maps.new(False, 'condition', '', 'payload', '')})}
   _ = {func, maps.ptr_set(result, {func, object.ref('onsubmit')}, {func, slices.new()})}
 elif element_type == 4:
   result = {func, maps.new(False, 'type', 'toggle', 'text', '', 'default', '')}
@@ -51,8 +50,7 @@ else:
 fi
 
 if element_type >= 3 and element_type <= 7:
-  temp = {func, maps.new(False, 'condition', '', 'payload', '')}
-  _ = {func, maps.ptr_set(result, {func, object.ref('optional_tooltip')}, temp)}
+  _ = {func, maps.ptr_set(result, {func, object.ref('optional_tooltip')}, {func, maps.new(False, 'condition', '', 'payload', '')})}
 fi
 
 _ = {func, object.pin(result)}

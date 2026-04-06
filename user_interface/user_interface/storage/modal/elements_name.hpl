@@ -1,8 +1,10 @@
 /*
 user_interface/storage/modal/elements_name(
   form: str,
-) -> ptr@slice[button_name: str] | int
+) -> ptr@slice[button_name: str]
 */
+
+
 
 
 
@@ -10,30 +12,15 @@ form = {func, tuple.get(args, 0)}
 
 
 
-level_id = {func, world.GetLevelId()}
-level_id = {func, object.deref(level_id)}
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
 storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
-if {func, object.is_none(storage)}:
-  return 0
-fi
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form)})}
+content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
 
-key_ptr = {func, object.ref('modal')}
-if not {func, maps.ptr_exist(storage, key_ptr)}:
-  return 0
-fi
-modal = {func, maps.ptr_get(storage, key_ptr)}
 
-key_ptr = {func, object.ref(form)}
-if not {func, maps.ptr_exist(modal, key_ptr)}:
-  return 0
-fi
-form_data = {func, maps.ptr_get(modal, key_ptr)}
-
-key_ptr = {func, object.ref('content')}
-if not {func, maps.ptr_exist(form_data, key_ptr)}:
-  return 0
-fi
-content = {func, maps.ptr_get(form_data, key_ptr)}
 
 
 

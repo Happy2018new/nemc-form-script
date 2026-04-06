@@ -28,7 +28,7 @@ command_length = {func, tuple.get(args, 3)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    // back to a long form that can used to select element to edit
+    _ = {func, function.call('user_interface/modal/edit', form_name)}
   fi
   return True
 fi
@@ -157,6 +157,6 @@ _ = {func, entity.SaveExtraData(level_id)}
 
 
 
-// back to a long form that can used to select element to edit
 _ = {func, function.call('user_interface/modal/process_submit', form_name, content, False)}
+_ = {func, function.call('user_interface/modal/edit', form_name)}
 return True

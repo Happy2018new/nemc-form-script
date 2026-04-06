@@ -1,0 +1,71 @@
+/*
+user_interface/handle_cancel(
+  is_cancel: bool,
+  form_name: str,
+  form_type: int,
+) -> bool
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
+
+EDIT_TYPE_EDIT_NORMAL_CANCEL = 0
+EDIT_TYPE_EDIT_BUSY_CANCEL = 1
+EDIT_TYPE_EDIT_EXIT_CANCEL = 2
+*/
+
+
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_name = {func, tuple.get(args, 1)}
+form_type = {func, tuple.get(args, 2)}
+
+
+
+
+
+should_back = False
+if is_cancel and {ref, int, -1} != 2:
+  should_back = True
+fi
+if not is_cancel and {ref, int, -1} == 3:
+  should_back = True
+fi
+
+if should_back:
+  if form_type == 0:
+    // back to edit main panel of this form (needs form type)
+  elif form_type == 1:
+    // back to edit main panel of this form (needs form type)
+  elif form_type == 2:
+    _ = {func, function.call('user_interface/modal/panel', form_name)}
+  else:
+    err = 'user_interface/handle_cancel: Unsupported form type; form_type = ' + str(form_type)
+    _ = {func, function.panic(err)}
+  fi
+fi
+
+if is_cancel or should_back:
+  return True
+fi
+
+
+
+
+
+index = {ref, int, -1}
+if index == 0:
+  _ = {func, function.call('user_interface/cancel_specific', form_name, form_type, 0)}
+elif index == 1:
+  _ = {func, function.call('user_interface/cancel_specific', form_name, form_type, 1)}
+elif index == 2:
+  _ = {func, function.call('user_interface/cancel_specific', form_name, form_type, 2)}
+fi
+
+
+
+
+
+return True

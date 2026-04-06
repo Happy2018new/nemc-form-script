@@ -63,7 +63,10 @@ rof
 
 
 if is_debug:
-  // back to the main edit panel of this modal form
+  temp = {func, slices.new(form_name)}
+  temp = {func, function.call('utils/as_func_string', 'user_interface/modal/panel', temp)}
+  temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
+  result = result + {func, strings.format('_ = {} | ', temp)}
 fi
 
 

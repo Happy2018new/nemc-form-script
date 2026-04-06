@@ -27,9 +27,24 @@
                     }
                 ],
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         },
@@ -39,16 +54,41 @@
                 "content": "CONTENT: DynamicString",
                 "button1": {
                     "text": "TEXT: DynamicString",
-                    "onclick": "COMMAND: FinalString"
+                    "onclick": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 },
                 "button2": {
                     "text": "TEXT: DynamicString",
-                    "onclick": "COMMAND: FinalString"
+                    "onclick": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 },
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         },
@@ -164,9 +204,24 @@
                     }
                 ],
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         }

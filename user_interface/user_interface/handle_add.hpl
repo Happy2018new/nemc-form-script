@@ -30,17 +30,20 @@ fi
 
 
 if form_type == 0:
-  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' long'}
+  success = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' long'} > 0
 elif form_type == 1:
-  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' popup'}
+  success = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' popup'} > 0
 elif form_type == 2:
-  count = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' modal'}
+  success = {command, 'customform add ' + {func, json.fast_dumps(form_name)} + ' modal'} > 0
 else:
   err = 'user_interface/handle_add: Unsupported form type; form_type = ' + str(form_type)
   _ = {func, function.panic(err)}
 fi
+if success:
+  _ = {func, function.call('user_interface/storage/init_form', form_name, form_type)}
+fi
 
 
 
-_ = {func, function.call('user_interface/add_after', count != 0, form_type, form_name, back_form)}
+_ = {func, function.call('user_interface/add_after', success, form_type, form_name, back_form)}
 return True

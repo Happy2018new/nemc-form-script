@@ -3,6 +3,10 @@ user_interface/modal/handle_panel(
   is_cancel: bool,
   form: str,
 ) -> bool
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
 */
 
 
@@ -23,18 +27,20 @@ fi
 
 index = {ref, int, -1}
 if index == 0:
-  // review modal form
+  _ = {func, function.call('user_interface/modal/preview', form)}
 elif index == 1:
-  // add elements
+  _ = {func, function.call('user_interface/modal/add', form, -1)}
 elif index == 2:
-  // insert elements
+  _ = {func, function.call('user_interface/modal/insert', form)}
 elif index == 3:
-  // edit elements
+  _ = {func, function.call('user_interface/modal/edit', form)}
 elif index == 4:
-  // remove elements
+  _ = {func, function.call('user_interface/modal/remove', form)}
 elif index == 5:
-  // set title
+  _ = {func, function.call('user_interface/modal/title', form)}
 elif index == 6:
+  _ = {func, function.call('user_interface/cancel', form, 2)}
+elif index == 7:
   // back to main panel
 fi
 
