@@ -104,7 +104,7 @@ def _generate_long_form(
         )
     result.content = filter_sentence(content)
 
-    for index, value in enumerate(form.elements):
+    for index, value in enumerate(list(form.elements)):
         if isinstance(value, LongStorageFormButton):
             # prepare
             button = LongFormalFormButton()
@@ -291,7 +291,7 @@ def _generate_modal_form(
         )
     result.title = filter_sentence(title)
 
-    for index, value in enumerate(form.content):
+    for index, value in enumerate(list(form.content)):
         if isinstance(value, ModalStorageFormElementLabel):
             ctx = "In text of label (index={})".format(index)
             text = runner.run_code(value.text, ctx, executor, dimension, position)
@@ -442,7 +442,7 @@ def _generate_modal_form(
                         index
                     )
                 )
-            for ind, val in enumerate(value.options):
+            for ind, val in enumerate(list(value.options)):
                 ctx = "In option of dropdown (index={}, ind={})".format(index, ind)
                 option = runner.run_code(val, ctx, executor, dimension, position)
                 if not isinstance(option, str):
@@ -584,7 +584,7 @@ def _generate_modal_form(
                         index
                     )
                 )
-            for ind, val in enumerate(value.steps):
+            for ind, val in enumerate(list(value.steps)):
                 ctx = "In step of step slider (index={}, ind={})".format(index, ind)
                 step = runner.run_code(val, ctx, executor, dimension, position)
                 if not isinstance(step, str):
