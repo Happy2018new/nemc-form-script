@@ -1,9 +1,9 @@
 /*
-user_interface/modal/handle_edit_dropdown(
+user_interface/modal/handle_edit_step_slider(
   is_cancel: bool,
   form_name: str,
   element_index: int,
-  option_length: int,
+  step_length: int,
   command_length: int,
 ) -> bool
 
@@ -23,7 +23,7 @@ is_cancel = {func, tuple.get(args, 0)}
 form_name = {func, tuple.get(args, 1)}
 format = {func, json.fast_dumps(form_name)}
 element_index = {func, tuple.get(args, 2)}
-option_length = {func, tuple.get(args, 3)}
+step_length = {func, tuple.get(args, 3)}
 command_length = {func, tuple.get(args, 4)}
 
 
@@ -58,41 +58,45 @@ element = {func, slices.ptr_get(content, element_index)}
 
 
 
-opts = {func, slices.new()}
+steps = {func, slices.new()}
 
-for i, option_length:
-  opt = {ref, str, 14+i}
-  if {func, strings.length(opt)} > 0:
-    _ = {func, slices.append(opts, opt)}
+for i, step_length:
+  step = {ref, str, 14+i}
+  if {func, strings.length(step)} > 0:
+    _ = {func, slices.append(steps, step)}
   fi
 rof
 
-if {func, slices.length(opts)} == 0:
-  _ = {func, slices.append(opts, '占位选项')}
+temp = {func, slices.length(steps)}
+if temp == 0:
+  _ = {func, slices.append(steps, '占位选项 1')}
+  _ = {func, slices.append(steps, '占位选项 2')}
+elif temp == 1:
+  _ = {func, slices.append(steps, '占位选项 2')}
 fi
 
 
 
-current_length = {func, form.dropdown_length(form_name, element_index)}
-cmd = {func, strings.format('editdropdown {} {} sub discard 0 {}', format, element_index, current_length)}
+current_length = {func, form.step_slider_length(form_name, element_index)}
+cmd = {func, strings.format('editstepslider {} {} sub discard 0 {}', format, element_index, current_length)}
 _ = {command, cmd}
 
-for i, {func, slices.length(opts)}:
-  opt = {func, slices.get(opts, i)}
+for i, {func, slices.length(steps)}:
+  step = {func, slices.get(steps, i)}
 
-  result = {func, function.try('utils/compile_code', opt)}
+  result = {func, function.try('utils/compile_code', step)}
   code = {func, tuple.get(result, 0)}
   err = {func, tuple.get(result, 1)}
   if {func, strings.length(err)} > 0:
     code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
   fi
 
-  cmd = {func, strings.format('editdropdown {} {} append "return {}"', format, element_index, code)}
+  cmd = {func, strings.format('editstepslider {} {} append "return {}"', format, element_index, code)}
   _ = {command, cmd}
 rof
 
-key_ptr = {func, object.ref('options')}
-_ = {func, maps.ptr_set(element, key_ptr, opts)}
+key_ptr = {func, object.ref('steps')}
+_ = {func, maps.ptr_set(element, key_ptr, steps)}
 
 
 
@@ -110,7 +114,7 @@ if {func, strings.length(err)} > 0:
   code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
 fi
 
-cmd = {func, strings.format('editdropdown {} {} text "return {}"', format, element_index, code)}
+cmd = {func, strings.format('editstepslider {} {} text "return {}"', format, element_index, code)}
 _ = {command, cmd}
 
 
@@ -130,10 +134,10 @@ fi
 temp = {func, strings.format('temp = {} | ', code)}
 temp = temp + 'temp = {func, function.call(\'utils/safe_cast\', temp, 0)} | '
 temp = temp + 'if temp < 0: | return 0 | fi | '
-temp = temp + 'if temp >= ' + str({func, slices.length(opts)}) + ': | return ' + str({func, slices.length(opts)}-1) + ' | fi | '
+temp = temp + 'if temp >= ' + str({func, slices.length(steps)}) + ': | return ' + str({func, slices.length(steps)}-1) + ' | fi | '
 temp = temp + 'return temp'
 
-cmd = {func, strings.format('editdropdown {} {} default "{}"', format, element_index, temp)}
+cmd = {func, strings.format('editstepslider {} {} default "{}"', format, element_index, temp)}
 _ = {command, cmd}
 
 
@@ -155,7 +159,7 @@ fi
 
 temp = {func, function.call('utils/as_code_string', condition)}
 temp = temp + '== \'\' or ' + '{command, ' + temp + '} > 0:'
-cmd = {func, strings.format('editdropdown {} {} tooltip "if {} | return {} | else: | return \'\' | fi"', format, element_index, temp, code)}
+cmd = {func, strings.format('editstepslider {} {} tooltip "if {} | return {} | else: | return \'\' | fi"', format, element_index, temp, code)}
 _ = {command, cmd}
 
 
@@ -167,8 +171,8 @@ _ = {command, cmd}
 commands = {func, slices.new()}
 
 for i, command_length:
-  payload = {ref, str, 18+option_length+2*i}
-  condition = {ref, bool, 19+option_length+2*i}
+  payload = {ref, str, 18+step_length+2*i}
+  condition = {ref, bool, 19+step_length+2*i}
 
   if {func, strings.length(payload)} == 0:
     continue

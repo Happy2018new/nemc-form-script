@@ -2,6 +2,7 @@
 user_interface/modal/process_submit(
   form_name: str,
   content: ptr@slice[map[str, Any]],
+  is_debug: bool,
 ) -> bool
 */
 
@@ -11,6 +12,7 @@ user_interface/modal/process_submit(
 
 form_name = {func, tuple.get(args, 0)}
 content = {func, tuple.get(args, 1)}
+is_debug = {func, tuple.get(args, 2)}
 
 
 
@@ -57,6 +59,12 @@ for index, {func, slices.length(content)}:
     fi
   rof
 rof
+
+
+
+if is_debug:
+  // back to the main edit panel of this modal form
+fi
 
 
 

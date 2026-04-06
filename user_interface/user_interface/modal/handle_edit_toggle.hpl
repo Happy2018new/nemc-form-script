@@ -114,5 +114,5 @@ _ = {func, entity.SaveExtraData(level_id)}
 
 
 // back to a long form that can used to select element to edit
-_ = {func, function.call('user_interface/modal/process_submit', form_name, content)}
+_ = {func, function.call('user_interface/modal/process_submit', form_name, content, False)}
 return True
