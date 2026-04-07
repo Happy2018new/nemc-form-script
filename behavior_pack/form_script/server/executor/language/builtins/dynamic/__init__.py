@@ -7,3 +7,4 @@ from .lib_entity import Entity
 from .lib_player import Player
 from .lib_block import Block
 from .lib_item import Item
+from .lib_utils import Utils

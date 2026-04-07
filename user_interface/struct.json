@@ -19,11 +19,13 @@
                     {
                         "type": "button",
                         "text": "TEXT: DynamicString",
-                        "optional_image": {
-                            "set": "SET: FinalBool",
-                            "payload": "IMAGE: FinalString"
-                        },
-                        "onclick": "COMMAND: FinalString"
+                        "image": "IMAGE: FinalString",
+                        "onclick": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     }
                 ],
                 "oncancel": {

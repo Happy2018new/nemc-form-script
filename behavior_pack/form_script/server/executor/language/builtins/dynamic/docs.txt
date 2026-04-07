@@ -314,3 +314,8 @@
     item.GetItemInfoByBlockName
     item.GetItemMaxDurability
     item.SetItemDurability
+
+
+
+杂项
+    utils.texture_by_keyword
