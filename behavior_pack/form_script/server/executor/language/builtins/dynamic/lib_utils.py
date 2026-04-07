@@ -4302,7 +4302,11 @@ class Utils:
         keyword = keyword.strip().lower()
 
         if page_split:
-            result = [(i, i) for i in CONST_ALL_TEXTURES if keyword in i.lower()]
+            result = [
+                (i.replace(keyword, "§c{}§r".format(keyword)), i)
+                for i in CONST_ALL_TEXTURES
+                if keyword in i.lower()
+            ]
         else:
             result = [i for i in CONST_ALL_TEXTURES if keyword in i.lower()]
 
