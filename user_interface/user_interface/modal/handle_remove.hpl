@@ -27,11 +27,8 @@ index = {ref, int, -1}
 if index == length:
   _ = {func, function.call('user_interface/modal/panel', form)}
 else:
-  _ = {func, function.call('user_interface/storage/modal/remove_element', form, index)}
-  _ = {func, function.call('user_interface/modal/remove', form)}
+  _ = {func, function.call('user_interface/modal/confirm_remove', form, index)}
 fi
-
-
 
 
 
