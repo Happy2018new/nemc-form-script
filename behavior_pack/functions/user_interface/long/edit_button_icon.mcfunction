@@ -5,7 +5,7 @@ editmodalform "user_interface/long/edit_button_icon" title "return '设置贴图
 
 
 editmodalform "user_interface/long/edit_button_icon" append label
-editlabel "user_interface/long/edit_button_icon" 0 label "return '搜索材质贴图'"
+editlabel "user_interface/long/edit_button_icon" 0 label "return '您将搜索材质贴图或指定材质贴图。'"
 
 editmodalform "user_interface/long/edit_button_icon" append input
 editinput "user_interface/long/edit_button_icon" 1 text "return '请输入搜索关键词'"
