@@ -135,7 +135,7 @@ class CodeRunner:
             require_return (bool, optional):
                 是否检查这些代码是否返回值。
                 如果为真且没有返回值，则抛出异常。
-                默认值为真
+                默认值为 True
             var_maps (dict[str, int | bool | float | str], optional):
                 运行代码前已经初始化的变量。
                 默认值为 EMPTY_VARIABLES
