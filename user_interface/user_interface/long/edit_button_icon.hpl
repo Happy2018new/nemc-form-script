@@ -1,5 +1,5 @@
 /*
-user_interface/long/select_texture(
+user_interface/long/edit_button_icon(
   form_name: str,
   element_index: int,
 ) -> bool
@@ -7,12 +7,8 @@ user_interface/long/select_texture(
 
 
 
-
-
 form_name = {func, tuple.get(args, 0)}
 element_index = {func, tuple.get(args, 1)}
-
-
 
 
 
@@ -23,26 +19,24 @@ form_data = {func, maps.ptr_get(long, {func, object.ref(form_name)})}
 elements = {func, maps.ptr_get(form_data, {func, object.ref('elements')})}
 element = {func, slices.ptr_get(elements, element_index)}
 
+
+
 texture = {func, maps.get(element, 'image')}
 texture = {func, function.call('utils/as_code_string', texture)}
-cmd = {func, strings.format('editinput "user_interface/long/select_texture" 1 default "return {}"', texture)}
+cmd = {func, strings.format('editinput "user_interface/long/edit_button_icon" 1 default "return {}"', texture)}
 _ = {command, cmd}
 
 
 
-
-
 temp = {func, slices.new(False, form_name, element_index)}
-code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_select_texture', temp)}
-_ = {command, {func, strings.format('customform onsubmit "user_interface/long/select_texture" "{}"', code)}}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_button_icon', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/long/edit_button_icon" "{}"', code)}}
 
 temp = {func, slices.new(True, form_name, element_index)}
-code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_select_texture', temp)}
-_ = {command, {func, strings.format('customform oncancel "user_interface/long/select_texture" "{}"', code)}}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_button_icon', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/long/edit_button_icon" "{}"', code)}}
 
 
 
-
-
-_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/long/select_texture"'}
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/long/edit_button_icon"'}
 return True

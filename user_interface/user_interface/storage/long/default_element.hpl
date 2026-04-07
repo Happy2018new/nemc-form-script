@@ -16,10 +16,10 @@ element_type = {func, tuple.get(args, 0)}
 
 
 if element_type == 0:
-  result = {func, maps.new(False, 'text', '', 'image', '')}
+  result = {func, maps.new(False, 'type', 'button', 'text', '', 'image', '')}
   _ = {func, maps.ptr_set(result, {func, object.ref('onclick')}, {func, slices.new()})}
 elif element_type == 1:
-  result = {func, maps.new(False, 'type', 'header', 'text', '')}
+  result = {func, maps.new(False, 'type', 'label', 'text', '')}
 elif element_type == 2:
   result = {func, maps.new(False, 'type', 'header', 'text', '')}
 elif element_type == 3:

@@ -47,7 +47,7 @@ _ = {func, entity.SaveExtraData(level_id)}
 
 
 
-format = {func, json.fast_dumps(form)}
+format = {func, json.fast_dumps(form_name)}
 
 if element_type == 0:
   _ = {command, {func, strings.format('editlongform {} insert {} button', format, insert_index)}}
