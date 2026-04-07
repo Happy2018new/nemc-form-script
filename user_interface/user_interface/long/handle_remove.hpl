@@ -1,0 +1,35 @@
+/*
+user_interface/long/handle_remove(
+  is_cancel: bool,
+  form: str,
+  length: int,
+) -> bool
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form = {func, tuple.get(args, 1)}
+length = {func, tuple.get(args, 2)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    // back to the main panel of long
+  fi
+  return True
+fi
+
+
+
+index = {ref, int, -1}
+if index == length:
+  _// back to the main panel of long
+else:
+  _ = {func, function.call('user_interface/long/confirm_remove', form, index)}
+fi
+
+
+
+return True
