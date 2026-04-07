@@ -23,7 +23,7 @@ command_length = {func, tuple.get(args, 3)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/long/edit_button_panel', form_name, element_index)}
+    _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
   fi
   return True
 fi
@@ -66,5 +66,5 @@ _ = {func, entity.SaveExtraData(level_id)}
 
 
 _ = {func, function.call('user_interface/long/process_submit', form_name, elements, False)}
-_ = {func, function.call('user_interface/long/edit_button_panel', form_name, element_index)}
+_ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
 return True

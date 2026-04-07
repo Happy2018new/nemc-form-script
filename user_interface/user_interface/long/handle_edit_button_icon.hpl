@@ -31,7 +31,7 @@ element_index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/long/edit_button_panel', form_name, element_index)}
+    _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
   fi
   return True
 fi
@@ -45,7 +45,7 @@ direct = {ref, bool, 2}
 
 if direct:
   _ = {func, function.call('user_interface/long/update_button_image', form_name, element_index, keyword)}
-  _ = {func, function.call('user_interface/long/edit_button_panel', form_name, element_index)}
+  _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
 else:
   result = {func, utils.texture_by_keyword(keyword, True)}
   extra = {func, maps.new(False, 'form_name', form_name, 'element_index', element_index)}

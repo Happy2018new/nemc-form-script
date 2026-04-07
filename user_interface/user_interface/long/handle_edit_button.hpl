@@ -1,5 +1,5 @@
 /*
-user_interface/long/handle_edit_button_panel(
+user_interface/long/handle_edit_button(
   is_cancel: bool,
   form_name: str,
   element_index: int,
@@ -20,7 +20,7 @@ element_index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    // back to the main panel of long
+    _ = {func, function.call('user_interface/long/edit', form_name)}
   fi
   return True
 fi
@@ -37,7 +37,7 @@ elif index == 1:
 elif index == 2:
   _ = {func, function.call('user_interface/long/edit_button_cmd', form_name, element_index)}
 elif index == 3:
-  // back to the main panel of long
+  _ = {func, function.call('user_interface/long/edit', form_name)}
 fi
 
 

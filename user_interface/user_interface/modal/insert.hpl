@@ -39,8 +39,5 @@ _ = {command, {func, strings.format('customform oncancel "user_interface/modal/i
 
 
 _ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/insert"'}
-if names != 0:
-  cmd = {func, strings.format('editlongform "user_interface/modal/insert" sub discard 0 {}', length)}
-  _ = {command, cmd}
-fi
+_ = {command, {func, strings.format('editlongform "user_interface/modal/insert" sub discard 0 {}', length)}}
 return True
