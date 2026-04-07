@@ -19,7 +19,7 @@ format = {func, json.fast_dumps(form_name)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    // back to the main panel of long
+    _ = {func, function.call('user_interface/long/panel', form_name)}
   fi
   return True
 fi
@@ -71,5 +71,5 @@ _ = {command, cmd}
 
 
 _ = {command, {func, strings.format('customform save {}', format)}}
-// back to the main panel of long
+_ = {func, function.call('user_interface/long/panel', form_name)}
 return True

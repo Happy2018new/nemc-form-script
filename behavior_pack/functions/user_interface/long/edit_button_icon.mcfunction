@@ -14,7 +14,7 @@ editinput "user_interface/long/edit_button_icon" 1 tooltip "return '如果目标
 
 editmodalform "user_interface/long/edit_button_icon" append toggle
 edittoggle "user_interface/long/edit_button_icon" 2 text "return '直接使用贴图路径'"
-edittoggle "user_interface/long/edit_button_icon" 2 tooltip "return '§b小提示§r\\n  §e1.§r 打开此开关后将跳过搜索，于是您输入的内容将视作贴图的路径，然后我们将使用该路径对应之贴图作为按钮的贴图。\\n  §e2.§r 您可以通过将输入框置空并打开此按钮来清空该按钮上的贴图。'"
+edittoggle "user_interface/long/edit_button_icon" 2 tooltip "return '§b小提示§r\\n  §e1.§r 打开此开关后将跳过搜索，于是您输入的内容将直接视作贴图的路径，然后我们将使用该路径对应之贴图作为按钮的贴图。\\n  §e2.§r 您可以通过将输入框置空并打开此按钮来清空该按钮上的贴图。'"
 
 
 

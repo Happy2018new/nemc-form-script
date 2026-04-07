@@ -16,7 +16,7 @@ index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    // back to the main panel of long
+    _ = {func, function.call('user_interface/long/panel', form)}
   fi
   return True
 fi
@@ -27,7 +27,7 @@ if {ref, bool, 0}:
   if index == -1:
     _ = {func, function.call('user_interface/long/add', form, -1)}
   else:
-    // back to the main panel of long
+    _ = {func, function.call('user_interface/long/panel', form)}
   fi
   return True
 fi

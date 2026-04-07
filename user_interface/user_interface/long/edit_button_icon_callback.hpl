@@ -33,10 +33,10 @@ if submit_type == 1:
   _ = {func, function.call('user_interface/long/update_button_image', form_name, element_index, texture_id)}
   _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
 elif submit_type == 2:
-  _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
+  _ = {func, function.call('user_interface/long/edit_button_icon', form_name, element_index)}
 elif submit_type == 3:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/long/edit_button', form_name, element_index)}
+    _ = {func, function.call('user_interface/long/edit_button_icon', form_name, element_index)}
   fi
 fi
 
