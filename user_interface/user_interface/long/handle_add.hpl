@@ -1,0 +1,54 @@
+/*
+user_interface/long/handle_add(
+  is_cancel: bool,
+  form: str,
+  index: int,
+) -> bool
+
+ELEMENT_TYPE_BUTTON = 0
+ELEMENT_TYPE_LABEL = 1
+ELEMENT_TYPE_HEADER = 2
+ELEMENT_TYPE_DIVIDER = 3
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form = {func, tuple.get(args, 1)}
+index = {func, tuple.get(args, 2)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    // back to the main panel of long
+  fi
+  return True
+fi
+
+
+
+selected = {ref, int, -1}
+if selected == 0:
+  _ = {func, function.call('user_interface/storage/long/add_element', form, 0, index)}
+  _ = {func, function.call('user_interface/long/add_after', form, index)}
+elif selected == 1:
+  _ = {func, function.call('user_interface/storage/long/add_element', form, 1, index)}
+  _ = {func, function.call('user_interface/long/add_after', form, index)}
+elif selected == 2:
+  _ = {func, function.call('user_interface/storage/long/add_element', form, 2, index)}
+  _ = {func, function.call('user_interface/long/add_after', form, index)}
+elif selected == 3:
+  _ = {func, function.call('user_interface/storage/long/add_element', form, 3, index)}
+  if index == -1:
+    _ = {func, function.call('user_interface/long/add', form, -1)}
+  else:
+    // back to the main panel of long
+  fi
+elif selected == 4:
+  // back to the main panel of long
+fi
+
+
+
+return True
