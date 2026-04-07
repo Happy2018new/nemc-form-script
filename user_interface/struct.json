@@ -6,17 +6,6 @@
                 "content": "CONTENT: DynamicString",
                 "elements": [
                     {
-                        "type": "label",
-                        "text": "TEXT: DynamicString"
-                    },
-                    {
-                        "type": "header",
-                        "text": "TEXT: DynamicString"
-                    },
-                    {
-                        "type": "divider"
-                    },
-                    {
                         "type": "button",
                         "text": "TEXT: DynamicString",
                         "image": "IMAGE: FinalString",
@@ -26,6 +15,17 @@
                                 "payload": "COMMAND: FinalString"
                             }
                         ]
+                    },
+                    {
+                        "type": "label",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "header",
+                        "text": "TEXT: DynamicString"
+                    },
+                    {
+                        "type": "divider"
                     }
                 ],
                 "oncancel": {

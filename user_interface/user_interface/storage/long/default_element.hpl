@@ -1,0 +1,35 @@
+/*
+user_interface/storage/long/default_element(
+  element_type: int,
+) -> ptr@map[str, Any]
+
+ELEMENT_TYPE_BUTTON = 0
+ELEMENT_TYPE_LABEL = 1
+ELEMENT_TYPE_HEADER = 2
+ELEMENT_TYPE_DIVIDER = 3
+*/
+
+
+
+element_type = {func, tuple.get(args, 0)}
+
+
+
+if element_type == 0:
+  result = {func, maps.new(False, 'text', '', 'image', '')}
+  _ = {func, maps.ptr_set(result, {func, object.ref('onclick')}, {func, slices.new()})}
+elif element_type == 1:
+  result = {func, maps.new(False, 'type', 'header', 'text', '')}
+elif element_type == 2:
+  result = {func, maps.new(False, 'type', 'header', 'text', '')}
+elif element_type == 3:
+  result = {func, maps.new(False, 'type', 'divider')}
+else:
+  err = 'user_interface/storage/long/default_element: Unsupported long form element type; element_type = ' + str(element_type)
+  _ = {func, function.panic(err)}
+fi
+
+
+
+_ = {func, object.pin(result)}
+return result

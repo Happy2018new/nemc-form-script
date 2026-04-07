@@ -23,14 +23,13 @@ storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
 modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
 form_data = {func, maps.ptr_get(modal, {func, object.ref(form)})}
 content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
-element = {func, slices.ptr_get(content, index)}
 
 
 
 new_content = {func, slices.new()}
 for ind, {func, slices.length(content)}:
-  val = {func, slices.ptr_get(content, ind)}
   if ind != index:
+    val = {func, slices.ptr_get(content, ind)}
     _ = {func, slices.ptr_append(new_content, val)}
   fi
 rof
