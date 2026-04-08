@@ -1,7 +1,7 @@
 /*
 user_interface/storage/long/elements_name(
   form: str,
-) -> ptr@slice[button_name: str]
+) -> ptr@slice[tuple[button_name: str, button_icon: str]]
 */
 
 
@@ -29,18 +29,26 @@ result = {func, slices.new()}
 for index, {func, slices.length(elements)}:
   value = {func, slices.ptr_get(elements, index)}
   element_type = {func, maps.get(value, 'type')}
+
   if element_type == 'button':
-    _ = {func, slices.append(result, '按钮 (' + str(index) + ')')}
+    name = '按钮 (' + str(index) + ')'
+    icon = {func, maps.get(value, 'image')}
   elif element_type == 'label':
-    _ = {func, slices.append(result, '普通文本 (' + str(index) + ')')}
+    name = '普通文本 (' + str(index) + ')'
+    icon = ''
   elif element_type == 'header':
-    _ = {func, slices.append(result, '大字文本 (' + str(index) + ')')}
+    name = '大字文本 (' + str(index) + ')'
+    icon = ''
   elif element_type == 'divider':
-    _ = {func, slices.append(result, '分割线 (' + str(index) + ')')}
+    name = '分割线 (' + str(index) + ')'
+    icon = ''
   else:
     err = 'user_interface/storage/long/elements_name: Unsupported long form element type; element_type = ' + element_type
     _ = {func, function.panic(err)}
   fi
+
+  temp = {func, tuple.new(name, icon)}
+  _ = {func, slices.ptr_append(result, temp)}
 rof
 
 _ = {func, object.pin(result)}

@@ -16,10 +16,16 @@ _ = {func, object.finalise(names)}
 length = {func, slices.length(names)}
 
 for index, length:
-  value = {func, slices.get(names, index)}
-  value = {func, function.call('utils/as_code_string', value)}
+  value = {func, slices.ptr_get(names, index)}
+
+  text = {func, tuple.get(value, 0)}
+  icon = {func, tuple.get(value, 1)}
+  text = {func, function.call('utils/as_code_string', text)}
+  icon = {func, function.call('utils/as_code_string', icon)}
+
   _ = {command, {func, strings.format('editlongform "user_interface/long/remove" insert {} button', index)}}
-  _ = {command, {func, strings.format('editbutton "user_interface/long/remove" {} text "return {}"', index, value)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/long/remove" {} text "return {}"', index, text)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/long/remove" {} icon "return {}"', index, icon)}}
 rof
 
 
