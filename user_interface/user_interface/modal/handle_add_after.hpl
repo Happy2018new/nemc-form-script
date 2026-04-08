@@ -16,7 +16,11 @@ index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/modal/panel', form)}
+    if index == -1:
+      _ = {func, function.call('user_interface/modal/add', form)}
+    else:
+      _ = {func, function.call('user_interface/modal/insert', form)}
+    fi
   fi
   return True
 fi
@@ -27,7 +31,7 @@ if {ref, bool, 0}:
   if index == -1:
     _ = {func, function.call('user_interface/modal/add', form, -1)}
   else:
-    _ = {func, function.call('user_interface/modal/panel', form)}
+    _ = {func, function.call('user_interface/modal/insert', form)}
   fi
   return True
 fi

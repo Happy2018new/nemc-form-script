@@ -21,7 +21,11 @@ index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/long/panel', form)}
+    if index == -1:
+      _ = {func, function.call('user_interface/long/panel', form)}
+    else:
+      _ = {func, function.call('user_interface/long/insert', form)}
+    fi
   fi
   return True
 fi
@@ -43,10 +47,14 @@ elif selected == 3:
   if index == -1:
     _ = {func, function.call('user_interface/long/add', form, -1)}
   else:
-    _ = {func, function.call('user_interface/long/panel', form)}
+    _ = {func, function.call('user_interface/long/insert', form)}
   fi
 elif selected == 4:
-  _ = {func, function.call('user_interface/long/panel', form)}
+  if index == -1:
+    _ = {func, function.call('user_interface/long/panel', form)}
+  else:
+    _ = {func, function.call('user_interface/long/insert', form)}
+  fi
 fi
 
 

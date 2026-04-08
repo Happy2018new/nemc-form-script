@@ -25,7 +25,11 @@ index = {func, tuple.get(args, 2)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call('user_interface/modal/panel', form)}
+    if index == -1:
+      _ = {func, function.call('user_interface/modal/panel', form)}
+    else:
+      _ = {func, function.call('user_interface/modal/insert', form)}
+    fi
   fi
   return True
 fi
@@ -44,7 +48,7 @@ elif selected == 2:
   if index == -1:
     _ = {func, function.call('user_interface/modal/add', form, -1)}
   else:
-    _ = {func, function.call('user_interface/modal/panel', form)}
+    _ = {func, function.call('user_interface/modal/insert', form)}
   fi
 elif selected == 3:
   _ = {func, function.call('user_interface/storage/modal/add_element', form, 3, index)}
@@ -62,7 +66,11 @@ elif selected == 7:
   _ = {func, function.call('user_interface/storage/modal/add_element', form, 7, index)}
   _ = {func, function.call('user_interface/modal/add_after', form, index)}
 elif selected == 8:
-  _ = {func, function.call('user_interface/modal/panel', form)}
+  if index == -1:
+    _ = {func, function.call('user_interface/modal/panel', form)}
+  else:
+    _ = {func, function.call('user_interface/modal/insert', form)}
+  fi
 fi
 
 
