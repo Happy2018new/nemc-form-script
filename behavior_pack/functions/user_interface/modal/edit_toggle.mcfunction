@@ -1,6 +1,6 @@
 customform remove "user_interface/modal/edit_toggle"
 customform add "user_interface/modal/edit_toggle" modal
-editmodalform "user_interface/modal/edit_toggle" title "return '编辑开关'"
+editmodalform "user_interface/modal/edit_toggle" title "return '开关 ({})'"
 
 
 

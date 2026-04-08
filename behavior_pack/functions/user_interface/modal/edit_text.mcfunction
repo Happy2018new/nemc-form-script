@@ -1,6 +1,6 @@
 customform remove "user_interface/modal/edit_text"
 customform add "user_interface/modal/edit_text" modal
-editmodalform "user_interface/modal/edit_text" title "return '编辑文本元素'"
+editmodalform "user_interface/modal/edit_text" title "return '{} ({})'"
 
 
 

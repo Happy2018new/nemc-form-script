@@ -1,6 +1,6 @@
 customform remove "user_interface/modal/edit_slider"
 customform add "user_interface/modal/edit_slider" modal
-editmodalform "user_interface/modal/edit_slider" title "return '编辑隐式步进滑块'"
+editmodalform "user_interface/modal/edit_slider" title "return '隐式步进滑块 ({})'"
 
 
 

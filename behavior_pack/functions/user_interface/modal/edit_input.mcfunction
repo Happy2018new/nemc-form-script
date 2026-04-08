@@ -1,6 +1,6 @@
 customform remove "user_interface/modal/edit_input"
 customform add "user_interface/modal/edit_input" modal
-editmodalform "user_interface/modal/edit_input" title "return '编辑输入框'"
+editmodalform "user_interface/modal/edit_input" title "return '输入框 ({})'"
 
 
 

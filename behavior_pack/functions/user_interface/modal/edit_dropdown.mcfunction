@@ -1,6 +1,6 @@
 customform remove "user_interface/modal/edit_dropdown"
 customform add "user_interface/modal/edit_dropdown" modal
-editmodalform "user_interface/modal/edit_dropdown" title "return '编辑下拉框'"
+editmodalform "user_interface/modal/edit_dropdown" title "return '下拉框 ({})'"
 
 
 

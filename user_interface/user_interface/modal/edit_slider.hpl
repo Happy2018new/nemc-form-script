@@ -114,6 +114,9 @@ rof
 
 
 
+cmd = {func, strings.format('editmodalform "user_interface/modal/edit_slider" title "return \'隐式步进滑块 ({})\'"', element_index)}
+_ = {command, cmd}
+
 temp = {func, slices.new(False, form_name, element_index, final)}
 code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_edit_slider', temp)}
 _ = {command, {func, strings.format('customform onsubmit "user_interface/modal/edit_slider" "{}"', code)}}

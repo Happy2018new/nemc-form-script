@@ -1,6 +1,6 @@
 customform remove "user_interface/long/edit_button"
 customform add "user_interface/long/edit_button" long
-editlongform "user_interface/long/edit_button" title "return '编辑按钮'"
+editlongform "user_interface/long/edit_button" title "return '按钮 ({})'"
 editlongform "user_interface/long/edit_button" content "return '请选择您要进行的操作。'"
 
 

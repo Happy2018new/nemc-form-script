@@ -7,8 +7,12 @@ user_interface/long/edit_text(
 
 
 
+
+
 form_name = {func, tuple.get(args, 0)}
 element_index = {func, tuple.get(args, 1)}
+
+
 
 
 
@@ -21,12 +25,28 @@ element = {func, slices.ptr_get(elements, element_index)}
 
 
 
+
+
 text = {func, maps.get(element, 'text')}
 text = {func, function.call('utils/as_code_string', text)}
 cmd = {func, strings.format('editinput "user_interface/long/edit_text" 1 default "return {}"', text)}
 _ = {command, cmd}
 
 
+
+
+
+element_type = {func, maps.get(element, 'type')}
+if element_type == 'label':
+  cmd = {func, strings.format('editmodalform "user_interface/long/edit_text" title "return \'普通文本 ({})\'"', element_index)}
+  _ = {command, cmd}
+elif element_type == 'header':
+  cmd = {func, strings.format('editmodalform "user_interface/long/edit_text" title "return \'大字文本 ({})\'"', element_index)}
+  _ = {command, cmd}
+else:
+  err = 'user_interface/long/edit_text: Unresolved element type; element_type = ' + element_type
+  _ = {func, function.panic(err)}
+fi
 
 temp = {func, slices.new(False, form_name, element_index)}
 code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_text', temp)}
@@ -35,6 +55,8 @@ _ = {command, {func, strings.format('customform onsubmit "user_interface/long/ed
 temp = {func, slices.new(True, form_name, element_index)}
 code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_text', temp)}
 _ = {command, {func, strings.format('customform oncancel "user_interface/long/edit_text" "{}"', code)}}
+
+
 
 
 
