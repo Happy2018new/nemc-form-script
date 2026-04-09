@@ -1,0 +1,51 @@
+/*
+user_interface/long/edit_button(
+  form_name: str,
+  element_index: int,
+) -> bool
+*/
+
+
+
+
+
+form_name = {func, tuple.get(args, 0)}
+element_index = {func, tuple.get(args, 1)}
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+long = {func, maps.ptr_get(storage, {func, object.ref('long')})}
+form_data = {func, maps.ptr_get(long, {func, object.ref(form_name)})}
+elements = {func, maps.ptr_get(form_data, {func, object.ref('elements')})}
+element = {func, slices.ptr_get(elements, element_index)}
+
+
+
+
+
+cmd = {func, strings.format('editlongform "user_interface/long/edit_button" title "return \'按钮 ({})\'"', element_index)}
+_ = {command, cmd}
+
+texture = {func, maps.get(element, 'image')}
+code = {func, function.call('utils/as_code_string', texture)}
+cmd = {func, strings.format('editbutton "user_interface/long/edit_button" 1 icon "return {}"', code)}
+_ = {command, cmd}
+
+temp = {func, slices.new(False, form_name, element_index, texture)}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_button', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/long/edit_button" "{}"', code)}}
+
+temp = {func, slices.new(True, form_name, element_index, texture)}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_edit_button', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/long/edit_button" "{}"', code)}}
+
+
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/long/edit_button"'}
+return True

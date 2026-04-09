@@ -1,0 +1,61 @@
+/*
+user_interface/modal/handle_edit(
+  is_cancel: bool,
+  form: str,
+  length: int,
+) -> bool
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form = {func, tuple.get(args, 1)}
+length = {func, tuple.get(args, 2)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    _ = {func, function.call('user_interface/modal/panel', form)}
+  fi
+  return True
+fi
+
+
+
+index = {ref, int, -1}
+if index == length:
+  _ = {func, function.call('user_interface/modal/panel', form)}
+  return True
+fi
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form)})}
+content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
+
+element = {func, slices.ptr_get(content, index)}
+element_type = {func, maps.get(element, 'type')}
+if element_type == 'label' or element_type == 'header':
+  _ = {func, function.call('user_interface/modal/edit_text', form, index)}
+elif element_type == 'divider':
+  _ = {func, function.call('user_interface/modal/edit_divider', form)}
+elif element_type == 'input':
+  _ = {func, function.call('user_interface/modal/edit_input', form, index)}
+elif element_type == 'toggle':
+  _ = {func, function.call('user_interface/modal/edit_toggle', form, index)}
+elif element_type == 'dropdown':
+  _ = {func, function.call('user_interface/modal/edit_dropdown', form, index)}
+elif element_type == 'slider':
+  _ = {func, function.call('user_interface/modal/edit_slider', form, index)}
+elif element_type == 'step_slider':
+  _ = {func, function.call('user_interface/modal/edit_step_slider', form, index)}
+else:
+  err = 'user_interface/modal/handle_edit: Unsupported element type; element_type = ' + element_type
+  _ = {func, function.panic(err)}
+fi
+
+return True

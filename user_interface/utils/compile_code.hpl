@@ -1,0 +1,141 @@
+/*
+utils/compile_code(code: str) -> str
+
+PROCESS_MODE_SCAN_SELECTOR = 1
+PROCESS_MODE_SCAN_SCORE = 2
+
+REQUEST_TYPE_SELECTOR = 0
+REQUEST_TYPE_SCOREBOARD = 1
+*/
+
+
+
+
+
+code = {func, tuple.get(args, 0)}
+code = {func, strings.replace(code, '"', '\\"')}
+code = {func, json.fast_loads('"' + code + '"')}
+ptr = 0
+result = {func, slices.new()}
+length = {func, strings.length(code)}
+
+
+
+
+
+for _, 2048:
+  process_mode = 0
+  select_mark = {func, strings.find(code, '$', ptr)}
+  score_mark = {func, strings.find(code, '#', ptr)}
+
+
+
+  if select_mark == -1 and score_mark == -1:
+    temp = {func, strings.sub(code, ptr, length)}
+    temp = {func, function.call('utils/as_code_string', temp)}
+    _ = {func, slices.append(result, temp)}
+    break
+  fi
+
+
+
+  if select_mark == -1:
+    process_mode = 2
+  elif score_mark == -1:
+    process_mode = 1
+  elif select_mark <= score_mark:
+    process_mode = 1
+  else:
+    process_mode = 2
+  fi
+
+
+
+  if process_mode == 1:
+    if select_mark+2 <= length and {func, strings.sub(code, select_mark+1, select_mark+2)} == '$':
+      temp = {func, strings.sub(code, ptr, select_mark+1)}
+      temp = {func, function.call('utils/as_code_string', temp)}
+      _ = {func, slices.append(result, temp)}
+      ptr = select_mark + 2
+    else:
+      temp = {func, strings.sub(code, ptr, select_mark)}
+      temp = {func, function.call('utils/as_code_string', temp)}
+      _ = {func, slices.append(result, temp)}
+
+      first_next = {func, strings.find(code, '$', select_mark+1)}
+      if first_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      second_next = {func, strings.find(code, '$', first_next+1)}
+      if second_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      ptr = second_next + 1
+
+      condition = {func, strings.sub(code, select_mark+1, first_next)}
+      target = {func, strings.sub(code, first_next+1, second_next)}
+
+      temp = {func, slices.new(0, condition, target, '')}
+      temp = {func, function.call('utils/as_func_string', 'utils/condition_string', temp)}
+      temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
+      _ = {func, slices.append(result, temp)}
+    fi
+  fi
+
+
+
+  if process_mode == 2:
+    if score_mark+2 <= length and {func, strings.sub(code, score_mark+1, score_mark+2)} == '#':
+      temp = {func, strings.sub(code, ptr, score_mark+1)}
+      temp = {func, function.call('utils/as_code_string', temp)}
+      _ = {func, slices.append(result, temp)}
+      ptr = score_mark + 2
+    else:
+      temp = {func, strings.sub(code, ptr, score_mark)}
+      temp = {func, function.call('utils/as_code_string', temp)}
+      _ = {func, slices.append(result, temp)}
+
+      first_next = {func, strings.find(code, '#', score_mark+1)}
+      if first_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      second_next = {func, strings.find(code, '#', first_next+1)}
+      if second_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      third_next = {func, strings.find(code, '#', second_next+1)}
+      if third_next == -1:
+        _ = {func, function.panic('utils/compile_code: Unexpected EOF')}
+      fi
+      ptr = third_next + 1
+
+      condition = {func, strings.sub(code, score_mark+1, first_next)}
+      target = {func, strings.sub(code, first_next+1, second_next)}
+      scoreboard = {func, strings.sub(code, second_next+1, third_next)}
+
+      temp = {func, slices.new(1, condition, target, scoreboard)}
+      temp = {func, function.call('utils/as_func_string', 'utils/condition_string', temp)}
+      temp = {func, strings.sub(temp, 7, {func, strings.length(temp)})}
+      _ = {func, slices.append(result, temp)}
+    fi
+  fi
+rof
+
+
+
+
+
+final = {func, slices.new()}
+
+for index, {func, slices.length(result)}:
+  value = {func, slices.get(result, index)}
+  if value != '\'\'':
+    _ = {func, slices.append(final, value)}
+  fi
+rof
+
+if {func, slices.length(final)} == 0:
+  return '\'\''
+else:
+  return {func, strings.join(' + ', final)}
+fi

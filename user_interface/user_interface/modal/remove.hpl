@@ -1,0 +1,43 @@
+// user_interface/modal/remove(form: str) -> bool
+
+
+
+
+
+form = {func, tuple.get(args, 0)}
+
+
+
+
+
+names = {func, function.call('user_interface/storage/modal/elements_name', form)}
+
+_ = {func, object.finalise(names)}
+length = {func, slices.length(names)}
+
+for index, length:
+  value = {func, slices.get(names, index)}
+  value = {func, function.call('utils/as_code_string', value)}
+  _ = {command, {func, strings.format('editlongform "user_interface/modal/remove" insert {} button', index)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/modal/remove" {} text "return {}"', index, value)}}
+rof
+
+
+
+
+
+temp = {func, slices.new(False, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_remove', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/modal/remove" "{}"', code)}}
+
+temp = {func, slices.new(True, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_remove', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/modal/remove" "{}"', code)}}
+
+
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/remove"'}
+_ = {command, {func, strings.format('editlongform "user_interface/modal/remove" sub discard 0 {}', length)}}
+return True

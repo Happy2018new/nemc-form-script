@@ -7,7 +7,7 @@ def collect_files(path: str) -> list[Path]:
     files: list[str] = []
 
     for i in Path(path).rglob("*"):
-        if i.is_file() and i.suffix == ".txt":
+        if i.is_file() and i.suffix == ".hpl":
             files.append(str(i))
 
     return [Path(i) for i in sorted(files)]

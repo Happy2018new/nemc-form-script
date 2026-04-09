@@ -1,0 +1,65 @@
+/*
+user_interface/long/handle_edit_text(
+  is_cancel: bool,
+  form_name: str,
+  element_index: int,
+) -> bool
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_name = {func, tuple.get(args, 1)}
+format = {func, json.fast_dumps(form_name)}
+element_index = {func, tuple.get(args, 2)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    _ = {func, function.call('user_interface/long/panel', form_name)}
+  fi
+  return True
+fi
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+long = {func, maps.ptr_get(storage, {func, object.ref('long')})}
+form_data = {func, maps.ptr_get(long, {func, object.ref(form_name)})}
+elements = {func, maps.ptr_get(form_data, {func, object.ref('elements')})}
+element = {func, slices.ptr_get(elements, element_index)}
+
+
+
+text = {ref, str, 1}
+_ = {func, maps.set(element, 'text', text)}
+_ = {func, entity.SaveExtraData(level_id)}
+
+result = {func, function.try('utils/compile_code', text)}
+code = {func, tuple.get(result, 0)}
+err = {func, tuple.get(result, 1)}
+
+if {func, strings.length(err)} > 0:
+  code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
+fi
+
+
+
+element_type = {func, maps.get(element, 'type')}
+if element_type == 'label':
+  cmd = {func, strings.format('editlabel {} {} label "return {}"', format, element_index, code)}
+elif element_type == 'header':
+  cmd = {func, strings.format('editlabel {} {} header "return {}"', format, element_index, code)}
+else:
+  err = 'user_interface/long/handle_edit_text: Unresolved long form element type; element_type = ' + str(element_type)
+  _ = {func, function.panic(err)}
+fi
+_ = {command, cmd}
+
+
+
+_ = {func, function.call('user_interface/long/process_submit', form_name, elements, False)}
+_ = {func, function.call('user_interface/long/panel', form_name)}
+return True

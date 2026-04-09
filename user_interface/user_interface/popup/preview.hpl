@@ -1,0 +1,32 @@
+/*
+user_interface/popup/preview(form: str) -> bool
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
+*/
+
+
+
+form = {func, tuple.get(args, 0)}
+format = {func, json.fast_dumps(form)}
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+popup = {func, maps.ptr_get(storage, {func, object.ref('popup')})}
+form_data = {func, maps.ptr_get(popup, {func, object.ref(form)})}
+oncancel = {func, maps.ptr_get(form_data, {func, object.ref('oncancel')})}
+
+
+
+_ = {func, function.call('user_interface/popup/process_submit', form, True)}
+_ = {func, function.call('user_interface/process_cancel', form, 1, oncancel, True)}
+_ = {command, {func, strings.format('customform show @s ~ ~ ~ @s {}', format)}}
+_ = {func, function.call('user_interface/popup/process_submit', form, False)}
+_ = {func, function.call('user_interface/process_cancel', form, 1, oncancel, False)}
+
+
+
+return True

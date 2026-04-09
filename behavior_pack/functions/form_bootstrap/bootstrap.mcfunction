@@ -1,0 +1,3 @@
+customfunction remove "form_bootstrap/bootstrap"
+customfunction add "form_bootstrap/bootstrap" "result = {func, function.try('form_bootstrap/form_ui_inited')} | err = {func, tuple.get(result, 1)} | if {func, strings.length(err)} > 0: | _ = {command, 'title @s title 编辑器安装中...'} | _ = {command, 'title @s subtitle 首次使用需要安装，可能需要一些时间'} | _ = {command, 'function form_bootstrap/add_forms'} | _ = {command, 'function form_bootstrap/add_funcs'} | _ = {command, 'customfunction add \"form_bootstrap/form_ui_inited\" \"return True\"'} | fi | return True"
+customfunction call @s ~ ~ ~ "form_bootstrap/bootstrap"
