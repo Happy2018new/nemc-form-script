@@ -7,7 +7,7 @@ editmodalform "user_interface/help" title "return '帮助'"
 editmodalform "user_interface/help" append header
 editlabel "user_interface/help" 0 header "return '警告'"
 editmodalform "user_interface/help" append label
-editlabel "user_interface/help" 1 label "return '编辑器产生的菜单§e只能§r通过编辑器编辑。\\n您§c绝不应§r用指令修改编辑器产生的菜单。'"
+editlabel "user_interface/help" 1 label "return '编辑器产生的菜单§e只能§r通过编辑器编辑。\\n您§c绝对不能§r使用指令修改它产生的菜单。'"
 editmodalform "user_interface/help" append label
 editlabel "user_interface/help" 2 label "return '请确保不会有多个管理员编辑§e同一个§r菜单。\\n如果它发生了，则菜单信息可能会§c严重错乱§r。'"
 editmodalform "user_interface/help" append divider
