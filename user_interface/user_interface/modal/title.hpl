@@ -1,0 +1,33 @@
+// user_interface/modal/title(form_name: str) -> bool
+
+
+
+form_name = {func, tuple.get(args, 0)}
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form_name)})}
+
+
+
+text = {func, maps.get(form_data, 'title')}
+text = {func, function.call('utils/as_code_string', text)}
+
+cmd = {func, strings.format('editinput "user_interface/modal/title" 1 default "return {}"', text)}
+_ = {command, cmd}
+
+temp = {func, slices.new(False, form_name)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_title', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/modal/title" "{}"', code)}}
+
+temp = {func, slices.new(True, form_name)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_title', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/modal/title" "{}"', code)}}
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/title"'}
+return True

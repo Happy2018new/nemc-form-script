@@ -35,6 +35,7 @@ from .dynamic import (
     Player,
     Block,
     Item,
+    Utils,
 )
 
 
@@ -163,6 +164,7 @@ class DynamicBuiltInFunction:
     player = None  # type: Player | None
     block = None  # type: Block | None
     item = None  # type: Item | None
+    utils = None  # type: Utils | None
 
     def __init__(self, manager, system):  # type: (BaseManager, ServerSystem) -> None
         """
@@ -181,6 +183,7 @@ class DynamicBuiltInFunction:
         self.player = Player(manager)
         self.block = Block(manager)
         self.item = Item(manager)
+        self.utils = Utils(manager)
 
     def build_func(
         self,
@@ -201,6 +204,7 @@ class DynamicBuiltInFunction:
         assert self.player is not None
         assert self.block is not None
         assert self.item is not None
+        assert self.utils is not None
 
         self.context.build_func(origin)
         self.general.build_func(origin)
@@ -209,3 +213,4 @@ class DynamicBuiltInFunction:
         self.player.build_func(origin)
         self.block.build_func(origin)
         self.item.build_func(origin)
+        self.utils.build_func(origin)

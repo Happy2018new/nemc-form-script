@@ -1,0 +1,25 @@
+/*
+user_interface/modal/handle_edit_divider(
+  is_cancel: bool,
+  form_name: str,
+) -> bool
+*/
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_name = {func, tuple.get(args, 1)}
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    _ = {func, function.call('user_interface/modal/edit', form_name)}
+  fi
+  return True
+fi
+
+
+
+_ = {func, function.call('user_interface/modal/edit', form_name)}
+return True

@@ -1,0 +1,85 @@
+/*
+user_interface/storage/init_form(
+  form_name: str,
+  form_type: int,
+) -> bool
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
+*/
+
+
+
+
+
+form_name = {func, tuple.get(args, 0)}
+form_type = {func, tuple.get(args, 1)}
+
+
+
+
+
+level_id = {func, world.GetLevelId()}
+level_id = {func, object.deref(level_id)}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+if {func, object.is_none(storage)}:
+  storage = {func, maps.new()}
+fi
+
+if form_type == 0:
+  key_ptr = {func, object.ref('long')}
+elif form_type == 1:
+  key_ptr = {func, object.ref('popup')}
+elif form_type == 2:
+  key_ptr = {func, object.ref('modal')}
+else:
+  err = 'user_interface/storage/init_form: Unsupported form type; form_type = ' + str(form_type)
+  _ = {func, function.panic(err)}
+fi
+
+if not {func, maps.ptr_exist(storage, key_ptr)}:
+  _ = {func, maps.ptr_set(storage, key_ptr, {func, maps.new()})}
+fi
+forms = {func, maps.ptr_get(storage, key_ptr)}
+
+if {func, maps.exist(forms, form_name)}:
+  return True
+fi
+
+
+
+
+
+if form_type == 0:
+  result = {func, maps.new(False, 'title', '', 'content', '')}
+  _ = {func, maps.ptr_set(result, {func, object.ref('elements')}, {func, slices.new()})}
+elif form_type == 1:
+  result = {func, maps.new(False, 'title', '', 'content', '')}
+
+  temp = {func, maps.new(False, 'text', '')}
+  _ = {func, maps.ptr_set(temp, {func, object.ref('onclick')}, {func, slices.new()})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('button1')}, temp)}
+
+  temp = {func, maps.new(False, 'text', '')}
+  _ = {func, maps.ptr_set(temp, {func, object.ref('onclick')}, {func, slices.new()})}
+  _ = {func, maps.ptr_set(result, {func, object.ref('button2')}, temp)}
+elif form_type == 2:
+  result = {func, maps.new(False, 'title', '')}
+  _ = {func, maps.ptr_set(result, {func, object.ref('content')}, {func, slices.new()})}
+fi
+
+oncancel = {func, maps.new()}
+_ = {func, maps.ptr_set(oncancel, {func, object.ref('normal')}, {func, slices.new()})}
+_ = {func, maps.ptr_set(oncancel, {func, object.ref('busy')}, {func, slices.new()})}
+_ = {func, maps.ptr_set(oncancel, {func, object.ref('exit')}, {func, slices.new()})}
+_ = {func, maps.ptr_set(result, {func, object.ref('oncancel')}, oncancel)}
+
+_ = {func, maps.ptr_set(forms, {func, object.ref(form_name)}, result)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
+
+
+
+
+
+return True

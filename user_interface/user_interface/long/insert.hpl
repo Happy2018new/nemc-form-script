@@ -1,0 +1,49 @@
+// user_interface/long/insert(form: str) -> bool
+
+
+
+
+
+form = {func, tuple.get(args, 0)}
+
+
+
+
+
+names = {func, function.call('user_interface/storage/long/elements_name', form)}
+
+_ = {func, object.finalise(names)}
+length = {func, slices.length(names)}
+
+for index, length:
+  value = {func, slices.ptr_get(names, index)}
+
+  text = {func, tuple.get(value, 0)}
+  icon = {func, tuple.get(value, 1)}
+  text = {func, function.call('utils/as_code_string', text)}
+  icon = {func, function.call('utils/as_code_string', icon)}
+
+  _ = {command, {func, strings.format('editlongform "user_interface/long/insert" insert {} button', index)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/long/insert" {} text "return {}"', index, text)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/long/insert" {} icon "return {}"', index, icon)}}
+rof
+
+
+
+
+
+temp = {func, slices.new(False, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_insert', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/long/insert" "{}"', code)}}
+
+temp = {func, slices.new(True, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/long/handle_insert', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/long/insert" "{}"', code)}}
+
+
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/long/insert"'}
+_ = {command, {func, strings.format('editlongform "user_interface/long/insert" sub discard 0 {}', length)}}
+return True

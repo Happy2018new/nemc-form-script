@@ -1,0 +1,43 @@
+// user_interface/modal/insert(form: str) -> bool
+
+
+
+
+
+form = {func, tuple.get(args, 0)}
+
+
+
+
+
+names = {func, function.call('user_interface/storage/modal/elements_name', form)}
+
+_ = {func, object.finalise(names)}
+length = {func, slices.length(names)}
+
+for index, length:
+  value = {func, slices.get(names, index)}
+  value = {func, function.call('utils/as_code_string', value)}
+  _ = {command, {func, strings.format('editlongform "user_interface/modal/insert" insert {} button', index)}}
+  _ = {command, {func, strings.format('editbutton "user_interface/modal/insert" {} text "return {}"', index, value)}}
+rof
+
+
+
+
+
+temp = {func, slices.new(False, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_insert', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/modal/insert" "{}"', code)}}
+
+temp = {func, slices.new(True, form, length)}
+code = {func, function.call('utils/as_func_string', 'user_interface/modal/handle_insert', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/modal/insert" "{}"', code)}}
+
+
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/modal/insert"'}
+_ = {command, {func, strings.format('editlongform "user_interface/modal/insert" sub discard 0 {}', length)}}
+return True

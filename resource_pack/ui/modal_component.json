@@ -17,7 +17,7 @@
                 "binding_type": "collection"
             }
         ],
-        "$max_text_edit_length": 100,
+        "$max_text_edit_length": 32767,
         "$option_binding_name": "#custom_input_text",
         "$option_label": "#custom_text",
         "$option_place_holder_text": "#custom_placeholder_text",

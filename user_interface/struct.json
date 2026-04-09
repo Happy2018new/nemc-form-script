@@ -6,6 +6,17 @@
                 "content": "CONTENT: DynamicString",
                 "elements": [
                     {
+                        "type": "button",
+                        "text": "TEXT: DynamicString",
+                        "image": "IMAGE: FinalString",
+                        "onclick": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
+                    },
+                    {
                         "type": "label",
                         "text": "TEXT: DynamicString"
                     },
@@ -15,21 +26,27 @@
                     },
                     {
                         "type": "divider"
-                    },
-                    {
-                        "type": "button",
-                        "text": "TEXT: DynamicString",
-                        "optional_image": {
-                            "set": "SET: FinalBool",
-                            "payload": "IMAGE: FinalString"
-                        },
-                        "onclick": "COMMAND: FinalString"
                     }
                 ],
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         },
@@ -39,16 +56,41 @@
                 "content": "CONTENT: DynamicString",
                 "button1": {
                     "text": "TEXT: DynamicString",
-                    "onclick": "COMMAND: FinalString"
+                    "onclick": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 },
                 "button2": {
                     "text": "TEXT: DynamicString",
-                    "onclick": "COMMAND: FinalString"
+                    "onclick": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 },
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         },
@@ -82,7 +124,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "toggle",
@@ -92,7 +139,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "dropdown",
@@ -107,7 +159,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "slider",
@@ -120,7 +177,12 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     },
                     {
                         "type": "step_slider",
@@ -135,13 +197,33 @@
                             "condition": "COMMAND: FinalString",
                             "payload": "TOOLTIP: DynamicString"
                         },
-                        "onsubmit": "COMMAND: FinalString"
+                        "onsubmit": [
+                            {
+                                "condition": "COMMAND: FinalString",
+                                "payload": "COMMAND: FinalString"
+                            }
+                        ]
                     }
                 ],
                 "oncancel": {
-                    "normal": "COMMAND: FinalString",
-                    "busy": "COMMAND: FinalString",
-                    "exit": "COMMAND: FinalString"
+                    "normal": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "busy": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ],
+                    "exit": [
+                        {
+                            "condition": "COMMAND: FinalString",
+                            "payload": "COMMAND: FinalString"
+                        }
+                    ]
                 }
             }
         }
