@@ -38,7 +38,7 @@ if should_back:
   if form_type == 0:
     _ = {func, function.call('user_interface/long/panel', form_name)}
   elif form_type == 1:
-    // back to edit main panel of this form (needs form type)
+    _ = {func, function.call('user_interface/popup/panel', form_name)}
   elif form_type == 2:
     _ = {func, function.call('user_interface/modal/panel', form_name)}
   else:

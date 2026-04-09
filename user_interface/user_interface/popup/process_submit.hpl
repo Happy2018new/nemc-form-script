@@ -24,8 +24,8 @@ level_id = {func, object.deref({func, world.GetLevelId()})}
 storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
 popup = {func, maps.ptr_get(storage, {func, object.ref('popup')})}
 form_data = {func, maps.ptr_get(popup, {func, object.ref(form_name)})}
-button1 = {func, maps.ptr_set(form_data, {func, object.ref('button1')})}
-button2 = {func, maps.ptr_set(form_data, {func, object.ref('button2')})}
+button1 = {func, maps.ptr_get(form_data, {func, object.ref('button1')})}
+button2 = {func, maps.ptr_get(form_data, {func, object.ref('button2')})}
 
 
 
