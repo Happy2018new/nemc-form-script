@@ -18,7 +18,8 @@ is_debug = {func, tuple.get(args, 2)}
 
 
 
-result = 'index = {ref, int, -1} | '
+result = 'cond = False | '
+result = result + 'index = {ref, int, -1} | '
 button_count = -1
 onclick_ptr = {func, object.ref('onclick')}
 
@@ -39,8 +40,9 @@ for index, {func, slices.length(elements)}:
   if length == 0:
     continue
   else:
-    result = result + 'if index == ' + str(button_count) + ': | '
-    result = result + 'cond = False | '
+    result = result + 'if index == '
+    result = result + str(button_count)
+    result = result + ': | '
   fi
 
 

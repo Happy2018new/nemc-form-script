@@ -24,7 +24,8 @@ is_debug = {func, tuple.get(args, 3)}
 
 
 
-result = 'reason = {ref, int, -1} | '
+result = 'cond = False | '
+result = result + 'reason = {ref, int, -1} | '
 keys = {func, maps.keys(oncancel)}
 
 
@@ -41,11 +42,11 @@ for index, {func, slices.length(keys)}:
   fi
 
   if key == 'normal':
-    result = result + 'if reason == 0: | cond = False | '
+    result = result + 'if reason == 0: | '
   elif key == 'busy':
-    result = result + 'if reason == 1: | cond = False | '
+    result = result + 'if reason == 1: | '
   elif key == 'exit':
-    result = result + 'if reason == 2: | cond = False | '
+    result = result + 'if reason == 2: | '
   else:
     _ = {func, function.panic('unreachable')}
   fi
