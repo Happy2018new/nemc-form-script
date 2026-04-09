@@ -1,6 +1,6 @@
 customform remove "user_interface/panel"
 customform add "user_interface/panel" long
-editlongform "user_interface/panel" title "return '菜单可视化编辑器'"
+editlongform "user_interface/panel" title "return '菜单编辑器'"
 editlongform "user_interface/panel" content "return 'Chapter 24 | flowers for m[A]chines'"
 
 
