@@ -35,7 +35,7 @@ editlabel "user_interface/help" 13 header "return '关于'"
 editmodalform "user_interface/help" append label
 editlabel "user_interface/help" 14 label "return 'Author: Eternal Crystal\\nVersion: Stable Release'"
 editmodalform "user_interface/help" append label
-editlabel "user_interface/help" 15 label "return 'YoRHa, Chapter 24\\nflowers for m[A]chines'"
+editlabel "user_interface/help" 15 label "return 'YoRHa, Chapter 12\\nflowers for m[A]chines'"
 
 
 
