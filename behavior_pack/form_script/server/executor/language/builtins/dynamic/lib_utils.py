@@ -4303,7 +4303,7 @@ class Utils:
 
         if page_split:
             result = [
-                (i.replace(keyword, "§c{}§r".format(keyword)), i)
+                (i.replace(keyword, "§c{}§8".format(keyword)), i)
                 for i in CONST_ALL_TEXTURES
                 if keyword in i.lower()
             ]
