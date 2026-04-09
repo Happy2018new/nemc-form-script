@@ -18,7 +18,7 @@ form = {func, tuple.get(args, 1)}
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    // back to main panel
+    _ = {func, function.call('user_interface/panel')}
   fi
   return True
 fi
@@ -41,7 +41,7 @@ elif index == 5:
 elif index == 6:
   _ = {func, function.call('user_interface/cancel', form, 2)}
 elif index == 7:
-  // back to main panel
+  _ = {func, function.call('user_interface/panel')}
 fi
 
 

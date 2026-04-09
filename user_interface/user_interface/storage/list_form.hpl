@@ -1,0 +1,43 @@
+/*
+user_interface/storage/list_form(
+  form_type: int,
+) -> ptr@slice[str]
+
+FORM_TYPE_LONG = 0
+FORM_TYPE_POPUP = 1
+FORM_TYPE_MODAL = 2
+*/
+
+
+
+
+
+form_type = {func, tuple.get(args, 0)}
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+
+if form_type == 0:
+  key_ptr = {func, object.ref('long')}
+elif form_type == 1:
+  key_ptr = {func, object.ref('popup')}
+elif form_type == 2:
+  key_ptr = {func, object.ref('modal')}
+else:
+  err = 'user_interface/storage/list_form: Unsupported form type; form_type = ' + str(form_type)
+  _ = {func, function.panic(err)}
+fi
+
+forms = {func, maps.ptr_get(storage, key_ptr)}
+
+
+
+
+
+result = {func, slices.cast(forms)}
+_ = {func, object.pin(result)}
+return result

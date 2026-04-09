@@ -92,6 +92,7 @@ class ModalForm(BaseForm):
             if control is not None:
                 if control.GetScrollViewPercentValue() != 0:
                     control.SetScrollViewPercentValue(0)
+                    print("HIT")
                 else:
                     self._modal_form_init_states = True
 

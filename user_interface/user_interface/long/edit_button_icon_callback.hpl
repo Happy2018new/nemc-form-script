@@ -13,8 +13,6 @@ SUBMIT_TYPE_CANCEL = 3
 
 
 
-
-
 submit_type = {func, tuple.get(args, 0)}
 options = {func, tuple.get(args, 1)}
 extra = {func, tuple.get(args, 2)}
@@ -22,10 +20,10 @@ selected = {func, tuple.get(args, 3)}
 
 
 
-
-
 form_name = {func, maps.get(extra, 'form_name')}
 element_index = {func, maps.get(extra, 'element_index')}
+
+
 
 if submit_type == 1:
   texture_id = {func, slices.ptr_get(options, selected)}
@@ -39,8 +37,6 @@ elif submit_type == 3:
     _ = {func, function.call('user_interface/long/edit_button_icon', form_name, element_index)}
   fi
 fi
-
-
 
 
 

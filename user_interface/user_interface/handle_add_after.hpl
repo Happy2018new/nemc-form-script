@@ -4,7 +4,6 @@ user_interface/handle_add_after(
   success: bool,
   form_name: str,
   form_type: int,
-  back_form: str,
 ) -> bool
 
 FORM_TYPE_LONG = 0
@@ -18,18 +17,25 @@ is_cancel = {func, tuple.get(args, 0)}
 success = {func, tuple.get(args, 1)}
 form_name = {func, tuple.get(args, 2)}
 form_type = {func, tuple.get(args, 3)}
-back_form = {func, tuple.get(args, 4)}
 
 
 
 if is_cancel:
   if {ref, int, -1} != 2:
-    _ = {func, function.call(back_form)}
+    _ = {func, function.call('user_interface/panel')}
   fi
   return True
 fi
-if not success or not {ref, bool, -1}:
-  _ = {func, function.call(back_form)}
+
+
+
+if success:
+  if not {ref, bool, -1}:
+    _ = {func, function.call('user_interface/panel')}
+    return True
+  fi
+else:
+  _ = {func, function.call('user_interface/add', form_type)}
   return True
 fi
 

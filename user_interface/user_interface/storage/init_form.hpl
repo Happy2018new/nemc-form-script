@@ -69,15 +69,11 @@ elif form_type == 2:
   _ = {func, maps.ptr_set(result, {func, object.ref('content')}, {func, slices.new()})}
 fi
 
-
-
 oncancel = {func, maps.new()}
 _ = {func, maps.ptr_set(oncancel, {func, object.ref('normal')}, {func, slices.new()})}
 _ = {func, maps.ptr_set(oncancel, {func, object.ref('busy')}, {func, slices.new()})}
 _ = {func, maps.ptr_set(oncancel, {func, object.ref('exit')}, {func, slices.new()})}
 _ = {func, maps.ptr_set(result, {func, object.ref('oncancel')}, oncancel)}
-
-
 
 _ = {func, maps.ptr_set(forms, {func, object.ref(form_name)}, result)}
 _ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
