@@ -22,22 +22,29 @@ level_id = {func, object.deref({func, world.GetLevelId()})}
 storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
 
 if form_type == 0:
-  key_ptr = {func, object.ref('long')}
+  key = 'long'
 elif form_type == 1:
-  key_ptr = {func, object.ref('popup')}
+  key = 'popup'
 elif form_type == 2:
-  key_ptr = {func, object.ref('modal')}
+  key = 'modal'
 else:
   err = 'user_interface/storage/list_form: Unsupported form type; form_type = ' + str(form_type)
   _ = {func, function.panic(err)}
 fi
 
-forms = {func, maps.ptr_get(storage, key_ptr)}
+if {func, object.is_none(storage)}:
+  result = {func, slices.new()}
+elif not {func, maps.exist(storage, key)}:
+  result = {func, slices.new()}
+else:
+  key_ptr = {func, object.ref(key)}
+  forms = {func, maps.ptr_get(storage, key_ptr)}
+  result = {func, slices.cast(forms)}
+fi
 
 
 
 
 
-result = {func, slices.cast(forms)}
 _ = {func, object.pin(result)}
 return result
