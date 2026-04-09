@@ -2,7 +2,7 @@
 user_interface/popup/submit_helper(
   result: str,
   onclick: ptr@slice[map[str, Any]],
-) -> bool
+) -> str
 */
 
 
