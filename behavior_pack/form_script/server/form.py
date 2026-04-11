@@ -33,19 +33,14 @@ from mod.server.extraServerApi import (
 
 ServerSystem = GetServerSystemCls()
 
-MESSAGE_GEN_TURORIAL = "生成自定义菜单示例"
-COMMAND_OPEN_EDITOR = "/菜单编辑器"
-
 DEFAULT_WAIT_SECONDS = 7
+MESSAGE_GEN_TURORIAL = "生成自定义菜单示例"
 DEFAULT_HELP_MESSAGE = (
     "§r§f[§e自定义菜单 & 服主开发者工具§f] \n"
-    + "  §a1. 我不想看教程？ 在聊天栏执行 §b"
-    + COMMAND_OPEN_EDITOR
-    + " §a以打开简易菜单编辑器！\n"
-    + "  §a2. 不会命令方块编辑菜单？ 在聊天栏发送 §b"
+    + "  §a• 小提示: 不会使用菜单？ 在聊天栏发送 §b"
     + MESSAGE_GEN_TURORIAL
     + " §a以生成示例命令方块！\n"
-    + "  §a3. 生成的命令方块较多，所以请在空地发送以防破坏您的建筑物！"
+    + "  §a• 注意: 生成的命令方块较多，所以请在空地发送以防破坏您的建筑物！"
 )
 
 
@@ -80,7 +75,6 @@ class FormSystem(ServerSystem):
         self._finalise_init()
 
         self.listen_engine_event("ServerChatEvent", self, self.on_server_chat_event)
-        self.listen_engine_event("CommandEvent", self, self.on_command_event)
         self.listen_engine_event(
             "CustomCommandTriggerServerEvent", self, self.on_custom_command_trigger
         )
@@ -191,39 +185,6 @@ class FormSystem(ServerSystem):
         engine_comp.CreateMsg(player_id).NotifyOneMessage(
             player_id, "§r§a已尝试生成自定义菜单示例"
         )
-
-    def on_command_event(self, args):  # type: (dict[str, Any]) -> None
-        """
-        on_command_event 在玩家通过聊天栏执行命令时被调用
-
-        Args:
-            args (dict[str, Any]):
-                ServerChatEvent 传入的字典参数
-        """
-        command = args["command"]  # type: str
-        if command.strip() != COMMAND_OPEN_EDITOR:
-            return
-
-        entity_id = args["entityId"]  # type: str
-        engine_comp, level_id = GetEngineCompFactory(), GetLevelId()
-        abilities = engine_comp.CreatePlayer(entity_id).GetPlayerAbilities()
-        if not abilities["op"] and GetHostPlayerId() != entity_id:
-            return
-
-        _ = engine_comp.CreateCommand(level_id).SetCommand(
-            "function form_bootstrap/bootstrap", entity_id, False
-        )
-        _ = engine_comp.CreateGame(level_id).AddTimer(
-            0.5,
-            lambda: engine_comp.CreateCommand(level_id).SetCommand(
-                "function form_bootstrap/main", entity_id, False
-            ),  # type: ignore
-        )
-        engine_comp.CreateMsg(entity_id).NotifyOneMessage(
-            entity_id, "§r§a已尝试打开菜单编辑器"
-        )
-
-        args["cancel"] = True
 
     def on_custom_command_trigger(self, args):  # type: (dict[str, Any]) -> None
         """
