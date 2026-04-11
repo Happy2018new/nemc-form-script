@@ -1,0 +1,8 @@
+交流群 644154294
+模组开源地址 github.com/Happy2018new/nemc-form-script
+
+![description_1](./description_1.png)
+![description_2](./description_2.png)
+
+关键词
+服务器菜单、网络游戏菜单、自定义表单、自定义菜单
