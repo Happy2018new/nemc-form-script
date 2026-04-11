@@ -1,5 +1,6 @@
-交流群 644154294
-模组开源地址 github.com/Happy2018new/nemc-form-script
+联系我们
+方式一：交流群 644154294
+方式二：模组开源地址 github.com/Happy2018new/nemc-form-script
 
 ![description_1](./description_1.png)
 ![description_2](./description_2.png)
