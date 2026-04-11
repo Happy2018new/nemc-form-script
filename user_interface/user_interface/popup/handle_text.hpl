@@ -1,0 +1,75 @@
+/*
+user_interface/popup/handle_text(
+  is_cancel: bool,
+  form_name: str,
+) -> bool
+*/
+
+
+
+
+
+is_cancel = {func, tuple.get(args, 0)}
+form_name = {func, tuple.get(args, 1)}
+format = {func, json.fast_dumps(form_name)}
+
+
+
+
+
+if is_cancel:
+  if {ref, int, -1} != 2:
+    _ = {func, function.call('user_interface/popup/panel', form_name)}
+  fi
+  return True
+fi
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+popup = {func, maps.ptr_get(storage, {func, object.ref('popup')})}
+form_data = {func, maps.ptr_get(popup, {func, object.ref(form_name)})}
+
+
+
+
+
+text = {ref, str, 2}
+_ = {func, maps.set(form_data, 'title', text)}
+
+result = {func, function.try('utils/compile_code', text)}
+code = {func, tuple.get(result, 0)}
+err = {func, tuple.get(result, 1)}
+if {func, strings.length(err)} > 0:
+  code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
+fi
+
+cmd = {func, strings.format('editpopupform {} title "return {}"', format, code)}
+_ = {command, cmd}
+
+
+
+text = {ref, str, 5}
+_ = {func, maps.set(form_data, 'content', text)}
+_ = {func, entity.SaveExtraData(level_id)}
+
+result = {func, function.try('utils/compile_code', text)}
+code = {func, tuple.get(result, 0)}
+err = {func, tuple.get(result, 1)}
+if {func, strings.length(err)} > 0:
+  code = {func, function.call('utils/as_code_string', '§c文本存在语法错误')}
+fi
+
+cmd = {func, strings.format('editpopupform {} content "return {}"', format, code)}
+_ = {command, cmd}
+
+
+
+
+
+_ = {command, {func, strings.format('customform save {}', format)}}
+_ = {func, function.call('user_interface/popup/panel', form_name)}
+return True

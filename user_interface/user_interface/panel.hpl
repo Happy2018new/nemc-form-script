@@ -1,0 +1,16 @@
+// user_interface/panel() -> bool
+
+
+
+temp = {func, slices.new(False)}
+code = {func, function.call('utils/as_func_string', 'user_interface/handle_panel', temp)}
+_ = {command, {func, strings.format('customform onsubmit "user_interface/panel" "{}"', code)}}
+
+temp = {func, slices.new(True)}
+code = {func, function.call('utils/as_func_string', 'user_interface/handle_panel', temp)}
+_ = {command, {func, strings.format('customform oncancel "user_interface/panel" "{}"', code)}}
+
+
+
+_ = {command, 'customform show @s ~ ~ ~ @s "user_interface/panel"'}
+return True

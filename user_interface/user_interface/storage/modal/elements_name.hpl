@@ -1,0 +1,55 @@
+/*
+user_interface/storage/modal/elements_name(
+  form: str,
+) -> ptr@slice[button_name: str]
+*/
+
+
+
+
+
+form = {func, tuple.get(args, 0)}
+
+
+
+
+
+level_id = {func, object.deref({func, world.GetLevelId()})}
+storage = {func, entity.GetExtraData(level_id, 'form_ui_storage')}
+modal = {func, maps.ptr_get(storage, {func, object.ref('modal')})}
+form_data = {func, maps.ptr_get(modal, {func, object.ref(form)})}
+content = {func, maps.ptr_get(form_data, {func, object.ref('content')})}
+
+
+
+
+
+result = {func, slices.new()}
+
+for index, {func, slices.length(content)}:
+  value = {func, slices.ptr_get(content, index)}
+  element_type = {func, maps.get(value, 'type')}
+  if element_type == 'label':
+    _ = {func, slices.append(result, '普通文本 (' + str(index) + ')')}
+  elif element_type == 'header':
+    _ = {func, slices.append(result, '大字文本 (' + str(index) + ')')}
+  elif element_type == 'divider':
+    _ = {func, slices.append(result, '分割线 (' + str(index) + ')')}
+  elif element_type == 'input':
+    _ = {func, slices.append(result, '输入框 (' + str(index) + ')')}
+  elif element_type == 'toggle':
+    _ = {func, slices.append(result, '开关 (' + str(index) + ')')}
+  elif element_type == 'dropdown':
+    _ = {func, slices.append(result, '下拉框 (' + str(index) + ')')}
+  elif element_type == 'slider':
+    _ = {func, slices.append(result, '隐式步进滑块 (' + str(index) + ')')}
+  elif element_type == 'step_slider':
+    _ = {func, slices.append(result, '显式步进滑块 (' + str(index) + ')')}
+  else:
+    err = 'user_interface/storage/modal/elements_name: Unsupported modal form element type; element_type = ' + element_type
+    _ = {func, function.panic(err)}
+  fi
+rof
+
+_ = {func, object.pin(result)}
+return result
