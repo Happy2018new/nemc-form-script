@@ -20,7 +20,7 @@ COMMAND_OPEN_EDITOR = "/菜单编辑器"
 DEFAULT_WAIT_SECONDS = 7
 DEFAULT_HELP_MESSAGE = (
     "§r§f[§e网络游戏菜单§f] \n"
-    + "  §a• 小提示: 在聊天栏执行 §b"
+    + "  §a在聊天栏执行 §b"
     + COMMAND_OPEN_EDITOR
     + " §a以打开简易菜单编辑器！"
 )
