@@ -48,7 +48,7 @@ for i, final:
   _ = {command, 'editmodalform "user_interface/popup/button1" append toggle'}
 
   _ = {command, {func, strings.format('editinput "user_interface/popup/button1" {} text "return \'要执行的指令\'"', 8+2*i)}}
-  _ = {command, {func, strings.format('edittoggle "user_interface/popup/button1" {} text "return \'条件制约\'"', 8+2*i)}}
+  _ = {command, {func, strings.format('edittoggle "user_interface/popup/button1" {} text "return \'条件制约\'"', 9+2*i)}}
   _ = {command, {func, strings.format('edittoggle "user_interface/popup/button1" {} tooltip "return \'要求该指令只会在上一个指令成功时才执行。\'"', 9+2*i)}}
 
   if i < length:
