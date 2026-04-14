@@ -40,6 +40,7 @@ else:
   key_ptr = {func, object.ref(key)}
   forms = {func, maps.ptr_get(storage, key_ptr)}
   result = {func, slices.cast(forms)}
+  _ = {func, slices.sort(result)}
 fi
 
 
