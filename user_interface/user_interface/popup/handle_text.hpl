@@ -54,7 +54,7 @@ _ = {command, cmd}
 
 text = {ref, str, 5}
 _ = {func, maps.set(form_data, 'content', text)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 result = {func, function.try('utils/compile_code', text)}
 code = {func, tuple.get(result, 0)}

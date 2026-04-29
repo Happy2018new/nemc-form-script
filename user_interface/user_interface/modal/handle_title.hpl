@@ -30,7 +30,7 @@ form_data = {func, maps.ptr_get(modal, {func, object.ref(form_name)})}
 
 text = {ref, str, 1}
 _ = {func, maps.set(form_data, 'title', text)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 result = {func, function.try('utils/compile_code', text)}
 code = {func, tuple.get(result, 0)}

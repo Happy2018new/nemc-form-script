@@ -45,7 +45,7 @@ if insert_index == -1:
 fi
 
 _ = {func, slices.ptr_insert(content, insert_index, map_ptr)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 
 

@@ -100,7 +100,7 @@ else:
 fi
 
 _ = {func, maps.ptr_set(oncancel, key_ptr, commands)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 
 

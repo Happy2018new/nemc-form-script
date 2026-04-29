@@ -34,7 +34,7 @@ for ind, {func, slices.length(content)}:
   fi
 rof
 _ = {func, maps.ptr_set(form_data, {func, object.ref('content')}, new_content)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 
 
