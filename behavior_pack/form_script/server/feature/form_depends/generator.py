@@ -2,7 +2,6 @@
 from __future__ import division
 
 from .define import FormalWithCallback
-from ...utils import filter_sentence
 from ...executor.executor import GameCodeExecutor
 from ...storage.form_struct.base import BaseForm as BaseStorageForm
 from ...storage.form_struct.long import (
@@ -91,7 +90,7 @@ def _generate_long_form(
                 title
             )
         )
-    result.title = filter_sentence(title)
+    result.title = title
 
     content = runner.run_code(
         form.content, "Error occurred in content", executor, dimension, position
@@ -102,7 +101,7 @@ def _generate_long_form(
                 content
             )
         )
-    result.content = filter_sentence(content)
+    result.content = content
 
     for index, value in enumerate(list(form.elements)):
         if isinstance(value, LongStorageFormButton):
@@ -117,7 +116,7 @@ def _generate_long_form(
                         index, text
                     )
                 )
-            button.text = filter_sentence(text)
+            button.text = text
             # icon
             if isinstance(value.icon, LongStorageFormIconPathImage):
                 ctx = "In image path of button which indexed in {}".format(index)
@@ -142,7 +141,7 @@ def _generate_long_form(
                         index, text
                     )
                 )
-            result.elements.append(LongFormalFormLabel(filter_sentence(text)))
+            result.elements.append(text)
         elif isinstance(value, LongStorageFormHeader):
             ctx = "In header which indexed in {}".format(index)
             text = runner.run_code(value.text, ctx, executor, dimension, position)
@@ -152,7 +151,7 @@ def _generate_long_form(
                         index, text
                     )
                 )
-            result.elements.append(LongFormalFormHeader(filter_sentence(text)))
+            result.elements.append(text)
         elif isinstance(value, LongStorageFormDivider):
             result.elements.append(LongFormalFormDivider())
 
@@ -205,7 +204,7 @@ def _generate_popup_form(
                 title
             )
         )
-    result.title = filter_sentence(title)
+    result.title = title
 
     content = runner.run_code(
         form.content, "Error occurred in content", executor, dimension, position
@@ -216,7 +215,7 @@ def _generate_popup_form(
                 content
             )
         )
-    result.content = filter_sentence(content)
+    result.content = content
 
     button1 = runner.run_code(
         form.button1, "Error occurred in button1", executor, dimension, position
@@ -227,7 +226,7 @@ def _generate_popup_form(
                 button1
             )
         )
-    result.button1 = filter_sentence(button1)
+    result.button1 = button1
 
     button2 = runner.run_code(
         form.button2, "Error occurred in button2", executor, dimension, position
@@ -238,7 +237,7 @@ def _generate_popup_form(
                 button2
             )
         )
-    result.button2 = filter_sentence(button2)
+    result.button2 = button2
 
     return FormalWithCallback(
         result, form.onsubmit, form.oncancel, form.onsuberr, form.oncanerr
@@ -289,7 +288,7 @@ def _generate_modal_form(
                 title
             )
         )
-    result.title = filter_sentence(title)
+    result.title = title
 
     for index, value in enumerate(list(form.content)):
         if isinstance(value, ModalStorageFormElementLabel):
@@ -301,7 +300,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            result.content.append(ModalFormalFormElementLabel(filter_sentence(text)))
+            result.content.append(ModalFormalFormElementLabel(text))
         elif isinstance(value, ModalStorageFormElementHeader):
             ctx = "In text of header (index={})".format(index)
             text = runner.run_code(value.text, ctx, executor, dimension, position)
@@ -311,7 +310,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            result.content.append(ModalFormalFormElementHeader(filter_sentence(text)))
+            result.content.append(ModalFormalFormElementHeader(text))
         elif isinstance(value, ModalStorageFormElementDivider):
             result.content.append(ModalFormalFormElementDivider())
         elif isinstance(value, ModalStorageFormElementInput):
@@ -355,12 +354,7 @@ def _generate_modal_form(
                 )
             # append
             result.content.append(
-                ModalFormalFormElementInput(
-                    filter_sentence(text),
-                    filter_sentence(default),
-                    filter_sentence(place_holder),
-                    filter_sentence(tooltip),
-                )
+                ModalFormalFormElementInput(text, default, place_holder, tooltip)
             )
         elif isinstance(value, ModalStorageFormElementToggle):
             # text
@@ -391,11 +385,7 @@ def _generate_modal_form(
                     )
                 )
             # append
-            result.content.append(
-                ModalFormalFormElementToggle(
-                    filter_sentence(text), default, filter_sentence(tooltip)
-                )
-            )
+            result.content.append(ModalFormalFormElementToggle(text, default, tooltip))
         elif isinstance(value, ModalStorageFormElementDropdown):
             # prepare
             element = ModalFormalFormElementDropdown()
@@ -408,7 +398,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            element.text = filter_sentence(text)
+            element.text = text
             # default
             ctx = "In default of dropdown (index={})".format(index)
             default = runner.run_code(value.default, ctx, executor, dimension, position)
@@ -434,7 +424,7 @@ def _generate_modal_form(
                         index, tooltip
                     )
                 )
-            element.tooltip = filter_sentence(tooltip)
+            element.tooltip = tooltip
             # options
             if len(value.options) == 0:
                 raise Exception(
@@ -451,7 +441,7 @@ def _generate_modal_form(
                             index, ind, option
                         )
                     )
-                element.options.append(filter_sentence(option))
+                element.options.append(option)
             # append
             result.content.append(element)
         elif isinstance(value, ModalStorageFormElementSlider):
@@ -530,12 +520,12 @@ def _generate_modal_form(
             # append
             result.content.append(
                 ModalFormalFormElementSlider(
-                    filter_sentence(text),
+                    text,
                     float(min_val),
                     float(max_val),
                     float(step),
                     float(default),
-                    filter_sentence(tooltip),
+                    tooltip,
                 )
             )
         elif isinstance(value, ModalStorageFormElementStepSlider):
@@ -550,7 +540,7 @@ def _generate_modal_form(
                         index, text
                     )
                 )
-            element.text = filter_sentence(text)
+            element.text = text
             # default
             ctx = "In default of step slider (index={})".format(index)
             default = runner.run_code(value.default, ctx, executor, dimension, position)
@@ -576,7 +566,7 @@ def _generate_modal_form(
                         index, tooltip
                     )
                 )
-            element.tooltip = filter_sentence(tooltip)
+            element.tooltip = tooltip
             # steps
             if len(value.steps) <= 1:
                 raise Exception(
@@ -593,7 +583,7 @@ def _generate_modal_form(
                             index, ind, step
                         )
                     )
-                element.steps.append(filter_sentence(step))
+                element.steps.append(step)
             # append
             result.content.append(element)
 
