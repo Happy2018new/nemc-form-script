@@ -38,6 +38,7 @@ else:
   _ = {func, function.panic(err)}
 fi
 if success:
+  _ = {command, 'customform save ' + {func, json.fast_dumps(form_name)}}
   _ = {func, function.call('user_interface/storage/init_form', form_name, form_type)}
 fi
 
