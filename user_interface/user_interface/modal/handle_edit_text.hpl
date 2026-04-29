@@ -35,7 +35,7 @@ element = {func, slices.ptr_get(content, element_index)}
 
 text = {ref, str, 1}
 _ = {func, maps.set(element, 'text', text)}
-_ = {func, entity.SaveExtraData(level_id)}
+_ = {func, entity.SetExtraData(level_id, 'form_ui_storage', storage, True)}
 
 result = {func, function.try('utils/compile_code', text)}
 code = {func, tuple.get(result, 0)}
