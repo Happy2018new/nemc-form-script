@@ -141,7 +141,7 @@ def _generate_long_form(
                         index, text
                     )
                 )
-            result.elements.append(text)
+            result.elements.append(LongFormalFormLabel(text))
         elif isinstance(value, LongStorageFormHeader):
             ctx = "In header which indexed in {}".format(index)
             text = runner.run_code(value.text, ctx, executor, dimension, position)
@@ -151,7 +151,7 @@ def _generate_long_form(
                         index, text
                     )
                 )
-            result.elements.append(text)
+            result.elements.append(LongFormalFormHeader(text))
         elif isinstance(value, LongStorageFormDivider):
             result.elements.append(LongFormalFormDivider())
 

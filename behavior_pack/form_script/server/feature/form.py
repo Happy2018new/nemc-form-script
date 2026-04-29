@@ -50,7 +50,6 @@ from ...packet.packet import (
     ClientBoundCloseForm,
 )
 
-
 MAX_PENDING_FORM_COUNT = 8
 
 LONG_FORM_ELEMENT_TYPE_BUTTON = 0
