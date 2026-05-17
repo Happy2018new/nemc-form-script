@@ -6,9 +6,10 @@ if TYPE_CHECKING:
     from typing import Any, Callable
     from mod.server.extraServerApi import ServerSystem
 
-import threading
 import json
+import threading
 from mod.server.extraServerApi import GetEngineNamespace, GetEngineSystemName
+from ..utils import filter_sentence
 from ..storage.base import StringWithHash
 from ..storage.event import EventFuncData, EventStorage
 from ..executor.executor import GameCodeExecutor
@@ -54,12 +55,15 @@ class SingleEventProcesser:
 
         with self.storage.get_locker():
             manager = self.executor.static_builtin.manager
+            message = ""
 
             funcs = self.storage.get_funcs(self.event_name)
             if funcs is None:
                 return
             if args is None:
                 args = {}
+            if self.event_name == "ServerChatEvent":
+                message = args.get("message", "")
 
             with self.executor.get_locker():
                 for _, func in tuple(funcs.items()):
@@ -81,6 +85,14 @@ class SingleEventProcesser:
                             )
                         except Exception:
                             pass
+
+                    if self.event_name == "ServerChatEvent":
+                        current = args.get("message", "")
+                        if not isinstance(current, str):
+                            args["message"] = message
+                        if current != message:
+                            args["message"] = filter_sentence(current)
+
                     if args.get("cancel", False):
                         break
 
