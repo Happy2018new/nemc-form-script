@@ -5,6 +5,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Callable
 
+import copy
 import bisect
 from .lib_object import BaseManager
 
@@ -96,7 +97,7 @@ class Slices:
         obj = self._manager.deref(ptr)
         if not isinstance(obj, list):
             raise Exception("slices.copy: Target object is not a slice")
-        return self._manager.ref(obj.copy())
+        return self._manager.ref(copy.copy(obj))
 
     def format(self, ptr):  # type: (int) -> str
         """format 将切片格式化为其字符串表示
