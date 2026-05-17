@@ -177,6 +177,22 @@ def disconnect_player(player_id, reason):  # type: (str, str) -> None
     )
 
 
+def filter_sentence(sentence):  # type: (str) -> str
+    """
+    filter_sentence 过滤 sentence 中的敏感词。
+    当 sentence 中存在敏感词时，将直接返回 `***`
+
+    Args:
+        sentence (str): 欲过滤的句子
+
+    Returns:
+        str: sentence 的安全化表示
+    """
+    if GetEngineCompFactory().CreateGame(GetLevelId()).CheckWordsValid(sentence):
+        return sentence
+    return "***"
+
+
 def get_entity_name(entity_id):  # type: (str) -> str
     """get_entity_name 返回给定实体的显示名称
 
