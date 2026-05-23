@@ -105,6 +105,13 @@ class Entity:
         funcs["entity.GetAuxValue"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateAuxValue(entity_id).GetAuxValue()
         )
+        funcs["entity.AddModifier"] = (
+            lambda entity_id, attr_type, modifier_id, amount, operation, operand: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateAttr(entity_id)
+                .AddModifier(attr_type, modifier_id, amount, operation, operand)
+            )
+        )
         funcs["entity.ChangeEntityDimension"] = (
             lambda entity_id, dimension_id, pos_ptr: self._manager.ref(
                 GetEngineCompFactory()
@@ -116,6 +123,11 @@ class Entity:
             GetEngineCompFactory()
             .CreateEntityComponent(entity_id)
             .GetAllComponentsName()
+        )
+        funcs["entity.GetAllModifiers"] = (
+            lambda entity_id, attr_type: self._manager.ref(
+                GetEngineCompFactory().CreateAttr(entity_id).GetAllModifiers(attr_type)
+            )
         )
         funcs["entity.GetAttrMaxValue"] = lambda entity_id, type: self._manager.ref(
             GetEngineCompFactory().CreateAttr(entity_id).GetAttrMaxValue(type)
@@ -214,6 +226,13 @@ class Entity:
             .CreateEntityComponent(entity_id)
             .HasComponent(attr_type)
         )
+        funcs["entity.HasModifier"] = (
+            lambda entity_id, attr_type, modifier_id: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateAttr(entity_id)
+                .HasModifier(attr_type, modifier_id)
+            )
+        )
         funcs["entity.HasSaddle"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateEntityDefinitions(entity_id).HasSaddle()
         )
@@ -253,6 +272,13 @@ class Entity:
             GetEngineCompFactory()
             .CreateEntityDefinitions(entity_id)
             .PromoteToIllagerCaptain()
+        )
+        funcs["entity.RemoveModifier"] = (
+            lambda entity_id, attr_type, modifier_id: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateAttr(entity_id)
+                .RemoveModifier(attr_type, modifier_id)
+            )
         )
         funcs["entity.ResetToDefaultValue"] = (
             lambda entity_id, attr_type: self._manager.ref(
@@ -299,11 +325,11 @@ class Entity:
             GetEngineCompFactory().CreateBreath(entity_id).SetCurrentAirSupply(data)
         )
         funcs["entity.SetEntityLookAtPos"] = (
-            lambda entity_id, target_pos, min_time, max_time, reject: self._manager.ref(
+            lambda entity_id, target_pos_ptr, min_time, max_time, reject: self._manager.ref(
                 GetEngineCompFactory()
                 .CreateRot(entity_id)
                 .SetEntityLookAtPos(
-                    self._manager.deref(target_pos), min_time, max_time, reject
+                    self._manager.deref(target_pos_ptr), min_time, max_time, reject
                 )
             )
         )
@@ -382,10 +408,10 @@ class Entity:
                 .SetSitting(should_sit_down)
             )
         )
-        funcs["entity.SetSize"] = lambda entity_id, size: self._manager.ref(
+        funcs["entity.SetSize"] = lambda entity_id, size_ptr: self._manager.ref(
             GetEngineCompFactory()
             .CreateCollisionBox(entity_id)
-            .SetSize(self._manager.deref(size))
+            .SetSize(self._manager.deref(size_ptr))
         )
         funcs["entity.SetTradeLevel"] = lambda entity_id, holder_id: self._manager.ref(
             GetEngineCompFactory()
@@ -598,6 +624,13 @@ class Entity:
         )
         funcs["entity.SetOrbExperience"] = lambda entity_id, exp: self._manager.ref(
             GetEngineCompFactory().CreateExp(entity_id).SetOrbExperience(exp)
+        )
+        funcs["entity.UpdateModifier"] = (
+            lambda entity_id, attr_type, modifier_id, amount, operation, operand: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateAttr(entity_id)
+                .UpdateModifier(attr_type, modifier_id, amount, operation, operand)
+            )
         )
 
         for key, value in funcs.items():

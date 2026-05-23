@@ -79,6 +79,9 @@ class Player:
                 .ChangePlayerFlyState(is_fly, enter_fly)
             )
         )
+        funcs["player.GetPlayerIsFishing"] = lambda player_id: self._manager.ref(
+            GetEngineCompFactory().CreatePlayer(player_id).GetPlayerIsFishing()
+        )
         funcs["player.GetPlayerRespawnPos"] = lambda player_id: self._manager.ref(
             GetEngineCompFactory().CreatePlayer(player_id).GetPlayerRespawnPos()
         )
@@ -95,10 +98,10 @@ class Player:
                 .SetBanPlayerFishing(is_ban)
             )
         )
-        funcs["player.SetPickUpArea"] = lambda player_id, area: self._manager.ref(
+        funcs["player.SetPickUpArea"] = lambda player_id, area_ptr: self._manager.ref(
             GetEngineCompFactory()
             .CreatePlayer(player_id)
-            .SetPickUpArea(self._manager.deref(area))
+            .SetPickUpArea(self._manager.deref(area_ptr))
         )
         funcs["player.SetPlayerAttackSpeedAmplifier"] = (
             lambda player_id, amplifier: self._manager.ref(
@@ -107,10 +110,12 @@ class Player:
                 .SetPlayerAttackSpeedAmplifier(amplifier)
             )
         )
-        funcs["player.SetPlayerMotion"] = lambda entity_id, motion: self._manager.ref(
-            GetEngineCompFactory()
-            .CreateActorMotion(entity_id)
-            .SetPlayerMotion(self._manager.deref(motion))
+        funcs["player.SetPlayerMotion"] = (
+            lambda entity_id, motion_ptr: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateActorMotion(entity_id)
+                .SetPlayerMotion(self._manager.deref(motion_ptr))
+            )
         )
         funcs["player.SetPlayerRespawnPos"] = (
             lambda player_id, pos_ptr: self._manager.ref(
@@ -163,6 +168,16 @@ class Player:
                 GetEngineCompFactory()
                 .CreateItem(player_id)
                 .GetInvItemModEnchantData(slot_pos)
+            )
+        )
+        funcs["player.GetPlayerFishHookEntity"] = lambda player_id: self._manager.ref(
+            GetEngineCompFactory().CreateItem(player_id).GetPlayerFishHookEntity()
+        )
+        funcs["player.GetPlayerFishItem"] = (
+            lambda player_id, get_user_data=False: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateItem(player_id)
+                .GetPlayerFishItem(get_user_data)
             )
         )
         funcs["player.GetPlayerItem"] = (
