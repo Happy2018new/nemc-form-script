@@ -70,6 +70,34 @@ class Item:
                 .SetItemDurability(pos_type, slot_pos, durability)
             )
         )
+        funcs["item.GetFishingLineColor"] = (
+            lambda player_id, item_name: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateFishingLine(player_id)
+                .GetFishingLineColor(item_name)
+            )
+        )
+        funcs["item.GetFishingLineMax"] = (
+            lambda player_id, item_name: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateFishingLine(player_id)
+                .GetFishingLineMax(item_name)
+            )
+        )
+        funcs["item.SetFishingLineColor"] = (
+            lambda player_id, item_name, color_ptr: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateFishingLine(player_id)
+                .SetFishingLineColor(item_name, self._manager.deref(color_ptr))
+            )
+        )
+        funcs["item.SetFishingLineMax"] = (
+            lambda player_id, item_name, max_length: self._manager.ref(
+                GetEngineCompFactory()
+                .CreateFishingLine(player_id)
+                .SetFishingLineMax(item_name, max_length)
+            )
+        )
 
         for key, value in funcs.items():
             origin[key] = value

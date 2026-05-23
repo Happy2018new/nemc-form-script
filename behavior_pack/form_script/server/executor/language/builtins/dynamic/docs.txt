@@ -91,8 +91,10 @@
     附加值
         entity.GetAuxValue
     属性
+        entity.AddModifier
         entity.ChangeEntityDimension
         entity.GetAllComponentsName
+        entity.GetAllModifiers
         entity.GetAttrMaxValue
         entity.GetAttrValue
         entity.GetCurrentAirSupply
@@ -120,6 +122,7 @@
         entity.GetVariant
         entity.HasChest
         entity.HasComponent
+        entity.HasModifier
         entity.HasSaddle
         entity.IsAngry
         entity.IsBaby
@@ -132,6 +135,7 @@
         entity.IsSitting
         entity.IsTamed
         entity.PromoteToIllagerCaptain
+        entity.RemoveModifier
         entity.ResetToDefaultValue
         entity.ResetToMaxValue
         entity.SetAngry
@@ -159,6 +163,7 @@
         entity.SetSize
         entity.SetTradeLevel
         entity.SetVariant
+        entity.UpdateModifier
     行为
         entity.GetAttackTarget
         entity.GetBlockControlAi
@@ -230,6 +235,7 @@
     行为
         player.ChangePlayerDimension
         player.ChangePlayerFlyState
+        player.GetPlayerIsFishing
         player.GetPlayerRespawnPos
         player.IsPlayerCanFly
         player.IsPlayerFlying
@@ -247,6 +253,8 @@
         player.ChangeSelectSlot
         player.GetInvItemEnchantData
         player.GetInvItemModEnchantData
+        player.GetPlayerFishHookEntity
+        player.GetPlayerFishItem
         player.GetPlayerItem
         player.GetSelectSlotId
         player.RemoveEnchantToInvItem
@@ -314,6 +322,10 @@
     item.GetItemInfoByBlockName
     item.GetItemMaxDurability
     item.SetItemDurability
+    item.GetFishingLineColor
+    item.GetFishingLineMax
+    item.SetFishingLineColor
+    item.SetFishingLineMax
 
 
 

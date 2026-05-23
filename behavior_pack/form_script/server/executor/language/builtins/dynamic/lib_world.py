@@ -114,10 +114,10 @@ class World:
                 )
             )
         )
-        funcs["world.CheckChunkState"] = lambda dimension, pos: self._manager.ref(
+        funcs["world.CheckChunkState"] = lambda dimension, pos_ptr: self._manager.ref(
             GetEngineCompFactory()
             .CreateChunkSource(GetLevelId())
-            .CheckChunkState(dimension, self._manager.deref(pos))
+            .CheckChunkState(dimension, self._manager.deref(pos_ptr))
         )
         funcs["world.GetAllAreaKeys"] = lambda: self._manager.ref(
             GetEngineCompFactory().CreateChunkSource(GetLevelId()).GetAllAreaKeys()
@@ -150,10 +150,10 @@ class World:
             )
         )
         funcs["world.GetEntitiesAround"] = (
-            lambda entity_id, radius, filters: self._manager.ref(
+            lambda entity_id, radius, filters_ptr: self._manager.ref(
                 GetEngineCompFactory()
                 .CreateGame(entity_id)
-                .GetEntitiesAround(entity_id, radius, self._manager.deref(filters))
+                .GetEntitiesAround(entity_id, radius, self._manager.deref(filters_ptr))
             )
         )
         funcs["world.GetEntitiesAroundByType"] = (
