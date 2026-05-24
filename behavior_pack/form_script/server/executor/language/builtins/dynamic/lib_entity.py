@@ -533,8 +533,10 @@ class Entity:
             )
         )
         funcs["entity.SetMobKnockback"] = self.set_mob_knockback
-        funcs["entity.SetMotion"] = lambda entity_id, motion: self._manager.ref(
-            GetEngineCompFactory().CreateActorMotion(entity_id).SetMotion(motion)
+        funcs["entity.SetMotion"] = lambda entity_id, motion_ptr: self._manager.ref(
+            GetEngineCompFactory()
+            .CreateActorMotion(entity_id)
+            .SetMotion(self._manager.deref(motion_ptr))
         )
         funcs["entity.SetPersistence"] = self.set_persistence
         funcs["entity.SetStepHeight"] = (
