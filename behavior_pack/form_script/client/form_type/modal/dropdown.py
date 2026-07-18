@@ -163,7 +163,7 @@ class DropDown(OptionGenericCore):
     parent = None  # type: BaseUIControl | None
     options = []  # type: list[RadioWithLabel]
     _def_name = ""  # type: str
-    _should_close_dropdown = False  # type: bool
+    _close_wait_time = 0  # type: int
     _last_click_pos = (0.0, 0.0)  # type: tuple[float, float]
     _last_select_index = 0  # type: int
 
@@ -210,7 +210,7 @@ class DropDown(OptionGenericCore):
             _ = self.set_tooltip_text(tooltip)
 
         self.options = []
-        self._should_close_dropdown = False
+        self._close_wait_time = 0
         self._last_click_pos = (0.0, 0.0)
         self._last_select_index = 0
 
@@ -484,8 +484,10 @@ class DropDown(OptionGenericCore):
             self._last_select_index = selected_index
             should_update = True
 
-        if self._should_close_dropdown:
-            self._should_close_dropdown = False
+        if self._close_wait_time >= 1:
+            if self._close_wait_time != 1:
+                self._close_wait_time -= 1
+                return should_update
 
             option_names = []
             title_label = self.get_title_label()
@@ -518,6 +520,7 @@ class DropDown(OptionGenericCore):
                 _ = self.set_tooltip_text(tooltip_text)
             self._add_options_on_batch(option_names, selected_index)
 
+            self._close_wait_time = 0
             self._should_update_screen = False
             return True
 
@@ -581,7 +584,7 @@ class DropDown(OptionGenericCore):
                 if point_is_in_rect(bar_indent_rect, touch_pos):
                     return False
 
-        self._should_close_dropdown = True
+        self._close_wait_time += 2
         return False
 
     def on_key_press(self, press_type, press_key):  # type: (int, str) -> bool
@@ -611,7 +614,7 @@ class DropDown(OptionGenericCore):
             if press_type != KEY_PRESS_TYPE_DOWN:
                 return False
 
-        self._should_close_dropdown = True
+        self._close_wait_time += 1
         return False
 
     def on_destroy(self):  # type: () -> None
