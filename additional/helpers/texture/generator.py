@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-SCAN_PATH = "D:/MCStudioDownload/game/MinecraftPE_Netease/3.7.0.261178/data/resource_packs/vanilla/textures"
+SCAN_PATH = "D:/MCStudioDownload/game/MinecraftPE_Netease/3.9.0.364397/data/resource_packs/vanilla/textures"
 OUT_PATH = "additional/helpers/texture/texture_ids.json"
 
 
