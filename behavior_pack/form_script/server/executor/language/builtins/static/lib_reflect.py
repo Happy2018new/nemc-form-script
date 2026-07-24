@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable, Any
+    from typing import Any, Callable
 
 import copy
 from .lib_object import BaseManager

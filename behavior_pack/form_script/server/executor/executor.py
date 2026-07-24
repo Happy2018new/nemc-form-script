@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable
+    from typing import Any, Callable
     from mod.server.extraServerApi import ServerSystem
     from mod.server.component.gameCompServer import GameComponentServer
     from mod.server.component.commandCompServer import CommandCompServer
@@ -270,6 +270,22 @@ class GameCodeExecutor:
         if result is None or not result:
             return 0
         return 1
+
+    def set_callback(
+        self, callback
+    ):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+        """
+        set_callback 向底层注册一个回调函数，
+        以便于基于回调函数工作的实现可以调用
+
+        Args:
+            callback (Callable[[str, dict[str, Any]], None]):
+                欲注册的回调函数实现
+        """
+        assert self.static_builtin is not None
+        assert self.dynamic_builtin is not None
+        self.static_builtin.set_callback(callback)
+        self.dynamic_builtin.set_callback(callback)
 
     def get_locker(self):  # type: () -> threading.RLock
         """

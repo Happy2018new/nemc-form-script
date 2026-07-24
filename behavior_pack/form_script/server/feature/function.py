@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable
+    from typing import Any, Callable
     from mod.server.extraServerApi import ServerSystem
 
 import json
@@ -319,3 +319,40 @@ class FunctionFeature:
                 error 所指示的错误
         """
         raise Exception("panic: {}".format(error))
+
+    def callback(self, name, args):  # type: (str, dict[str, Any]) -> None
+        """
+        callback 是一个内部实现细节，
+        它提供了对回调函数的基本实现
+
+        Args:
+            name (str):
+                欲调用的自定义函数的名称
+            args (dict[str, Any]):
+                要传入该自定义函数的参数
+
+        Raises:
+            Exception:
+                如果目标自定义函数不存在，
+                则抛出相应的错误
+        """
+        assert self.storage is not None
+        assert self.executor is not None
+        assert self.executor.static_builtin is not None
+        assert self.executor.static_builtin.manager is not None
+
+        with self.storage.get_locker():
+            func = self.storage.get_func(name)
+            if func is None:
+                return
+
+        with self.executor.get_locker():
+            try:
+                manager = self.executor.static_builtin.manager
+                _ = self.executor.run_code(
+                    code=func,
+                    var_maps={"args": manager.ref(args)},
+                    require_return=False,
+                )
+            except Exception:
+                pass

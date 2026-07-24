@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable
+    from typing import Callable, Any
     from mod.server.extraServerApi import ServerSystem
 
 from .static import (
@@ -101,6 +101,17 @@ class StaticBuiltInFunction:
         self.timedelta = TimeDelta(self.manager)
         self.base64 = Base64(self.manager)
 
+    def set_callback(self, _):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+        """
+        set_callback 向底层注册一个回调函数，
+        以便于基于回调函数工作的实现可以调用
+
+        Args:
+            callback (Callable[[str, dict[str, Any]], None]):
+                欲注册的回调函数实现
+        """
+        pass
+
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -184,6 +195,20 @@ class DynamicBuiltInFunction:
         self.block = Block(manager)
         self.item = Item(manager)
         self.utils = Utils(manager)
+
+    def set_callback(
+        self, callback
+    ):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+        """
+        set_callback 向底层注册一个回调函数，
+        以便于基于回调函数工作的实现可以调用
+
+        Args:
+            callback (Callable[[str, dict[str, Any]], None]):
+                欲注册的回调函数实现
+        """
+        assert self.world is not None
+        self.world.set_callback(callback)
 
     def build_func(
         self,

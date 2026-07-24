@@ -32,33 +32,51 @@
         world.CanSee
         world.CheckBlockToPos
         world.CheckChunkState
+        world.CreateExplosion
         world.GetAllAreaKeys
         world.GetBiomeInfo
         world.GetBiomeName
         world.GetBlockLightLevel
         world.GetChunkEntites
+        world.GetChunkMaxPos
+        world.GetChunkMinPos
         world.GetChunkMobNum
         world.GetEntitiesAround
         world.GetEntitiesAroundByType
         world.GetEntitiesInSquareArea
         world.GetLevelId
+        world.GetLoadedChunks
         world.GetSpawnPosition
         world.GetStructureSize
         world.IsChunkGenerated
         world.IsSlimeChunk
+        world.LocateNeteaseFeatureRule
         world.LocateStructureFeature
         world.MayPlace
         world.MayPlaceOn
+        world.MirrorDimension
         world.PlaceFeature
+        world.PlaceNeteaseLargeFeature
+        world.SetBiomeByPos
+        world.SetBiomeByPosList
+        world.SetBiomeByVolume
+        world.SetBiomeInfo
         world.SetMergeSpawnItemRadius
     实体管理
+        world.CreateEngineEntityByTypeStr
+        world.CreateEntityAOI
         world.CreateExperienceOrb
         world.CreateProjectileEntity
+        world.DeleteEntityAOI
         world.DestroyEntity
         world.GetDroppedItem
+        world.GetEngineActor
         world.GetPlayerList
         world.IsEntityAlive
         world.KillEntity
+        world.SpawnResources
+        world.SpawnResourcesSilkTouched
+        world.getEntitiesOrBlockFromRay
     方块管理
         world.GetBlockClip
         world.GetBlockCollision
@@ -68,6 +86,8 @@
     生物生成
         world.GetEntityLimit
         world.SetEntityLimit
+    方块组合
+        world.RegisterBlockPatterns
     天气
         world.IsRaining
         world.IsThunder
@@ -107,6 +127,7 @@
         entity.GetEntityOwner
         entity.GetFootPos
         entity.GetGravity
+        entity.GetLoadActors
         entity.GetMarkVariant
         entity.GetMaxAirSupply
         entity.GetMobColor
@@ -146,6 +167,7 @@
         entity.SetCurrentAirSupply
         entity.SetEntityLookAtPos
         entity.SetEntityOwner
+        entity.SetFootPos
         entity.SetGravity
         entity.SetMarkVariant
         entity.SetMaxAirSupply
