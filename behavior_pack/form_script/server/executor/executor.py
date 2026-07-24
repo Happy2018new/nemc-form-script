@@ -271,21 +271,22 @@ class GameCodeExecutor:
             return 0
         return 1
 
-    def set_callback(
+    def dynamic_register(
         self, callback
-    ):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+    ):  # type: (Callable[[str, dict[str, Any] | tuple], None]) -> None
         """
-        set_callback 向底层注册一个回调函数，
-        以便于基于回调函数工作的实现可以调用
+        dynamic_register 向底层动态地注册实现，
+        于是依赖库可以调用环路引用上已实现的接口
 
         Args:
-            callback (Callable[[str, dict[str, Any]], None]):
-                欲注册的回调函数实现
+            callback (Callable[[str, dict[str, Any] | tuple], None]):
+                用于回调执行自定义函数的实现
         """
+        assert self._game_interact is not None
         assert self.static_builtin is not None
         assert self.dynamic_builtin is not None
-        self.static_builtin.set_callback(callback)
-        self.dynamic_builtin.set_callback(callback)
+        self.static_builtin.dynamic_register(callback, self)
+        self.dynamic_builtin.dynamic_register(callback, self)
 
     def get_locker(self):  # type: () -> threading.RLock
         """

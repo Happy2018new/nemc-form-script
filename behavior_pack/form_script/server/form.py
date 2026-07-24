@@ -72,7 +72,6 @@ class FormSystem(ServerSystem):
         """
         ServerSystem.__init__(self, namespace, system_name)
         self._start_init()
-        self._set_callback()
         self._finalise_init()
 
         self.listen_engine_event("ServerChatEvent", self, self.on_server_chat_event)
@@ -130,19 +129,13 @@ class FormSystem(ServerSystem):
             self.event_feature,
         )
 
-    def _set_callback(self):  # type: () -> None
-        """
-        _set_callback 向底层注册一个回调函数，
-        以便于基于回调函数工作的实现可以调用它
-        """
-        assert self.executor is not None
-        assert self.func_feature is not None
-        self.executor.set_callback(self.func_feature.callback)
-
     def _finalise_init(self):  # type: () -> None
         """
-        _finalise_init 终结了本模组在服务端侧的初始化，
-        它预编译所有存储的用户代码，同时侦听用户注册的所有引擎事件。
+        _finalise_init 终结了本模组在服务端侧的初始化.
+
+        它预编译所有存储的用户代码，侦听用户注册的所有引擎事件，
+        并向底层动态地注册实现，最后又初始化了底层的延迟调度器。
+
         有责任确保 _finalise_init 在 _start_init 之后调用
         """
         assert self.compile_cache is not None
@@ -154,6 +147,15 @@ class FormSystem(ServerSystem):
             self.form_storage, self.func_storage, self.event_storage
         )
         _ = self.event_feature.prepare()
+
+        assert self.executor is not None
+        assert self.func_feature is not None
+        self.executor.dynamic_register(self.func_feature.callback)
+
+        assert self.executor.dynamic_builtin is not None
+        assert self.executor.dynamic_builtin.utils is not None
+        timer = self.executor.dynamic_builtin.utils.get_timer()
+        self.listen_engine_event("OnSimTickServerEvent", timer, timer.on_tick)
 
     def auto_collect_garbage(self):  # type: () -> None
         """
