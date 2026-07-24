@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable, Any
+    from typing import Any, Callable
 
 from .cmd import CommandHandlers
 from .storage.base import StorageManager
@@ -72,6 +72,7 @@ class FormSystem(ServerSystem):
         """
         ServerSystem.__init__(self, namespace, system_name)
         self._start_init()
+        self._set_callback()
         self._finalise_init()
 
         self.listen_engine_event("ServerChatEvent", self, self.on_server_chat_event)
@@ -104,6 +105,7 @@ class FormSystem(ServerSystem):
         self.form_storage = FormStorage(self.storage_manager)
         self.func_storage = FunctionStorage(self.storage_manager)
         self.event_storage = EventStorage(self.storage_manager)
+
         self.compile_cache = CompileCache(self.storage_manager)
         self.executor = GameCodeExecutor(self.compile_cache, self)
         self.form_feature = FormFeature(self, self.form_storage, self.executor)
@@ -117,6 +119,7 @@ class FormSystem(ServerSystem):
             self.func_feature,
             self.compile_cache,
         )
+
         self.cmd_handlers = CommandHandlers(
             self.compile_cache,
             self.form_storage,
@@ -126,6 +129,15 @@ class FormSystem(ServerSystem):
             self.func_feature,
             self.event_feature,
         )
+
+    def _set_callback(self):  # type: () -> None
+        """
+        _set_callback 向底层注册一个回调函数，
+        以便于基于回调函数工作的实现可以调用它
+        """
+        assert self.executor is not None
+        assert self.func_feature is not None
+        self.executor.set_callback(self.func_feature.callback)
 
     def _finalise_init(self):  # type: () -> None
         """

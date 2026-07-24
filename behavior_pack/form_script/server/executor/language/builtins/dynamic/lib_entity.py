@@ -177,6 +177,9 @@ class Entity:
         funcs["entity.GetGravity"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateGravity(entity_id).GetGravity()
         )
+        funcs["entity.GetLoadActors"] = lambda: self._manager.ref(
+            GetEngineCompFactory().CreateGame(GetLevelId()).GetLoadActors()
+        )
         funcs["entity.GetMarkVariant"] = lambda entity_id: self._manager.ref(
             GetEngineCompFactory().CreateEntityDefinitions(entity_id).GetMarkVariant()
         )
@@ -335,6 +338,11 @@ class Entity:
         )
         funcs["entity.SetEntityOwner"] = lambda entity_id, target_id: self._manager.ref(
             GetEngineCompFactory().CreateActorOwner(entity_id).SetEntityOwner(target_id)
+        )
+        funcs["entity.SetFootPos"] = lambda entity_id, foot_pos_ptr: self._manager.ref(
+            GetEngineCompFactory()
+            .CreatePos(entity_id)
+            .SetFootPos(self._manager.deref(foot_pos_ptr))
         )
         funcs["entity.SetGravity"] = lambda entity_id, gravity: self._manager.ref(
             GetEngineCompFactory().CreateGravity(entity_id).SetGravity(gravity)
