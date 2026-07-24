@@ -5,6 +5,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Callable, Any
     from mod.server.extraServerApi import ServerSystem
+    from ...executor import GameCodeExecutor
 
 from .static import (
     BaseManager,
@@ -101,16 +102,20 @@ class StaticBuiltInFunction:
         self.timedelta = TimeDelta(self.manager)
         self.base64 = Base64(self.manager)
 
-    def set_callback(self, _):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+    def dynamic_register(
+        self, callback, executor
+    ):  # type: (Callable[[str, dict[str, Any] | tuple], None], GameCodeExecutor) -> None
         """
-        set_callback 向底层注册一个回调函数，
-        以便于基于回调函数工作的实现可以调用
+        dynamic_register 向底层动态地注册实现，
+        于是依赖库可以调用环路引用上已实现的接口
 
         Args:
-            callback (Callable[[str, dict[str, Any]], None]):
-                欲注册的回调函数实现
+            callback (Callable[[str, dict[str, Any] | tuple], None]):
+                用于回调执行自定义函数的实现
+            executor (GameCodeExecutor):
+                用户代码的执行器
         """
-        pass
+        _, _ = callback, executor
 
     def build_func(
         self,
@@ -196,19 +201,23 @@ class DynamicBuiltInFunction:
         self.item = Item(manager)
         self.utils = Utils(manager)
 
-    def set_callback(
-        self, callback
-    ):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+    def dynamic_register(
+        self, callback, executor
+    ):  # type: (Callable[[str, dict[str, Any] | tuple], None], GameCodeExecutor) -> None
         """
-        set_callback 向底层注册一个回调函数，
-        以便于基于回调函数工作的实现可以调用
+        dynamic_register 向底层动态地注册实现，
+        于是依赖库可以调用环路引用上已实现的接口
 
         Args:
-            callback (Callable[[str, dict[str, Any]], None]):
-                欲注册的回调函数实现
+            callback (Callable[[str, dict[str, Any] | tuple], None]):
+                用于回调执行自定义函数的实现
+            executor (GameCodeExecutor):
+                用户代码的执行器
         """
         assert self.world is not None
-        self.world.set_callback(callback)
+        assert self.utils is not None
+        self.world.dynamic_register(callback, executor)
+        self.utils.dynamic_register(callback, executor)
 
     def build_func(
         self,

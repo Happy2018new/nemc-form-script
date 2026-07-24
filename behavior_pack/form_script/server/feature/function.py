@@ -320,7 +320,7 @@ class FunctionFeature:
         """
         raise Exception("panic: {}".format(error))
 
-    def callback(self, name, args):  # type: (str, dict[str, Any]) -> None
+    def callback(self, name, args):  # type: (str, dict[str, Any] | tuple) -> None
         """
         callback 是一个内部实现细节，
         它提供了对回调函数的基本实现
@@ -328,7 +328,7 @@ class FunctionFeature:
         Args:
             name (str):
                 欲调用的自定义函数的名称
-            args (dict[str, Any]):
+            args (dict[str, Any] | tuple):
                 要传入该自定义函数的参数
 
         Raises:
@@ -347,12 +347,24 @@ class FunctionFeature:
                 return
 
         with self.executor.get_locker():
-            try:
-                manager = self.executor.static_builtin.manager
+            context = self.executor.execute_context()
+            manager = self.executor.static_builtin.manager
+            if not isinstance(args, dict) and len(args) == 0:
                 _ = self.executor.run_code(
                     code=func,
+                    ctx="In function {}".format(json.dumps(name, ensure_ascii=False)),
+                    executor=context.get_executor(),
+                    dimension=context.get_dimension(),
+                    position=context.get_position(),
+                    require_return=False,
+                )
+            else:
+                _ = self.executor.run_code(
+                    code=func,
+                    ctx="In function {}".format(json.dumps(name, ensure_ascii=False)),
+                    executor=context.get_executor(),
+                    dimension=context.get_dimension(),
+                    position=context.get_position(),
                     var_maps={"args": manager.ref(args)},
                     require_return=False,
                 )
-            except Exception:
-                pass

@@ -5,6 +5,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any, Callable
     from mod.server.extraServerApi import ServerSystem
+    from ....executor import GameCodeExecutor
 
 from mod.server.extraServerApi import (
     GetLevelId,
@@ -25,7 +26,7 @@ class World:
 
     _manager = BaseManager()  # type: BaseManager
     _system = None  # type: ServerSystem | None
-    _callback = None  # type: Callable[[str, dict[str, Any]], None] | None
+    _callback = None  # type: Callable[[str, dict[str, Any] | tuple], None] | None
 
     def __init__(self, manager, system):  # type: (BaseManager, ServerSystem) -> None
         """初始化并返回一个新的 World
@@ -132,18 +133,56 @@ class World:
             )
         )
 
-    def set_callback(
-        self, callback
-    ):  # type: (Callable[[str, dict[str, Any]], None]) -> None
+    def create_entity_aoi(self, dimension, name, aabb_ptr, func_name):
         """
-        set_callback 向底层注册一个回调函数，
-        以便于基于回调函数工作的实现可以调用
+        create_entity_aoi 注册一个感应区域，
+        当有实体进入时和离开时会触发回调函数
 
         Args:
-            callback (Callable[[str, dict[str, Any]], None]):
-                欲注册的回调函数实现
+            dimension (int):
+                感应区域所在的维度 ID
+            name (str):
+                感应区域的名称
+            aabb_ptr (int):
+                围成感应区域的长方体。
+                应是一个指向元组的指针
+            func_name (str):
+                欲触发的回调函数的名称
+        """
+
+        def callback(args):
+            assert self._callback is not None
+            try:
+                self._callback(func_name, args)
+            except Exception:
+                pass
+
+        return self._manager.ref(
+            GetEngineCompFactory()
+            .CreateDimension(GetLevelId())
+            .CreateEntityAOI(
+                dimension,
+                name,
+                self._manager.deref(aabb_ptr),
+                lambda args: callback(args),  # type: ignore
+            )
+        )
+
+    def dynamic_register(
+        self, callback, executor
+    ):  # type: (Callable[[str, dict[str, Any] | tuple], None], GameCodeExecutor) -> None
+        """
+        dynamic_register 向底层动态地注册实现，
+        于是依赖库可以调用环路引用上已实现的接口
+
+        Args:
+            callback (Callable[[str, dict[str, Any] | tuple], None]):
+                用于回调执行自定义函数的实现
+            executor (GameCodeExecutor):
+                用户代码的执行器
         """
         self._callback = callback
+        _ = executor
 
     def build_func(
         self,
@@ -406,18 +445,7 @@ class World:
         funcs["world.CreateEngineEntityByTypeStr"] = (
             self.create_engine_entity_by_type_str
         )
-        funcs["world.CreateEntityAOI"] = (
-            lambda dimension, name, aabb_ptr, func_name: self._manager.ref(
-                GetEngineCompFactory()
-                .CreateDimension(GetLevelId())
-                .CreateEntityAOI(
-                    dimension,
-                    name,
-                    self._manager.deref(aabb_ptr),
-                    lambda args: self._callback(func_name, args),  # type: ignore
-                )
-            )
-        )
+        funcs["world.CreateEntityAOI"] = self.create_entity_aoi
         funcs["world.CreateExperienceOrb"] = (
             lambda entity_id, exp, position_ptr, is_special: self._manager.ref(
                 GetEngineCompFactory()
