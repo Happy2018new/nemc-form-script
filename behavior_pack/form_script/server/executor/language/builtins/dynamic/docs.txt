@@ -353,5 +353,7 @@
 
 杂项
     utils.texture_by_keyword
+    utils.add_ench
+    utils.del_ench
     utils.async_run_func (gofn)
     utils.async_run_cmd (gocmd)

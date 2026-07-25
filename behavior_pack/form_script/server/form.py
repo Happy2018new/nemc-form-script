@@ -137,7 +137,7 @@ class FormSystem(ServerSystem):
 
     def _finalise_init(self):  # type: () -> None
         """
-        _finalise_init 终结了本模组在服务端侧的初始化.
+        _finalise_init 终结了本模组在服务端侧的初始化。
 
         它预编译所有存储的用户代码，侦听用户注册的所有引擎事件，
         并向底层动态地注册实现，最后又初始化了底层的延迟调度器。

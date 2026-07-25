@@ -10,6 +10,7 @@ import heapq
 import threading
 from .const import CONST_ALL_TEXTURES
 from ..static.lib_object import BaseManager
+from mod.server.extraServerApi import GetEngineCompFactory, GetMinecraftEnum
 
 
 class GameTickTimer:
@@ -148,6 +149,139 @@ class Utils:
 
         return self._manager.ref(result)
 
+    def add_ench(
+        self, entity_id, pos_type, slot_pos, ench_id, ench_level
+    ):  # type: (str, int, int, int, int) -> bool
+        """
+        add_ench 向实体中特定位置的物品添加原版附魔。
+        如果目标附魔魔咒已经存在，则它仅设置附魔等级
+
+        Args:
+            entity_id (str):
+                目标实体的 ID
+            pos_type (int):
+                ItemPosType 枚举值
+            slot_pos (int):
+                物品所在的槽位
+            ench_id (int):
+                欲添加的附魔 ID
+            ench_level (int):
+                欲设置的附魔等级
+
+        Returns:
+            bool:
+                如果操作成功，则返回 True；
+                否则操作失败，那么返回 False
+        """
+        engine_comp = GetEngineCompFactory()
+        item_comp = engine_comp.CreateItem(entity_id)
+        const_enum = GetMinecraftEnum()
+
+        entity_type = engine_comp.CreateEngineType(entity_id).GetEngineType()
+        if entity_type is None:
+            return False
+        is_player = entity_type == const_enum.EntityType.Player
+
+        if is_player:
+            item = item_comp.GetPlayerItem(pos_type, slot_pos, True)
+        else:
+            item = item_comp.GetEntityItem(pos_type, slot_pos, True)
+        if item is None:
+            return False
+
+        user_data = item["userData"]
+        if user_data is None:
+            user_data = {}
+        ench_data = user_data.get("ench", [])  # type: list[dict[str, dict[str, Any]]]
+
+        hit_ench = False
+        for index, value in enumerate(ench_data):
+            if value["id"]["__value__"] == ench_id:
+                hit_ench = True
+                ench_data[index]["lvl"]["__value__"] = ench_level
+                break
+        if not hit_ench:
+            ench_data.append(
+                {
+                    "id": {"__type__": 2, "__value__": ench_id},
+                    "lvl": {"__type__": 2, "__value__": ench_level},
+                    "modEnchant": {"__type__": 8, "__value__": ""},
+                }
+            )
+
+        user_data["ench"] = ench_data
+        item["userData"] = user_data
+        if "enchantData" in item:
+            del item["enchantData"]
+
+        if is_player and pos_type == const_enum.ItemPosType.INVENTORY:
+            _ = item_comp.SetInvItemNum(slot_pos, 0)
+            return item_comp.SpawnItemToPlayerInv(item, entity_id, slot_pos)
+        else:
+            return item_comp.SetEntityItem(pos_type, item, slot_pos)
+
+    def del_ench(
+        self, entity_id, pos_type, slot_pos, ench_id
+    ):  # type: (str, int, int, int) -> bool
+        """
+        del_ench 将一个附魔魔咒从实体中特定位置的物品中移除
+
+        Args:
+            entity_id (str):
+                目标实体的 ID
+            pos_type (int):
+                ItemPosType 枚举值
+            slot_pos (int):
+                物品所在的槽位
+            ench_id (int):
+                要移除的附魔 ID
+
+        Returns:
+            bool:
+                如果魔咒存在，并且操作成功，则返回 True；
+                否则操作失败，那么返回 False
+        """
+        engine_comp = GetEngineCompFactory()
+        item_comp = engine_comp.CreateItem(entity_id)
+        const_enum = GetMinecraftEnum()
+
+        entity_type = engine_comp.CreateEngineType(entity_id).GetEngineType()
+        if entity_type is None:
+            return False
+        is_player = entity_type == const_enum.EntityType.Player
+
+        if is_player:
+            item = item_comp.GetPlayerItem(pos_type, slot_pos, True)
+        else:
+            item = item_comp.GetEntityItem(pos_type, slot_pos, True)
+        if item is None:
+            return False
+
+        user_data = item["userData"]
+        if user_data is None:
+            user_data = {}
+        ench_data = user_data.get("ench", [])  # type: list[dict[str, dict[str, Any]]]
+
+        for index, value in enumerate(ench_data):
+            if value["id"]["__value__"] == ench_id:
+                del ench_data[index]
+                break
+        else:
+            return False
+
+        user_data["ench"] = ench_data
+        item["userData"] = user_data
+        if "enchantData" in item:
+            del item["enchantData"]
+        if len(ench_data) == 0 and "ench" in user_data:
+            del user_data["ench"]
+
+        if is_player and pos_type == const_enum.ItemPosType.INVENTORY:
+            _ = item_comp.SetInvItemNum(slot_pos, 0)
+            return item_comp.SpawnItemToPlayerInv(item, entity_id, slot_pos)
+        else:
+            return item_comp.SetEntityItem(pos_type, item, slot_pos)
+
     def async_run_func(self, delay, func_name, *args):  # type: (int, str, ...) -> bool
         """
         async_run_func 以异步的方式延迟执行自定义函数
@@ -257,6 +391,8 @@ class Utils:
         funcs = {}  # type: dict[str, Callable[..., int | bool | float | str]]
 
         funcs["utils.texture_by_keyword"] = self.texture_by_keyword
+        funcs["utils.add_ench"] = self.add_ench
+        funcs["utils.del_ench"] = self.del_ench
         funcs["utils.async_run_func"], funcs["gofn"] = (
             self.async_run_func,
             self.async_run_func,
