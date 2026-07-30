@@ -307,11 +307,14 @@ class Utils:
 
             try:
                 ctx.fast_set(eid, False)
+            except Exception:
+                pass
+            try:
                 self._callback(func_name, args)
             finally:
                 ctx.recover_context(backup)
 
-        self._timer.schedule(delay, lambda: callback())
+        self._timer.schedule(delay, callback)
         return True
 
     def async_run_cmd(self, delay, command):  # type: (int, str) -> bool
@@ -343,11 +346,14 @@ class Utils:
 
             try:
                 ctx.fast_set(eid, False)
+            except Exception:
+                pass
+            try:
                 _ = interact.command_func()(command)
             finally:
                 ctx.recover_context(backup)
 
-        self._timer.schedule(delay, lambda: callback())
+        self._timer.schedule(delay, callback)
         return True
 
     def dynamic_register(
