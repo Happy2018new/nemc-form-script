@@ -60,11 +60,11 @@ class GameTickTimer:
         """
         assert self._locker is not None
 
+        if ticks < 0:
+            raise Exception("schedule: Can not schedule a delay in the past")
         if ticks == 0:
             callback()
             return
-        if ticks < 0:
-            raise Exception("schedule: Can not schedule a delay in the past")
 
         with self._locker:
             self._seq += 1
