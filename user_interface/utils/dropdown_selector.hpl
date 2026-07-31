@@ -53,7 +53,7 @@ for index, length:
   value = {func, slices.ptr_get(name_with_id, index)}
   value = {func, tuple.get(value, 0)}
   value = {func, function.call('utils/as_code_string', value)}
-  cmd = {func, strings.format('editdropdown {} {} append \"return {}\"', format_name, dropdown_index, value)}
+  cmd = {func, strings.format('editdropdown {} {} append "return {}"', format_name, dropdown_index, value)}
   _ = {command, cmd}
 rof
 
