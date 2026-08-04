@@ -52,7 +52,7 @@ class FormSystem(ServerSystem):
 
         Args:
             args (dict[str, Any]):
-                ServerChatEvent 传入的字典参数
+                CommandEvent 传入的字典参数
         """
         command = args["command"]  # type: str
         if command.strip() != COMMAND_OPEN_EDITOR:
