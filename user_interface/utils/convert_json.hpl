@@ -15,11 +15,14 @@ object = {func, tuple.get(args, 0)}
 
 
 ref_type = {func, object.ref_type(object)}
-if ref_type == 0 or ref_type == 1 or ref_type == 2 or ref_type == 3:
-  return True
-elif ref_type != 5 and ref_type != 6:
+
+if ref_type > 6:
   error = 'utils/convert_json: Unsupported data type: ' + str(ref_type)
   _ = {func, function.panic(error)}
+fi
+
+if ref_type <= 4:
+  return True
 fi
 
 
@@ -28,6 +31,7 @@ fi
 
 if ref_type == 5:
   length = {func, slices.length(object)}
+
   for index, length:
     value = {func, slices.ptr_get(object, index)}
     rtype = {func, object.ref_type(value)}
@@ -38,6 +42,7 @@ if ref_type == 5:
       _ = {func, function.call('utils/convert_json', value)}
     fi
   rof
+
   return True
 fi
 
