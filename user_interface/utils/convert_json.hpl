@@ -1,0 +1,68 @@
+/*
+utils/convert_json(
+  object: ptr@int | ptr@bool | ptr@float | ptr@str | ptr@slice | ptr@map,
+) -> bool
+*/
+
+
+
+
+
+object = {func, tuple.get(args, 0)}
+
+
+
+
+
+ref_type = {func, object.ref_type(object)}
+if ref_type == 0 or ref_type == 1 or ref_type == 2 or ref_type == 3:
+  return True
+elif ref_type != 5 and ref_type != 6:
+  error = 'utils/convert_json: Unsupported data type: ' + str(ref_type)
+  _ = {func, function.panic(error)}
+fi
+
+
+
+
+
+if ref_type == 5:
+  length = {func, slices.length(object)}
+  for index, length:
+    value = {func, slices.ptr_get(object, index)}
+    rtype = {func, object.ref_type(value)}
+    if rtype == 3:
+      value = {func, object.deref(value)}
+      _ = {func, slices.set(object, index, str(value))}
+    elif rtype == 5 or rtype == 6:
+      _ = {func, function.call('utils/convert_json', value)}
+    fi
+  rof
+  return True
+fi
+
+
+
+
+
+keys = {func, maps.keys(object)}
+length = {func, slices.length(keys)}
+
+for index, length:
+  key = {func, slices.get(keys, index)}
+  key = {func, object.ref(str(key))}
+  val = {func, maps.ptr_get(object, key)}
+  _ = {func, maps.ptr_del(object, key)}
+
+  rtype = {func, object.ref_type(val)}
+  if rtype == 3:
+    val = {func, object.deref(val)}
+    val = {func, object.ref(str(val))}
+  elif rtype == 5 or rtype == 6:
+    _ = {func, function.call('utils/convert_json', val)}
+  fi
+
+  _ = {func, maps.ptr_set(object, key, val)}
+rof
+
+return True
