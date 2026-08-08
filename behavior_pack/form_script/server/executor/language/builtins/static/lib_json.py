@@ -3,7 +3,7 @@ from __future__ import division
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Callable
+    from typing import Any, Callable
 
 import json
 from .lib_object import BaseManager
@@ -102,6 +102,43 @@ class JSON:
         """
         return self._manager.ref(json.loads(string))
 
+    def fix_object(self, obj):  # type: (Any) -> Any
+        """
+        fix_object 修复 json.loads 解析所得的对象，
+        使得其中包含的所有字符串呈现非 unicode 类型。
+
+        fix_object 的行为是就地对原始对象进行修改，
+        这意味着出于性能考虑，它不会深拷贝原始对象
+
+        Args:
+            obj (Any): 待修正的对象
+
+        Returns:
+            Any: 修正后所得的对象
+        """
+        if isinstance(obj, (int, float, bool)):
+            return obj
+        if obj is None:
+            return None
+
+        if isinstance(obj, str):
+            return str(obj)
+        try:
+            if isinstance(obj, unicode):  # type: ignore
+                return str(obj)
+        except Exception:
+            pass
+
+        if isinstance(obj, list):
+            for index, value in enumerate(obj):
+                obj[index] = self.fix_object(value)
+        if isinstance(obj, dict):
+            for key in list(obj.keys()):
+                value = obj[key]
+                del obj[key]
+                obj[str(key)] = self.fix_object(value)
+        return obj
+
     def build_func(
         self,
         origin,  # type: dict[str, Callable[..., int | bool | float | str]]
@@ -120,6 +157,9 @@ class JSON:
         funcs["json.fast_dumps"] = lambda obj: json.dumps(obj, ensure_ascii=False)
         funcs["json.loads"] = self.loads
         funcs["json.fast_loads"] = lambda string: json.loads(string)
+        funcs["json.fix_object"] = lambda ptr: self._manager.ref(
+            self.fix_object(self._manager.deref(ptr))
+        )
 
         for key, value in funcs.items():
             origin[key] = value

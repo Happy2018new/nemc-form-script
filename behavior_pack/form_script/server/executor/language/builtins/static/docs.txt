@@ -318,6 +318,7 @@ json.dumps
 json.fast_dumps
 json.loads
 json.fast_loads
+json.fix_object
 
 
 
