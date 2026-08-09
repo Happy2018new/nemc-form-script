@@ -80,11 +80,11 @@ class Context:
             bool: 总是返回 True
         """
         if isinstance(posx, bool) or not isinstance(posx, (int, float)):
-            raise Exception("set_position: Given posx must be tuple")
+            raise Exception("set_position: Given posx must be int or float")
         if isinstance(posy, bool) or not isinstance(posy, (int, float)):
-            raise Exception("set_position: Given posy must be tuple")
+            raise Exception("set_position: Given posy must be int or float")
         if isinstance(posz, bool) or not isinstance(posz, (int, float)):
-            raise Exception("set_position: Given posz must be tuple")
+            raise Exception("set_position: Given posz must be int or float")
 
         self._position = (float(posx), float(posy), float(posz))
         return True
