@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 import copy
 from .lib_object import BaseManager
-from .checker.checker import check_object
 
 
 class Reflect:
@@ -159,73 +158,44 @@ class Reflect:
             return False
 
     def getattr(self, ptr, attr):  # type: (int, str) -> int
-        """
-        getattr 获取对象在 attr 上指示的属性。
-        如果 attr 或目标属性是受保护的特性，则将返回 0
+        """getattr 是已被弃用的特性
 
         Args:
-            ptr (int): 目标对象的指针
-            attr (str): 欲获取的属性的名称
+            ptr (int): 任意整数
+            attr (str): 任意字符串
 
         Returns:
-            int:
-                如果成功，则返回该属性对应对象的指针；
-                否则失败，那么返回 0
+            int: 总是返回 0
         """
-        if attr.startswith("_"):
-            return 0
-
-        try:
-            obj = getattr(self._manager.deref(ptr), attr)
-        except Exception:
-            return 0
-        if not check_object(obj):
-            return 0
-
-        return self._manager.ref(obj)
+        _, _ = ptr, attr
+        return 0
 
     def setattr(self, obj_ptr, obj_attr, value_ptr):  # type: (int, str, int) -> bool
-        """
-        setattr 设置对象在 obj_attr 上指示的属性。
-        如果 obj_attr 是受保护的特性，则将返回 False
+        """setattr 是已被弃用的特性
 
         Args:
-            obj_ptr (int): 目标对象的指针
-            obj_attr (str): 欲设置的属性的名称
-            value_ptr (int): 要设置的值的指针
+            obj_ptr (int): 任意整数
+            obj_attr (str): 任意字符串
+            value_ptr (int): 任意整数
 
         Returns:
-            bool: 操作是否成功
+            bool: 总是返回 False
         """
-        if obj_attr.startswith("_"):
-            return False
-        try:
-            setattr(
-                self._manager.deref(obj_ptr), obj_attr, self._manager.deref(value_ptr)
-            )
-            return True
-        except Exception:
-            return False
+        _, _, _ = obj_ptr, obj_attr, value_ptr
+        return False
 
     def delattr(self, ptr, attr):  # type: (int, str) -> bool
-        """
-        delattr 删除对象在 attr 上指示的属性。
-        如果 attr 是受保护的特性，则将返回 False
+        """delattr 是已被弃用的特性
 
         Args:
-            ptr (int): 目标对象的指针
-            attr (str): 欲删除的属性的名称
+            ptr (int): 任意整数
+            attr (str): 任意字符串
 
         Returns:
-            bool: 操作是否成功
+            bool: 总是返回 False
         """
-        if attr.startswith("_"):
-            return False
-        try:
-            delattr(self._manager.deref(ptr), attr)
-            return True
-        except Exception:
-            return False
+        _, _ = ptr, attr
+        return False
 
     def callable(self, ptr):  # type: (int) -> bool
         """callable 检查对象是否是可以调用的

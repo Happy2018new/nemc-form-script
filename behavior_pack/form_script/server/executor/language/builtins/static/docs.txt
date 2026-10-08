@@ -19,10 +19,10 @@ reflect.deepcopy
 reflect.format
 reflect.vars
 reflect.dir
-reflect.hasattr
-reflect.getattr
-reflect.setattr
-reflect.delattr
+reflect.hasattr (已弃用)
+reflect.getattr (已弃用)
+reflect.setattr (已弃用)
+reflect.delattr (已弃用)
 reflect.callable
 reflect.call
 reflect.and
