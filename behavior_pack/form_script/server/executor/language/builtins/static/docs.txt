@@ -17,8 +17,8 @@ reflect.length
 reflect.copy
 reflect.deepcopy
 reflect.format
-reflect.vars
-reflect.dir
+reflect.vars (已弃用)
+reflect.dir (已弃用)
 reflect.hasattr (已弃用)
 reflect.getattr (已弃用)
 reflect.setattr (已弃用)
