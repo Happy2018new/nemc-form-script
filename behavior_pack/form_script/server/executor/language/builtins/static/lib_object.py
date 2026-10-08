@@ -66,16 +66,6 @@ class BaseManager:
             if ptr != 0 and ptr not in self._mapping:
                 return ptr
 
-    def rand(self):  # type: () -> random.Random
-        """
-        rand 返回用于生成随机数的随机数生成器。
-
-        Returns:
-            random.Random:
-                用于生成随机数的随机数生成器
-        """
-        return self._random
-
     def ref(self, obj):  # type: (Any) -> int
         """
         ref 注册 obj 到引用中，并返回此引用所得的指针。
@@ -164,7 +154,7 @@ class BaseManager:
         有责任确保 current 的调用者总是来自于内部实现（如代码执行器）
 
         Returns:
-            dict[int, Any]:
+            set[int]:
                 当前所有对象的指针
         """
         return set(self._mapping)
