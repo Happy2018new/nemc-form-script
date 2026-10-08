@@ -9,9 +9,6 @@ from ..packet.packet import (
     PACKET_NAME_MODAL_FORM_REQUEST,
     PACKET_NAME_CLIENT_BOUND_CLOSE_FORM,
 )
-from mod.client.extraClientApi import GetClientSystemCls
-
-ClientSystem = GetClientSystemCls()
 
 
 class FormSystem(BaseFormSystem):

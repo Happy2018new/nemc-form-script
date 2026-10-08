@@ -35,12 +35,9 @@ from ...packet.packet import (
     ModalFormResponse,
 )
 from mod.client.extraClientApi import (
-    GetClientSystemCls,
     RegisterUI,
     GetTouchPos,
 )
-
-ClientSystem = GetClientSystemCls()
 
 
 class EngineFormSystem:
