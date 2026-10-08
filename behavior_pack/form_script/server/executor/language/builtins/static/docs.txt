@@ -24,7 +24,7 @@ reflect.getattr (已弃用)
 reflect.setattr (已弃用)
 reflect.delattr (已弃用)
 reflect.callable
-reflect.call
+reflect.call (已弃用)
 reflect.and
 reflect.or
 reflect.inverse
