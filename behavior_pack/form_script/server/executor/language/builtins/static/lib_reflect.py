@@ -134,20 +134,17 @@ class Reflect:
         return 0
 
     def hasattr(self, ptr, attr):  # type: (int, str) -> bool
-        """
-        hasattr 检查对象是否拥有 attr 指示的属性
+        """hasattr 是已被弃用的特性
 
         Args:
-            ptr (int): 目标对象的指针
-            attr (str): 欲检查的属性的名称
+            ptr (int): 任意整数
+            attr (str): 任意字符串
 
         Returns:
-            bool: 目标对象是否拥有该属性
+            bool: 总是返回 False
         """
-        try:
-            return hasattr(self._manager.deref(ptr), attr)
-        except Exception:
-            return False
+        _, _ = ptr, attr
+        return False
 
     def getattr(self, ptr, attr):  # type: (int, str) -> int
         """getattr 是已被弃用的特性
